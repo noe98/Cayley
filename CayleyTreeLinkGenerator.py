@@ -123,8 +123,10 @@ def main():
     TupleOrganizer(generations, connections)
     print(graph)
     #draw_graph(graph)
+    #Shows initial Node Dictionary
     print(initiateNodeDictionary())
     random_node_selector()
+    #Runs Node Dictionary through 
     print(random_node_selector())
     
 
