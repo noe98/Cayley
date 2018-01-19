@@ -13,6 +13,7 @@ import matplotlib.pyplot as plt
 from random import *
 
 graph=[]
+node_dict = {}
 generations = int(input("What is the number of generations? "))
 connections = int(input("What is the number of connections? "))
 
@@ -95,14 +96,37 @@ def TupleOrganizer(generations, connections):
                 graph.append((x,nodes_done))
                 nodes_done += 1
 
+def initiateNodeDictionary():
+    """Creates an initial dictioary with nodes as integer types in the key and
+       assigns a 0 to represent the unfilled state as the value.
+       The key in dictionary is node, the value is the state."""
+    for x in range(NodeCalculator(generations,connections)):
+        node_dict[x] = 0
+    return node_dict
+
+def random_node_selector():
+    """Selecting the nodes randomly out of given total generations and edges."""
+    nodes = NodeCalculator(generations,connections)
+    print(nodes)
+    #use a 3 states here
+    for x in range(0, nodes):
+        rand_value = randint(0,2)
+        node_dict[x] = rand_value
+
+    return node_dict
+
+
+
 def main():
     print("The number of nodes is: ",NodeCalculator(generations, connections))
     print("Nodes per generations is: ", NodesPerGeneration(generations, connections))
     TupleOrganizer(generations, connections)
     print(graph)
-    draw_graph(graph)
+    #draw_graph(graph)
+    print(initiateNodeDictionary())
+    random_node_selector()
+    print(random_node_selector())
     
 
 if __name__ == "__main__":
     main()
-
