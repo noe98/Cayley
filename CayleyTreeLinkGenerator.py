@@ -11,6 +11,7 @@ Code Adapted from: https://www.udacity.com/wiki/creating-network-graphs-with-pyt
 import networkx as nx
 import matplotlib.pyplot as plt
 from random import *
+import csv
 
 graph=[]
 node_dict = {}
@@ -148,6 +149,10 @@ def monteCarlo():
         print("Number of ones: ", sum_of_ones)
         print("Number of twos: ", sum_of_twos)
 
+def CreateCSVfile():
+    with open('test.csv', 'w') as csvfile:
+        filewriter = csv.writer(csvfile, delimiter=',')
+        filewriter.writerows(graph)
 
 def main():
     print("The number of nodes is: ",NodeCalculator(generations, connections))
@@ -160,7 +165,7 @@ def main():
     #Runs Node Dictionary through 
     print(random_node_selector())
     monteCarlo()
-    
+    CreateCSVfile() 
 
 if __name__ == "__main__":
     main()
