@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """
 Author: Justin Pusztay and Matt Lubas
 

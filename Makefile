@@ -1,7 +1,5 @@
-#Makefile for Cayley Tree Project
+#Makefile for Cayley Tree Projecty
 
-run:
-	./CayleyTreeLinkGenerator.py
 
 clean:
 	-rm -rf *.csv
