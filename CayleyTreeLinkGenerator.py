@@ -107,14 +107,46 @@ def initiateNodeDictionary():
 def random_node_selector():
     """Selecting the nodes randomly out of given total generations and edges."""
     nodes = NodeCalculator(generations,connections)
-    print(nodes)
+    #print(nodes)
     #use a 3 states here
     for x in range(0, nodes):
         rand_value = randint(0,2)
         node_dict[x] = rand_value
-
+##    sum_of_zeros = 0
+##    sum_of_ones = 0
+##    sum_of_twos = 0
+##    for state in node_dict.values():
+##        if state == 0:
+##            sum_of_zeros += 1
+##        elif state == 1:
+##            sum_of_ones += 1
+##        else:
+##            sum_of_twos += 1
+##    for x in range(NodeCalculator(generations,connections)):
+##        print("Round "+str(x))
+##        print("Number of zeros: ", sum_of_zeros)
+##        print("Number of ones: ", sum_of_ones)
+##        print("Number of twos: ", sum_of_twos)
     return node_dict
+    #sum_of_zeros, sum_of_ones,sum_of_twos
 
+def monteCarlo():
+    for x in range(NodeCalculator(generations,connections)):
+        random_node_selector()
+        sum_of_zeros = 0
+        sum_of_ones = 0
+        sum_of_twos = 0
+        for state in node_dict.values():
+            if state == 0:
+                sum_of_zeros += 1
+            elif state == 1:
+                sum_of_ones += 1
+            else:
+                sum_of_twos += 1
+        print("Round "+str(x))
+        print("Number of zeros: ", sum_of_zeros)
+        print("Number of ones: ", sum_of_ones)
+        print("Number of twos: ", sum_of_twos)
 
 
 def main():
@@ -124,10 +156,10 @@ def main():
     print(graph)
     #draw_graph(graph)
     #Shows initial Node Dictionary
-    print(initiateNodeDictionary())
-    random_node_selector()
+    #print(initiateNodeDictionary())
     #Runs Node Dictionary through 
     print(random_node_selector())
+    monteCarlo()
     
 
 if __name__ == "__main__":
