@@ -14,8 +14,8 @@ import matplotlib.pyplot as plt
 from random import *
 import csv
 
-graph=[]
-node_dict = {}
+graph = list()
+node_dict = dict()
 generations = int(input("What is the number of generations? "))
 connections = int(input("What is the number of connections? "))
 
@@ -79,10 +79,10 @@ def NodesPerGeneration(generations, connections):
 def NodeCalculator(generations, connections):
     """This functions takes in number of generations and connections and
        returns the number of nodes in the graph."""
-    nodes = 1
+    number_nodes = 1
     for x in range(1,generations+1):
-        nodes += (connections * (connections - 1)**(x - 1))
-    return nodes
+        number_nodes += (connections * (connections - 1)**(x - 1))
+    return number_nodes
 
 def TupleOrganizer(generations, connections):
     """This function generates the tuples for the Cayley Tree."""
@@ -106,33 +106,35 @@ def initiateNodeDictionary():
         node_dict[x] = 0
     return node_dict
 
+def NearestNeighborFinder(node):
+    """Finds the nodes that are neighbors to the node in question."""
+    neighbors = list(filter(lambda x: x.count(node) > 0, graph))
+    neighbors_list = list()
+    for x in neighbors:
+        if x[0] != node:
+            neighbors_list.append(x[0])
+        elif x[1] != node:
+            neighbors_list.append(x[1])
+    return neighbors_list
+
+def NearestNeighborCalculator(node):
+    """Calculates the sum of the nearest neighbors for a node."""
+    sum_of_neighbors = 0
+    for node in NearestNeighborFinder(node):
+        print(node_dict[node])
+        sum_of_neighbors += node_dict[node]
+    return sum_of_neighbors
+
 def random_node_selector():
     """Selecting the nodes randomly out of given total generations and edges."""
     nodes = NodeCalculator(generations,connections)
-    #print(nodes)
-    #use a 3 states here
-    for x in range(0, nodes):
+    for node in range(0, nodes):
         rand_value = randint(0,2)
-        node_dict[x] = rand_value
-##    sum_of_zeros = 0
-##    sum_of_ones = 0
-##    sum_of_twos = 0
-##    for state in node_dict.values():
-##        if state == 0:
-##            sum_of_zeros += 1
-##        elif state == 1:
-##            sum_of_ones += 1
-##        else:
-##            sum_of_twos += 1
-##    for x in range(NodeCalculator(generations,connections)):
-##        print("Round "+str(x))
-##        print("Number of zeros: ", sum_of_zeros)
-##        print("Number of ones: ", sum_of_ones)
-##        print("Number of twos: ", sum_of_twos)
+        node_dict[node] = rand_value
     return node_dict
-    #sum_of_zeros, sum_of_ones,sum_of_twos
 
 def monteCarlo():
+    """Runs the Monte Carlo simulation the desired number of times."""
     for x in range(NodeCalculator(generations,connections)):
         random_node_selector()
         sum_of_zeros = 0
@@ -145,28 +147,29 @@ def monteCarlo():
                 sum_of_ones += 1
             else:
                 sum_of_twos += 1
-        print("Round "+str(x))
-        print("Number of zeros: ", sum_of_zeros)
-        print("Number of ones: ", sum_of_ones)
-        print("Number of twos: ", sum_of_twos)
+        #print("Round " + str(x))
+        #print("Number of zeros: ", sum_of_zeros)
+        #print("Number of ones: ", sum_of_ones)
+        #print("Number of twos: ", sum_of_twos)
 
 def CreateCSVfile():
     with open('test.csv', 'w') as csvfile:
         filewriter = csv.writer(csvfile, delimiter=',')
         filewriter.writerows(graph)
 
+
 def main():
     print("The number of nodes is: ",NodeCalculator(generations, connections))
-    print("Nodes per generations is: ", NodesPerGeneration(generations, connections))
-    TupleOrganizer(generations, connections)
-    print(graph)
-    #draw_graph(graph)
-    #Shows initial Node Dictionary
-    #print(initiateNodeDictionary())
-    #Runs Node Dictionary through 
-    print(random_node_selector())
-    monteCarlo()
-    CreateCSVfile() 
+    #print("Nodes per generations is: ", NodesPerGeneration(generations, connections))
+    TupleOrganizer(generations, connections) #generates graph
+    #print(graph) #prints list of connecttions generated in TupleOrganizer
+    #draw_graph(graph) #Creates plot of Cayley Tree
+    #print(initiateNodeDictionary()) #creates inital state of dictionary
+    #print(random_node_selector()) #does 1 step of Monte Carlo with transtion rate
+    #print("Nearest Neighbor Sum: ", NearestNeighborCalculator(8))
+    #print(NearestNeighborFinder(8)) #prints list with nearest neighbors
+    monteCarlo() #runs Monte Carlo n-times
+    #CreateCSVfile()
 
 if __name__ == "__main__":
     main()
