@@ -150,11 +150,6 @@ def monteCarlo():
         print(node_dict)
         print("Number of zeros: ", len(node_dict) - sum(node_dict.values()))
         print("Number of ones: ", sum(node_dict.values()))
-        
-        
-
-
-
 
 def CreateCSVfile():
     with open('test.csv', 'w') as csvfile:

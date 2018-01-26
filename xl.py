@@ -1,9 +1,11 @@
 import xlwt
 import math
 import random
+
 node_dict = dict()
 for x in range(20):
     node_dict[x] = random.randint(0,1)
+    
 book = xlwt.Workbook(encoding="utf-8")
 sheet1 = book.add_sheet("Sheet 1")
 rows = list()
@@ -14,8 +16,6 @@ for key in node_dict:
     sheet1.write(0,key+1, key)
 for key in node_dict:
     sheet1.write(key+1,1,node_dict[key])
-    
-
 book.save("trial.xls")
 
 ##import csv
