@@ -14,6 +14,10 @@ import matplotlib.pyplot as plt
 from random import *
 import csv
 
+gamma = .1
+beta = .2
+alpha = .1
+
 graph = list()
 node_dict = dict()
 generations = int(input("What is the number of generations? "))
@@ -121,17 +125,21 @@ def NearestNeighborCalculator(node):
     """Calculates the sum of the nearest neighbors for a node."""
     sum_of_neighbors = 0
     for node in NearestNeighborFinder(node):
-        print(node_dict[node])
         sum_of_neighbors += node_dict[node]
     return sum_of_neighbors
 
 def random_node_selector():
     """Selecting the nodes randomly out of given total generations and edges."""
-    nodes = NodeCalculator(generations,connections)
-    for node in range(0, nodes):
-        rand_value = randint(0,2)
-        node_dict[node] = rand_value
-    return node_dict
+    list_nodes = list(range(NodeCalculator(generations,connections)))
+    shuffle(list_nodes)
+    #print(list_nodes)
+    for x in list_nodes:
+        summ = NearestNeighborCalculator(x)
+        transition_rate_prob = gamma*node_dict[x] + (1 - node_dict[x])*alpha*(beta**(summ))
+        print(transition_rate_prob)
+##        rand_value = randint(0,2)
+##        node_dict[node] = rand_value
+##    return node_dict
 
 def monteCarlo():
     """Runs the Monte Carlo simulation the desired number of times."""
@@ -162,10 +170,10 @@ def main():
     print("The number of nodes is: ",NodeCalculator(generations, connections))
     #print("Nodes per generations is: ", NodesPerGeneration(generations, connections))
     TupleOrganizer(generations, connections) #generates graph
-    #print(graph) #prints list of connecttions generated in TupleOrganizer
+    print(graph) #prints list of connecttions generated in TupleOrganizer
     #draw_graph(graph) #Creates plot of Cayley Tree
-    #print(initiateNodeDictionary()) #creates inital state of dictionary
-    #print(random_node_selector()) #does 1 step of Monte Carlo with transtion rate
+    print(initiateNodeDictionary()) #creates inital state of dictionary
+    random_node_selector() #does 1 step of Monte Carlo with transtion rate
     #print("Nearest Neighbor Sum: ", NearestNeighborCalculator(8))
     #print(NearestNeighborFinder(8)) #prints list with nearest neighbors
     monteCarlo() #runs Monte Carlo n-times
