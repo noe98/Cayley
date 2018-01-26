@@ -128,37 +128,33 @@ def NearestNeighborCalculator(node):
         sum_of_neighbors += node_dict[node]
     return sum_of_neighbors
 
-def random_node_selector():
-    """Selecting the nodes randomly out of given total generations and edges."""
-    list_nodes = list(range(NodeCalculator(generations,connections)))
-    shuffle(list_nodes)
-    #print(list_nodes)
-    for x in list_nodes:
-        summ = NearestNeighborCalculator(x)
-        transition_rate_prob = gamma*node_dict[x] + (1 - node_dict[x])*alpha*(beta**(summ))
-        print(transition_rate_prob)
-##        rand_value = randint(0,2)
-##        node_dict[x] = rand_value
-##    return node_dict
-
 def monteCarlo():
     """Runs the Monte Carlo simulation the desired number of times."""
-    for x in range(NodeCalculator(generations,connections)):
-        random_node_selector()
-        sum_of_zeros = 0
-        sum_of_ones = 0
-        sum_of_twos = 0
-        for state in node_dict.values():
-            if state == 0:
-                sum_of_zeros += 1
-            elif state == 1:
-                sum_of_ones += 1
-            else:
-                sum_of_twos += 1
-        #print("Round " + str(x))
-        #print("Number of zeros: ", sum_of_zeros)
-        #print("Number of ones: ", sum_of_ones)
-        #print("Number of twos: ", sum_of_twos)
+    print("Initial Dictionary")
+    print("--------------------")
+    print(node_dict)
+    for x in node_dict:
+        summ = NearestNeighborCalculator(x)
+        
+        #print("Node", x)
+        #print("Neigherest Neighbor Sum: ",summ)
+        transition_rate_prob = gamma*node_dict[x] + \
+                               (1 - node_dict[x])*alpha*(beta**(summ))
+        #print(transition_rate_prob)
+        if uniform(0, 1) <= transition_rate_prob and node_dict[x] == 0:
+            node_dict[x] = 1
+        elif uniform(0, 1) <= transition_rate_prob and node_dict[x] == 1:
+            node_dict[x] = 0
+        print("Dictionary after ", x+1, "runs")
+        print("--------------------------------")
+        print(node_dict)
+        print("Number of zeros: ", len(node_dict) - sum(node_dict.values()))
+        print("Number of ones: ", sum(node_dict.values()))
+        
+        
+
+
+
 
 def CreateCSVfile():
     with open('test.csv', 'w') as csvfile:
@@ -171,12 +167,12 @@ def main():
     print("Nodes per generations is: ", NodesPerGeneration(generations, connections))
     TupleOrganizer(generations, connections) #generates graph
     print(graph) #prints list of connecttions generated in TupleOrganizer
-    draw_graph(graph) #Creates plot of Cayley Tree
+    #draw_graph(graph) #Creates plot of Cayley Tree
     initiateNodeDictionary() #creates inital state of dictionary
-    random_node_selector() #does 1 step of Monte Carlo with transtion rate
-    print("Nearest Neighbor Sum: ", NearestNeighborCalculator(8))
-    print(NearestNeighborFinder(8)) #prints list with nearest neighbors
-    print(NearestNeighborFinder(3))
+    #random_node_selector() #does 1 step of Monte Carlo with transtion rate
+    #print("Nearest Neighbor Sum: ", NearestNeighborCalculator(8))
+    #print(NearestNeighborFinder(8)) #prints list with nearest neighbors
+    #print(NearestNeighborFinder(3))
     monteCarlo() #runs Monte Carlo n-times
     #CreateCSVfile()
 
