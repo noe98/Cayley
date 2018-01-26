@@ -16,7 +16,7 @@ import csv
 
 gamma = .1
 beta = .2
-alpha = .5
+alpha = .1
 
 graph = list()
 node_dict = dict()
@@ -88,7 +88,7 @@ def NodeCalculator(generations, connections):
         number_nodes += (connections * (connections - 1)**(x - 1))
     return number_nodes
 
-def TupleOrganizer(generations, connections): #RENAME TO GRAPH CREATOR or something
+def TupleOrganizer(generations, connections):
     """This function generates the tuples for the Cayley Tree."""
     nodes = NodeCalculator(generations, connections)
     NodesPerGeneration(generations, connections)
@@ -117,7 +117,7 @@ def NearestNeighborFinder(node):
     for x in neighbors:
         if x[0] != node:
             neighbors_list.append(x[0])
-        elif x[1] != node: 
+        elif x[1] != node:
             neighbors_list.append(x[1])
     return neighbors_list
 
@@ -138,7 +138,7 @@ def random_node_selector():
         transition_rate_prob = gamma*node_dict[x] + (1 - node_dict[x])*alpha*(beta**(summ))
         print(transition_rate_prob)
 ##        rand_value = randint(0,2)
-##        node_dict[x] = rand_value
+##        node_dict[node] = rand_value
 ##    return node_dict
 
 def monteCarlo():
@@ -168,15 +168,14 @@ def CreateCSVfile():
 
 def main():
     print("The number of nodes is: ",NodeCalculator(generations, connections))
-    print("Nodes per generations is: ", NodesPerGeneration(generations, connections))
+    #print("Nodes per generations is: ", NodesPerGeneration(generations, connections))
     TupleOrganizer(generations, connections) #generates graph
     print(graph) #prints list of connecttions generated in TupleOrganizer
-    draw_graph(graph) #Creates plot of Cayley Tree
-    initiateNodeDictionary() #creates inital state of dictionary
+    #draw_graph(graph) #Creates plot of Cayley Tree
+    print(initiateNodeDictionary()) #creates inital state of dictionary
     random_node_selector() #does 1 step of Monte Carlo with transtion rate
-    print("Nearest Neighbor Sum: ", NearestNeighborCalculator(8))
-    print(NearestNeighborFinder(8)) #prints list with nearest neighbors
-    print(NearestNeighborFinder(3))
+    #print("Nearest Neighbor Sum: ", NearestNeighborCalculator(8))
+    #print(NearestNeighborFinder(8)) #prints list with nearest neighbors
     monteCarlo() #runs Monte Carlo n-times
     #CreateCSVfile()
 
