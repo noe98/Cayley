@@ -12,7 +12,7 @@ Code Adapted from: https://www.udacity.com/wiki/creating-network-graphs-with-pyt
 import networkx as nx
 import matplotlib.pyplot as plt
 from random import *
-import csv
+import xlwt
 
 gamma = .1
 beta = .2
@@ -133,19 +133,20 @@ def monteCarlo():
     print("Initial Dictionary")
     print("--------------------")
     print(node_dict)
-    for x in node_dict:
-        summ = NearestNeighborCalculator(x)
-        
-        #print("Node", x)
-        #print("Neigherest Neighbor Sum: ",summ)
-        transition_rate_prob = gamma*node_dict[x] + \
-                               (1 - node_dict[x])*alpha*(beta**(summ))
-        #print(transition_rate_prob)
-        if uniform(0, 1) <= transition_rate_prob and node_dict[x] == 0:
-            node_dict[x] = 1
-        elif uniform(0, 1) <= transition_rate_prob and node_dict[x] == 1:
-            node_dict[x] = 0
-        print("Dictionary after ", x+1, "runs")
+    for n in range(len(node_dict)):
+        for x in node_dict:
+            summ = NearestNeighborCalculator(x)
+            
+            #print("Node", x)
+            #print("Neigherest Neighbor Sum: ",summ)
+            transition_rate_prob = gamma*node_dict[x] + \
+                                   (1 - node_dict[x])*alpha*(beta**(summ))
+            #print(transition_rate_prob)
+            if uniform(0, 1) <= transition_rate_prob and node_dict[x] == 0:
+                node_dict[x] = 1
+            elif uniform(0, 1) <= transition_rate_prob and node_dict[x] == 1:
+                node_dict[x] = 0
+        print("Dictionary after ", n+1, "runs")
         print("--------------------------------")
         print(node_dict)
         print("Number of zeros: ", len(node_dict) - sum(node_dict.values()))
