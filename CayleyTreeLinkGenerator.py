@@ -13,6 +13,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 from random import *
 import xlwt
+import math
 
 gamma = .1
 beta = .2
@@ -130,47 +131,78 @@ def NearestNeighborCalculator(node):
 
 def monteCarlo():
     """Runs the Monte Carlo simulation the desired number of times."""
+    #LOOK LATER AT TRANSITION RATE OVERTIME FOR NODE
     print("Initial Dictionary")
     print("--------------------")
     print(node_dict)
-    for n in range(len(node_dict)):
+    time_steps = range(len(node_dict))
+
+    book = xlwt.Workbook(encoding="utf-8")
+    sheet1 = book.add_sheet("Sheet 1")
+    rows = list()
+    cols = list()
+    sheet1.write(0,0,"Time Step")
+    
+    for key in node_dict:
+        sheet1.write(key+1, 0,"Node " + str(key))
+        sheet1.write(0,key+1, key)
+
+    
+    for n in time_steps:
         for x in node_dict:
             summ = NearestNeighborCalculator(x)
-            
-            #print("Node", x)
-            #print("Neigherest Neighbor Sum: ",summ)
+    
             transition_rate_prob = gamma*node_dict[x] + \
                                    (1 - node_dict[x])*alpha*(beta**(summ))
             #print(transition_rate_prob)
+            
             if uniform(0, 1) <= transition_rate_prob and node_dict[x] == 0:
                 node_dict[x] = 1
+                sheet1.write(x+1,n+1,node_dict[x])
+                
             elif uniform(0, 1) <= transition_rate_prob and node_dict[x] == 1:
                 node_dict[x] = 0
+                sheet1.write(x+1,n+1,node_dict[x])
+            else:
+                sheet1.write(x+1,n+1,node_dict[x])
         print("Dictionary after ", n+1, "runs")
         print("--------------------------------")
         print(node_dict)
         print("Number of zeros: ", len(node_dict) - sum(node_dict.values()))
         print("Number of ones: ", sum(node_dict.values()))
 
-def CreateCSVfile():
-    with open('test.csv', 'w') as csvfile:
-        filewriter = csv.writer(csvfile, delimiter=',')
-        filewriter.writerows(graph)
+    book.save("trial.xls")
 
+def excel_generator():
+    """Generates an excel worksheet with the states for each node for every
+    timestep"""
+    global sheet1
+    book = xlwt.Workbook(encoding="utf-8")
+    sheet1 = book.add_sheet("Sheet 1")
+    rows = list()
+    cols = list()
+    sheet1.write(0,0,"Time Step")
+    for key in node_dict:
+        sheet1.write(key+1, 0,"Node " + str(key))
+        sheet1.write(0,key+1, key)
+##    for key in node_dict:
+##        sheet1.write(key+1,1,node_dict[key])
+    book.save("trial.xls")
+    
 
 def main():
     print("The number of nodes is: ",NodeCalculator(generations, connections))
     print("Nodes per generations is: ", NodesPerGeneration(generations, connections))
     TupleOrganizer(generations, connections) #generates graph
     print(graph) #prints list of connecttions generated in TupleOrganizer
-    #draw_graph(graph) #Creates plot of Cayley Tree
     initiateNodeDictionary() #creates inital state of dictionary
     #random_node_selector() #does 1 step of Monte Carlo with transtion rate
     #print("Nearest Neighbor Sum: ", NearestNeighborCalculator(8))
     #print(NearestNeighborFinder(8)) #prints list with nearest neighbors
     #print(NearestNeighborFinder(3))
+    #excel_generator()
     monteCarlo() #runs Monte Carlo n-times
-    #CreateCSVfile()
+    draw_graph(graph) #Creates plot of Cayley Tree
 
 if __name__ == "__main__":
     main()
