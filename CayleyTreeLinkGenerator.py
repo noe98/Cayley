@@ -19,11 +19,29 @@ class CayleyTree(object):
     """Creates the Cayley Tree object."""
 
     def __init__(self):
+        """Initializes an empty list reserved for the tuples representing 
+           each link, a dictionary for nodes and their states, and the
+           constants: alpha, gamma, and beta in the transition rate."""
         self.link_list = list()
         self.node_state_dict = dict()
         self.gamma = .1
         self.beta = .2
         self.alpha = .5
+
+    def gammaChanger(self,newGamma):
+        """Changes the value of gamma from the default value
+           of 0.1. Must input a float between 0 and 1."""
+        self.gamma = newGamma
+        
+    def betaChanger(self,newBeta):
+        """Changes the value of beta from the default value
+           of 0.2. Must input a float between 0 and 1."""
+        self.beta = newBeta
+
+    def alphaChanger(self,newAlpha):
+        """Changes the value of beta from the default value
+           of 0.5. Must input a float between 0 and 1."""
+        self.alpha = newAlpha
         
 
 gamma = .1
