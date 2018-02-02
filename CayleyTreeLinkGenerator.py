@@ -15,6 +15,17 @@ from random import *
 import xlwt
 import math
 
+class CayleyTree(object):
+    """Creates the Cayley Tree object."""
+
+    def __init__(self):
+        self.link_list = list()
+        self.node_state_dict = dict()
+        self.gamma = .1
+        self.beta = .2
+        self.alpha = .5
+        
+
 gamma = .1
 beta = .2
 alpha = .5
