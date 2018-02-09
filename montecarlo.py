@@ -27,7 +27,9 @@ class MonteCarlo(object):
 
         #HERE (1)
         for n in time_steps:
-            for x in dicty:
+
+            neighbor_state_cache = dicty
+            for x in neighbor_state_cache:
                 summ = self.NearestNeighborCalculator(x,dicty,graph)
         
                 transition_rate_prob = gamma*dicty[x] + \
