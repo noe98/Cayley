@@ -8,13 +8,12 @@ class MonteCarlo(object):
     
     def __init__(self,state_d,alpha,beta,gamma,excel,graph):
         """Runs the Monte Carlo simulation the desired number of times."""
-        #LOOK LATER AT TRANSITION RATE OVERTIME FOR NODE
-        #Store previous and new previous in cache for staggered comparison (1)
         print("Initial Dictionary")
         print("--------------------")
         print(state_d)
         time_steps = range(len(state_d))
         if(excel):
+<<<<<<< HEAD
             book,sheet = self.makeExcel(state_d)
         #HERE (1)
         for n in time_steps:
@@ -34,6 +33,43 @@ class MonteCarlo(object):
                 if(excel):
                     self.writeExcel(sheet,x,n,state_d[x])
             self.endTest(state_d,n)
+=======
+            book = xlwt.Workbook(encoding="utf-8")
+            sheet1 = book.add_sheet("Sheet 1")
+            rows = list()
+            cols = list()
+            sheet1.write(0,0,"Time Step")
+        
+            for key in state_d:
+                sheet1.write(key+1, 0,"Node " + str(key))
+                sheet1.write(0,key+1, key)               
+
+        
+        for n in time_steps:
+            
+            neighbor_state_cache = state_d
+            for x in neighbor_state_cache:
+                summ = self.NearestNeighborCalculator(x,state_d,graph)
+
+                transition_rate_prob = gamma*state_d[x] + \
+                                       (1 - state_d[x])*alpha*(beta**(summ))
+                
+                if uniform(0, 1) <= transition_rate_prob and state_d[x] == 0:
+                    state_d[x] = 1
+                    if(excel):
+                        sheet1.write(x+1,n+1,state_d[x])
+                    
+                elif uniform(0, 1) <= transition_rate_prob and state_d[x] == 1:
+                    state_d[x] = 0
+                    if(excel):
+                        sheet1.write(x+1,n+1,state_d[x])
+                else:
+                    if(excel):
+                        sheet1.write(x+1,n+1,state_d[x])
+
+            
+            self.test(state_d,n)
+>>>>>>> 052cd7b7350cd3030c02cdfeaf46bfcdeef46a60
         if(excel):
             self.saveExcel(book)
             
@@ -79,9 +115,19 @@ class MonteCarlo(object):
     def saveExcel(self,book):
         book.save("trial.xls")
             
+<<<<<<< HEAD
     def endTest(self,state_d,i):
+=======
+    def test(self,state_d,i):
+        
+>>>>>>> 052cd7b7350cd3030c02cdfeaf46bfcdeef46a60
         print("Dictionary after ", i+1, "runs")
         print("--------------------------------")
         print(state_d)
         print("Number of zeros: ", self.getZeros(state_d))
         print("Number of ones: ", self.getOnes(state_d))
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 052cd7b7350cd3030c02cdfeaf46bfcdeef46a60
