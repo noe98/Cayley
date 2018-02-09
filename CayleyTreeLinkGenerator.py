@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 from random import *
 import xlwt
 import math
-from cayley import CayleyTree
+from cayleytree import CayleyTree
 
 excel = False
 gamma = .1
@@ -207,7 +207,8 @@ def main():
     #print("Nearest Neighbor Sum: ", NearestNeighborCalculator(8))
     #print(NearestNeighborFinder(8)) #prints list with nearest neighbors
     #print(NearestNeighborFinder(3))
-    excel_generator(node_dict)
+    if(excel):
+        excel_generator(node_dict)
     monteCarlo(node_dict) #runs Monte Carlo n-times
     draw_graph(graph) #Creates plot of Cayley Tree
 
