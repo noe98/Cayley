@@ -8,8 +8,6 @@ class MonteCarlo(object):
     
     def __init__(self,dicty,alpha,beta,gamma,excel,graph):
         """Runs the Monte Carlo simulation the desired number of times."""
-        #LOOK LATER AT TRANSITION RATE OVERTIME FOR NODE
-        #Store previous and new previous in cache for staggered comparison (1)
         print("Initial Dictionary")
         print("--------------------")
         print(dicty)
@@ -23,18 +21,17 @@ class MonteCarlo(object):
         
             for key in dicty:
                 sheet1.write(key+1, 0,"Node " + str(key))
-                sheet1.write(0,key+1, key)
+                sheet1.write(0,key+1, key)               
 
-        #HERE (1)
+        
         for n in time_steps:
-
+            
             neighbor_state_cache = dicty
             for x in neighbor_state_cache:
                 summ = self.NearestNeighborCalculator(x,dicty,graph)
-        
+
                 transition_rate_prob = gamma*dicty[x] + \
                                        (1 - dicty[x])*alpha*(beta**(summ))
-                #print(transition_rate_prob)
                 
                 if uniform(0, 1) <= transition_rate_prob and dicty[x] == 0:
                     dicty[x] = 1
@@ -48,6 +45,8 @@ class MonteCarlo(object):
                 else:
                     if(excel):
                         sheet1.write(x+1,n+1,dicty[x])
+
+            
             self.test(dicty,n)
         if(excel):
             book.save("trial.xls")
@@ -77,8 +76,11 @@ class MonteCarlo(object):
         return neighbors_list
             
     def test(self,dicty,i):
+        
         print("Dictionary after ", i+1, "runs")
         print("--------------------------------")
         print(dicty)
         print("Number of zeros: ", self.getZeros(dicty))
         print("Number of ones: ", self.getOnes(dicty))
+
+
