@@ -14,77 +14,22 @@ import matplotlib.pyplot as plt
 from random import *
 import xlwt
 import math
+from cayley import CayleyTree
 
-class CayleyTree(object):
-    """Creates the Cayley Tree object. The class needs integer values
-       for number of generations and links."""
-    
-    def __init__(self,generations,links):
-        """Initializes an empty list reserved for the tuples
-           representing each link, a dictionary for nodes and their states,
-           and the constants: alpha, gamma, and beta in the transition rate."""
-        self.generations = generations
-        self.links = links
-        self.link_list = list()
-        self.node_state_dict = dict()
-        self.gamma = .1
-        self.beta = .2
-        self.alpha = .5
-
-    def gammaChanger(self,newGamma):
-        """Changes the value of gamma from the default value
-           of 0.1. Must input a float between 0 and 1."""
-        self.gamma = newGamma
-        
-    def betaChanger(self,newBeta):
-        """Changes the value of beta from the default value
-           of 0.2. Must input a float between 0 and 1."""
-        self.beta = newBeta
-
-    def alphaChanger(self,newAlpha):
-        """Changes the value of beta from the default value
-           of 0.5. Must input a float between 0 and 1."""
-        self.alpha = newAlpha
-
-    def nodeCalculator(self):
-        """Calculates the total number of nodes with a Cayley Tree and the
-           list of nodes per generation. Returns those two data types as a
-           tuple."""
-        list_of_nodes_by_generation = [1]
-        for x in range(1,self.generations+1):
-            nodes = (self.links * (self.links - 1)**(x - 1))
-            list_of_nodes_by_generation.append(nodes)
-        return (sum(list_of_nodes_by_generation),list_of_nodes_by_generation)
-
-    def linkCreator(self): 
-        """Generates the tuples that represents each link in the Cayley Tree
-           graph. It appends each tuple to the link_list list that is iniitiated
-           when the Cayley Tree object is created."""
-        self.nodeCalculator()
-        exclude = self.nodeCalculator()[1][-1]
-        for x in range(1,self.links + 1):
-            self.link_list.append((0,x))
-        nodes_done = self.links + 1
-        if nodes_done < self.nodeCalculator()[0]:
-            for x in range(1,self.nodeCalculator()[0] - exclude):
-                for y in range(1,self.links):
-                    self.link_list.append((x,nodes_done))
-                    nodes_done += 1
-        
-
+excel = False
 gamma = .1
 beta = .2
 alpha = .5
 
 graph = list()
 node_dict = dict()
-generations = int(input("What is the number of generations? "))
-connections = int(input("What is the number of connections? "))
+generations = int(input("Number of generations: "))
+connections = int(input("Number of connections: "))
 
 def draw_graph(graph, labels=None, graph_layout='spring',
                node_size=1000, node_color='cyan', node_alpha=0.3,
                node_text_size=12,
-               edge_color='blue', edge_alpha=0.3, edge_tickness=2,
+               edge_color='blue', edge_alpha=0.3, edge_thickness=2,
                edge_text_pos=0.3,
                text_font='sans-serif'):
     """Method that physically draws the graph based on generations and connections"""
@@ -113,7 +58,7 @@ def draw_graph(graph, labels=None, graph_layout='spring',
     # draw graph
     nx.draw_networkx_nodes(G,graph_pos,node_size=node_size, 
                            alpha=node_alpha, node_color=node_color)
-    nx.draw_networkx_edges(G,graph_pos,width=edge_tickness,
+    nx.draw_networkx_edges(G,graph_pos,width=edge_thickness,
                            alpha=edge_alpha,edge_color=edge_color)
     nx.draw_networkx_labels(G, graph_pos,font_size=node_text_size,
                             font_family=text_font)
@@ -132,7 +77,7 @@ def draw_graph(graph, labels=None, graph_layout='spring',
 
 def NodesPerGeneration(generations, connections):
     """This functions takes the number of generations and connections and
-       returns a list of nodes per generation."""
+       returns a list of  nodes per generation."""
     lyst_of_nodes_by_generation = [1]
     for x in range(1,generations+1):
         nodes = (connections * (connections - 1)**(x - 1))
@@ -161,13 +106,13 @@ def TupleOrganizer(generations, connections): #RENAME TO GRAPH CREATOR or someth
                 graph.append((x,nodes_done))
                 nodes_done += 1
 
-def initiateNodeDictionary():
+def initiateNodeDictionary(dicty):
     """Creates an initial dictioary with nodes as integer types in the key and
        assigns a 0 to represent the unfilled state as the value.
        The key in dictionary is node, the value is the state."""
     for x in range(NodeCalculator(generations,connections)):
-        node_dict[x] = 0
-    return node_dict
+        dicty[x] = 0
+    return dicty
 
 def NearestNeighborFinder(node):
     """Finds the nodes that are neighbors to the node in question."""
@@ -180,58 +125,62 @@ def NearestNeighborFinder(node):
             neighbors_list.append(x[1])
     return neighbors_list
 
-def NearestNeighborCalculator(node):
+def NearestNeighborCalculator(node,dicty):
     """Calculates the sum of the nearest neighbors for a node."""
     sum_of_neighbors = 0
     for node in NearestNeighborFinder(node):
-        sum_of_neighbors += node_dict[node]
+        sum_of_neighbors += dicty[node]
     return sum_of_neighbors
 
-def monteCarlo():
+def monteCarlo(dicty):
     """Runs the Monte Carlo simulation the desired number of times."""
     #LOOK LATER AT TRANSITION RATE OVERTIME FOR NODE
+    #Store previous and new previous in cache for staggered comparison (1)
     print("Initial Dictionary")
     print("--------------------")
-    print(node_dict)
-    time_steps = range(len(node_dict))
-
-    book = xlwt.Workbook(encoding="utf-8")
-    sheet1 = book.add_sheet("Sheet 1")
-    rows = list()
-    cols = list()
-    sheet1.write(0,0,"Time Step")
+    print(dicty)
+    time_steps = range(len(dicty))
+    if(excel):
+        book = xlwt.Workbook(encoding="utf-8")
+        sheet1 = book.add_sheet("Sheet 1")
+        rows = list()
+        cols = list()
+        sheet1.write(0,0,"Time Step")
     
-    for key in node_dict:
-        sheet1.write(key+1, 0,"Node " + str(key))
-        sheet1.write(0,key+1, key)
+        for key in dicty:
+            sheet1.write(key+1, 0,"Node " + str(key))
+            sheet1.write(0,key+1, key)
 
-    
+    #HERE (1)
     for n in time_steps:
-        for x in node_dict:
-            summ = NearestNeighborCalculator(x)
+        for x in dicty:
+            summ = NearestNeighborCalculator(x,dicty)
     
-            transition_rate_prob = gamma*node_dict[x] + \
-                                   (1 - node_dict[x])*alpha*(beta**(summ))
+            transition_rate_prob = gamma*dicty[x] + \
+                                   (1 - dicty[x])*alpha*(beta**(summ))
             #print(transition_rate_prob)
             
-            if uniform(0, 1) <= transition_rate_prob and node_dict[x] == 0:
-                node_dict[x] = 1
-                sheet1.write(x+1,n+1,node_dict[x])
+            if uniform(0, 1) <= transition_rate_prob and dicty[x] == 0:
+                dicty[x] = 1
+                if(excel):
+                    sheet1.write(x+1,n+1,dicty[x])
                 
-            elif uniform(0, 1) <= transition_rate_prob and node_dict[x] == 1:
-                node_dict[x] = 0
-                sheet1.write(x+1,n+1,node_dict[x])
+            elif uniform(0, 1) <= transition_rate_prob and dicty[x] == 1:
+                dicty[x] = 0
+                if(excel):
+                    sheet1.write(x+1,n+1,dicty[x])
             else:
-                sheet1.write(x+1,n+1,node_dict[x])
+                if(excel):
+                    sheet1.write(x+1,n+1,dicty[x])
         print("Dictionary after ", n+1, "runs")
         print("--------------------------------")
-        print(node_dict)
-        print("Number of zeros: ", len(node_dict) - sum(node_dict.values()))
-        print("Number of ones: ", sum(node_dict.values()))
+        print(dicty)
+        print("Number of zeros: ", len(dicty) - sum(dicty.values()))
+        print("Number of ones: ", sum(dicty.values()))
+    if(excel):
+        book.save("trial.xls")
 
-    book.save("trial.xls")
-
-def excel_generator():
+def excel_generator(dicty):
     """Generates an excel worksheet with the states for each node for every
     timestep"""
     global sheet1
@@ -240,11 +189,11 @@ def excel_generator():
     rows = list()
     cols = list()
     sheet1.write(0,0,"Time Step")
-    for key in node_dict:
+    for key in dicty:
         sheet1.write(key+1, 0,"Node " + str(key))
         sheet1.write(0,key+1, key)
-##    for key in node_dict:
-##        sheet1.write(key+1,1,node_dict[key])
+##    for key in dicty:
+##        sheet1.write(key+1,1,dicty[key])
     book.save("trial.xls")
     
 
@@ -253,13 +202,13 @@ def main():
     print("Nodes per generations is: ", NodesPerGeneration(generations, connections))
     TupleOrganizer(generations, connections) #generates graph
     print(graph) #prints list of connecttions generated in TupleOrganizer
-    initiateNodeDictionary() #creates inital state of dictionary
+    initiateNodeDictionary(node_dict) #creates inital state of dictionary
     #random_node_selector() #does 1 step of Monte Carlo with transtion rate
     #print("Nearest Neighbor Sum: ", NearestNeighborCalculator(8))
     #print(NearestNeighborFinder(8)) #prints list with nearest neighbors
     #print(NearestNeighborFinder(3))
-    #excel_generator()
-    monteCarlo() #runs Monte Carlo n-times
+    excel_generator(node_dict)
+    monteCarlo(node_dict) #runs Monte Carlo n-times
     draw_graph(graph) #Creates plot of Cayley Tree
 
 if __name__ == "__main__":
