@@ -17,7 +17,7 @@ import math
 from cayleytree import CayleyTree
 from montecarlo import MonteCarlo
 
-excel = False
+excel = True
 gamma = .1
 beta = .2
 alpha = .5
@@ -107,98 +107,17 @@ def TupleOrganizer(generations, connections): #RENAME TO GRAPH CREATOR or someth
                 graph.append((x,nodes_done))
                 nodes_done += 1
 
-def initiateNodeDictionary(dicty):
+def initiateNodeDictionary(state_d):
     """Creates an initial dictioary with nodes as integer types in the key and
        assigns a 0 to represent the unfilled state as the value.
        The key in dictionary is node, the value is the state."""
     for x in range(NodeCalculator(generations,connections)):
-        dicty[x] = 0
-    return dicty
+        state_d[x] = 0
+    return state_d
 
-##def NearestNeighborFinder(node):
-##    """Finds the nodes that are neighbors to the node in question."""
-##    neighbors = list(filter(lambda x: x.count(node) > 0, graph))
-##    neighbors_list = list()
-##    for x in neighbors:
-##        if x[0] != node:
-##            neighbors_list.append(x[0])
-##        elif x[1] != node: 
-##            neighbors_list.append(x[1])
-##    return neighbors_list
-##
-##def NearestNeighborCalculator(node,dicty):
-##    """Calculates the sum of the nearest neighbors for a node."""
-##    sum_of_neighbors = 0
-##    for node in NearestNeighborFinder(node):
-##        sum_of_neighbors += dicty[node]
-##    return sum_of_neighbors
-
-def testMonte(dicty,graph):
+def testMonte(state_d,graph):
     """Runs the Monte Carlo simulation the desired number of times."""
-    #LOOK LATER AT TRANSITION RATE OVERTIME FOR NODE
-    #Store previous and new previous in cache for staggered comparison (1)
-    monte = MonteCarlo(dicty,alpha,beta,gamma,excel,graph)
-##    print("Initial Dictionary")
-##    print("--------------------")
-##    print(dicty)
-##    time_steps = range(len(dicty))
-##    if(excel):
-##        book = xlwt.Workbook(encoding="utf-8")
-##        sheet1 = book.add_sheet("Sheet 1")
-##        rows = list()
-##        cols = list()
-##        sheet1.write(0,0,"Time Step")
-##    
-##        for key in dicty:
-##            sheet1.write(key+1, 0,"Node " + str(key))
-##            sheet1.write(0,key+1, key)
-##
-##    #HERE (1)
-##    for n in time_steps:
-##        for x in dicty:
-##            summ = NearestNeighborCalculator(x,dicty)
-##    
-##            transition_rate_prob = gamma*dicty[x] + \
-##                                   (1 - dicty[x])*alpha*(beta**(summ))
-##            #print(transition_rate_prob)
-##            
-##            if uniform(0, 1) <= transition_rate_prob and dicty[x] == 0:
-##                dicty[x] = 1
-##                if(excel):
-##                    sheet1.write(x+1,n+1,dicty[x])
-##                
-##            elif uniform(0, 1) <= transition_rate_prob and dicty[x] == 1:
-##                dicty[x] = 0
-##                if(excel):
-##                    sheet1.write(x+1,n+1,dicty[x])
-##            else:
-##                if(excel):
-##                    sheet1.write(x+1,n+1,dicty[x])
-####        print("Dictionary after ", n+1, "runs")
-####        print("--------------------------------")
-####        print(dicty)
-####        print("Number of zeros: ", len(dicty) - sum(dicty.values()))
-####        print("Number of ones: ", sum(dicty.values()))
-##
-##    if(excel):
-##        book.save("trial.xls")
-
-def excel_generator(dicty):
-    """Generates an excel worksheet with the states for each node for every
-    timestep"""
-    global sheet1
-    book = xlwt.Workbook(encoding="utf-8")
-    sheet1 = book.add_sheet("Sheet 1")
-    rows = list()
-    cols = list()
-    sheet1.write(0,0,"Time Step")
-    for key in dicty:
-        sheet1.write(key+1, 0,"Node " + str(key))
-        sheet1.write(0,key+1, key)
-##    for key in dicty:
-##        sheet1.write(key+1,1,dicty[key])
-    book.save("trial.xls")
-    
+    monte = MonteCarlo(state_d,alpha,beta,gamma,excel,graph)
 
 def main():
     print("The number of nodes is: ",NodeCalculator(generations, connections))
@@ -210,8 +129,6 @@ def main():
     #print("Nearest Neighbor Sum: ", NearestNeighborCalculator(8))
     #print(NearestNeighborFinder(8)) #prints list with nearest neighbors
     #print(NearestNeighborFinder(3))
-    if(excel):
-        excel_generator(node_dict)
     testMonte(node_dict,graph) #runs Monte Carlo n-times
     draw_graph(graph) #Creates plot of Cayley Tree
 
