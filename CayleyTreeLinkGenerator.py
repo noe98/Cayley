@@ -17,7 +17,7 @@ import math
 from cayleytree import CayleyTree
 from montecarlo import MonteCarlo
 
-excel = False
+excel = True
 gamma = .1
 beta = .2
 alpha = .5

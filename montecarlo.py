@@ -11,14 +11,13 @@ class MonteCarlo(object):
 ##        self.startTest(state_d)
         if(excel):
             book,sheet = self.makeExcel(state_d)
-        self.simulate(state_d,alpha,beta,gamma,graph)
+        lyst = self.simulate(state_d,alpha,beta,gamma,graph)
         if(excel):
-            for n in range(len(state_d)):
-                for x in range(len(state_d)):
-                    self.writeExcel(sheet,x,n)
-##            self.endTest(state_d,n)
-        if(excel):
+            for n in range(len(lyst)):
+                for x in range(len(lyst[n])):
+                    self.writeExcel(sheet,x,n,lyst[n][x])
             self.saveExcel(book)
+##            self.endTest(state_d,n)
 
     def simulate(self, _dict,a,b,g,graph):
         time_steps = range(len(_dict))
@@ -28,7 +27,7 @@ class MonteCarlo(object):
             cache = dict()
             for x in range(len(_dict)):
                 summ = self.NearestNeighborCalculator(x,list_cache[n],graph)
-                print("summ: ", summ)
+##                print("summ: ", summ)
                 transition_rate_prob = g*list_cache[n][x] + \
                                        (1 - list_cache[n][x])*a*(b**(summ))
                 if uniform(0, 1) <= transition_rate_prob and list_cache[n][x] == 0:
@@ -39,9 +38,10 @@ class MonteCarlo(object):
                 else:
                     cache[x] = list_cache[n][x]
                 
-                print("cache: ",cache)
+##                print("cache: ",cache)
             list_cache.append(cache)
-            print("Previous cache: ", list_cache[n])
+        return list_cache
+##            print("Previous cache: ", list_cache[n])
 
 ##            self.writeExcel(sheet,x,n,state_d[x])
                             
