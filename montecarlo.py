@@ -22,19 +22,27 @@ class MonteCarlo(object):
 
     def simulate(self, _dict,a,b,g,graph):
         time_steps = range(len(_dict))
+        list_cache = list()
+        list_cache.append(_dict)
         for n in time_steps:
-
-            neighbor_state_cache = _dict
-            for x in neighbor_state_cache:
-                summ = self.NearestNeighborCalculator(x,_dict,graph)
-        
-                transition_rate_prob = g*_dict[x] + \
-                                       (1 - _dict[x])*a*(b**(summ))
+            cache = dict()
+            for x in range(len(_dict)):
+                summ = self.NearestNeighborCalculator(x,list_cache[n],graph)
+                print("summ: ", summ)
+                transition_rate_prob = g*list_cache[n][x] + \
+                                       (1 - list_cache[n][x])*a*(b**(summ))
+                if uniform(0, 1) <= transition_rate_prob and list_cache[n][x] == 0:
+                    cache[x] = 1 #uniform is from random library
+                elif uniform(0, 1) <= transition_rate_prob and \
+                     list_cache[n][x] == 1:
+                    cache[x] = 0 #uniform is from random library
+                else:
+                    cache[x] = list_cache[n][x]
                 
-                if uniform(0, 1) <= transition_rate_prob and _dict[x] == 0:
-                    _dict[x] = 1
-                elif uniform(0, 1) <= transition_rate_prob and _dict[x] == 1:
-                    _dict[x] = 0
+                print("cache: ",cache)
+            list_cache.append(cache)
+            print("Previous cache: ", list_cache[n])
+
 ##            self.writeExcel(sheet,x,n,state_d[x])
                             
     def getZeros(self,state_dict):

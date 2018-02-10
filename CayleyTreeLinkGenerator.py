@@ -130,7 +130,7 @@ def main():
     #print(NearestNeighborFinder(8)) #prints list with nearest neighbors
     #print(NearestNeighborFinder(3))
     testMonte(node_dict,graph) #runs Monte Carlo n-times
-    draw_graph(graph) #Creates plot of Cayley Tree
+    #draw_graph(graph) #Creates plot of Cayley Tree
 
 if __name__ == "__main__":
     main()
