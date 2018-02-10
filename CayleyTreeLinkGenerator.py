@@ -17,7 +17,7 @@ import math
 from cayleytree import CayleyTree
 from montecarlo import MonteCarlo
 
-excel = True
+excel = False
 gamma = .1
 beta = .2
 alpha = .5
@@ -120,10 +120,10 @@ def testMonte(state_d,graph):
     monte = MonteCarlo(state_d,alpha,beta,gamma,excel,graph)
 
 def main():
-    print("The number of nodes is: ",NodeCalculator(generations, connections))
-    print("Nodes per generations is: ", NodesPerGeneration(generations, connections))
+##    print("The number of nodes is: ",NodeCalculator(generations, connections))
+##    print("Nodes per generations is: ", NodesPerGeneration(generations, connections))
     TupleOrganizer(generations, connections) #generates graph
-    print(graph) #prints list of connecttions generated in TupleOrganizer
+##    print(graph) #prints list of connecttions generated in TupleOrganizer
     initiateNodeDictionary(node_dict) #creates inital state of dictionary
     #random_node_selector() #does 1 step of Monte Carlo with transtion rate
     #print("Nearest Neighbor Sum: ", NearestNeighborCalculator(8))

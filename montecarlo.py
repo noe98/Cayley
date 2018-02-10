@@ -8,40 +8,40 @@ class MonteCarlo(object):
     
     def __init__(self,state_d,alpha,beta,gamma,excel,graph):
         """Runs the Monte Carlo simulation the desired number of times."""
-        #LOOK LATER AT TRANSITION RATE OVERTIME FOR NODE
-        #Store previous and new previous in cache for staggered comparison (1)
-        print("Initial Dictionary")
-        print("--------------------")
-        print(state_d)
-        time_steps = range(len(state_d))
+##        self.startTest(state_d)
         if(excel):
             book,sheet = self.makeExcel(state_d)
-        #HERE (1)
-        for n in time_steps:
-
-            neighbor_state_cache = state_d
-            for x in neighbor_state_cache:
-                summ = self.NearestNeighborCalculator(x,state_d,graph)
-        
-                transition_rate_prob = gamma*state_d[x] + \
-                                       (1 - state_d[x])*alpha*(beta**(summ))
-                #print(transition_rate_prob)
-                
-                if uniform(0, 1) <= transition_rate_prob and state_d[x] == 0:
-                    state_d[x] = 1
-                elif uniform(0, 1) <= transition_rate_prob and state_d[x] == 1:
-                    state_d[x] = 0
-                if(excel):
-                    self.writeExcel(sheet,x,n,state_d[x])
-            self.endTest(state_d,n)
+        self.simulate(state_d,alpha,beta,gamma,graph)
+        if(excel):
+            for n in range(len(state_d)):
+                for x in range(len(state_d)):
+                    self.writeExcel(sheet,x,n)
+##            self.endTest(state_d,n)
         if(excel):
             self.saveExcel(book)
-            
-    def getZeros(self,state_d):
-        return len(state_d) - sum(state_d.values())
+
+    def simulate(self, _dict,a,b,g,graph):
+        time_steps = range(len(_dict))
+        for n in time_steps:
+
+            neighbor_state_cache = _dict
+            for x in neighbor_state_cache:
+                summ = self.NearestNeighborCalculator(x,_dict,graph)
+        
+                transition_rate_prob = g*_dict[x] + \
+                                       (1 - _dict[x])*a*(b**(summ))
+                
+                if uniform(0, 1) <= transition_rate_prob and _dict[x] == 0:
+                    _dict[x] = 1
+                elif uniform(0, 1) <= transition_rate_prob and _dict[x] == 1:
+                    _dict[x] = 0
+##            self.writeExcel(sheet,x,n,state_d[x])
+                            
+    def getZeros(self,state_dict):
+        return len(state_dict) - sum(state_dict.values())
     
-    def getOnes(self,state_d):
-        return sum(state_d.values())
+    def getOnes(self,state_dict):
+        return sum(state_dict.values())
 
     def NearestNeighborCalculator(self,node,state_d,graph):
         """Calculates the sum of the nearest neighbors for a node."""
@@ -78,7 +78,12 @@ class MonteCarlo(object):
 
     def saveExcel(self,book):
         book.save("trial.xls")
-            
+
+    def startTest(self,state_d):
+        print("Initial Dictionary")
+        print("--------------------")
+        print(state_d)
+        
     def endTest(self,state_d,i):
         print("Dictionary after ", i+1, "runs")
         print("--------------------------------")
