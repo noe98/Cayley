@@ -8,11 +8,6 @@ which allow for some basic analysis of the class such as number of nodes
 and nodes per generation. 
 """
 
-import networkx as nx
-import matplotlib.pyplot as plt
-from random import *
-import xlwt
-import math
 
 class CayleyTree(object):
     """Creates the Cayley Tree object. The class needs integer values
