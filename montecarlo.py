@@ -27,7 +27,7 @@ class MonteCarlo(object):
             cache = dict()
             for x in range(len(_dict)):
                 summ = self.NearestNeighborCalculator(x,list_cache[n],graph)
-##                print("summ: ", summ)
+                print("summ: ", summ)
                 transition_rate_prob = g*list_cache[n][x] + \
                                        (1 - list_cache[n][x])*a*(b**(summ))
                 if uniform(0, 1) <= transition_rate_prob and list_cache[n][x] == 0:
@@ -38,7 +38,7 @@ class MonteCarlo(object):
                 else:
                     cache[x] = list_cache[n][x]
                 
-##                print("cache: ",cache)
+            print("cache: ",cache)
             list_cache.append(cache)
         return list_cache
 ##            print("Previous cache: ", list_cache[n])
