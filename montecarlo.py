@@ -2,23 +2,25 @@
 Authors: Justin Pusztay, Matt Lubas, and Griffin Noe
 Filename: montecarlo.py
 
-This file contains the MonteCarlo class. It currently is a subclass of the
-CayleyTree class. It takes a Cayley Tree and performs a MonteCarlo simullation
-on it. Also there exists methods that allow data to be analyzed and exported.
+This file contains the MonteCarlo class. It creates a Cayley Tree and performs
+a MonteCarlo simullation on it. Also there exists methods that allow data
+to be analyzed and exported.
 """
 
 import networkx as nx
 import matplotlib.pyplot as plt
 import random
-import xlwt
+import xlsxwriter #http://xlsxwriter.readthedocs.io/tutorial01.html 
 import math
 
 from cayleytree import CayleyTree
 
 class MonteCarlo(object):
 
-    #state_d will be the new initial dictionary with the three possibilites
-    #graph will be CayleyTree.linkCreator()
+    #Note to Matt and Griffin:
+    #state_d will be the new initial dictionary with the three possibilites:
+    #all from empty, random % filled, and the 0 node is filled
+    #graph will now be self.tree.linkCreator()
     
     def __init__(self, generations, links):
         """Runs the Monte Carlo simulation the desired number of times."""
@@ -26,6 +28,7 @@ class MonteCarlo(object):
         self.generations = generations
         self.links = links
         self.state_d = dict()
+        
 
     def setGamma(self,gamma):
         """Sets the desired gamma value for the monte carlo simulation"""
@@ -75,93 +78,68 @@ class MonteCarlo(object):
         """Calculates the number of nodes in the filled state- a value of 1."""
         return sum(self.state_d.values())
 
-            
+    def nearestNeighborCalculator(self,node,state_d):
+        """Takes the node number and caculates the sum of the neartest
+           nieghbors."""
+        sum_of_neighbors = 0
+        for node in self.nearestNeighborFinder(node):
+            sum_of_neighbors += state_d[node]
+        return sum_of_neighbors
 
+    def nearestNeighborFinder(self,node):
+        """Finds the nodes that are neighbors to the node in question."""
+        neighbors = list(filter(lambda x: x.count(node) > 0, self.tree.linkCreator()))
+        neighbors_list = list()
+        for x in neighbors:
+            if x[0] != node:
+                neighbors_list.append(x[0])
+            elif x[1] != node: 
+                neighbors_list.append(x[1])
+        return neighbors_list
 
-##        self.startTest(state_d)
-##        if(excel):
-##            book,sheet = self.makeExcel(state_d)
-##        lyst = self.simulate(state_d,alpha,beta,gamma,graph)
-##        if(excel):
-##            for n in range(len(lyst)):
-##                for x in range(len(lyst[n])):
-##                    self.writeExcel(sheet,x,n,lyst[n][x])
-##            self.saveExcel(book)
-##            self.endTest(state_d,n)
+    def simulate(self):
+        """Simulates the Monte Carlo simulation on the Cayley Tree. Runs the
+           simulation an equal number of times to the number of nodes in the
+           tree. Returns a list filled with dictionaries, each containing the state
+           of each node after a certain timestep."""
+        time_steps = range(len(self.state_d)) #should this be optional variable?
+        list_cache = list()
+        list_cache.append(self.state_d)
+        for n in time_steps:
+            cache = dict()
+            for x in time_steps:
+                summ = self.nearestNeighborCalculator(x,list_cache[n])
+                #print("summ: ", summ)
+                transition_rate_prob = self.gamma*list_cache[n][x] + \
+                                       (1 - list_cache[n][x])*self.alpha*(self.beta\
+                                                                          **(summ))
+                if random.uniform(0, 1) <= transition_rate_prob and list_cache[n][x] == 0:
+                    cache[x] = 1 
+                elif random.uniform(0, 1) <= transition_rate_prob and \
+                     list_cache[n][x] == 1:
+                    cache[x] = 0 
+                else:
+                    cache[x] = list_cache[n][x]
+                
+            #print("cache: ",cache)
+            list_cache.append(cache)
+        self.list_cache = list_cache
+        return self.list_cache
 
-##    def simulate(self, _dict,a,b,g,graph):
-##        time_steps = range(len(_dict))
-##        list_cache = list()
-##        list_cache.append(_dict)
-##        for n in time_steps:
-##            cache = dict()
-##            for x in range(len(_dict)):
-##                summ = self.NearestNeighborCalculator(x,list_cache[n],graph)
-##                print("summ: ", summ)
-##                transition_rate_prob = g*list_cache[n][x] + \
-##                                       (1 - list_cache[n][x])*a*(b**(summ))
-##                if uniform(0, 1) <= transition_rate_prob and list_cache[n][x] == 0:
-##                    cache[x] = 1 #uniform is from random library
-##                elif uniform(0, 1) <= transition_rate_prob and \
-##                     list_cache[n][x] == 1:
-##                    cache[x] = 0 #uniform is from random library
-##                else:
-##                    cache[x] = list_cache[n][x]
-##                
-##            print("cache: ",cache)
-##            list_cache.append(cache)
-##        return list_cache
-####            print("Previous cache: ", list_cache[n])
-##
-####            self.writeExcel(sheet,x,n,state_d[x])
-##                            
-##    
-
-##
-##    def NearestNeighborCalculator(self,node,state_d,graph):
-##        """Calculates the sum of the nearest neighbors for a node."""
-##        sum_of_neighbors = 0
-##        for node in self.NearestNeighborFinder(node,graph):
-##            sum_of_neighbors += state_d[node]
-##        return sum_of_neighbors
-##
-##    def NearestNeighborFinder(self,node,graph):
-##        """Finds the nodes that are neighbors to the node in question."""
-##        neighbors = list(filter(lambda x: x.count(node) > 0, graph))
-##        neighbors_list = list()
-##        for x in neighbors:
-##            if x[0] != node:
-##                neighbors_list.append(x[0])
-##            elif x[1] != node: 
-##                neighbors_list.append(x[1])
-##        return neighbors_list
-##
-##    def makeExcel(self,state_d):
-##        book = xlwt.Workbook(encoding="utf-8")
-##        sheet1 = book.add_sheet("Sheet 1")
-##        rows = list()
-##        cols = list()
-##        sheet1.write(0,0,"Time Step")
-##        
-##        for key in state_d:
-##            sheet1.write(key+1, 0,"Node " + str(key))
-##            sheet1.write(0,key+1, key)
-##        return book,sheet1
-##
-##    def writeExcel(self,sheet,x,n,state):
-##        sheet.write(x+1,n+1,state)
-##
-##    def saveExcel(self,book):
-##        book.save("trial.xls")
-##
-##    def startTest(self,state_d):
-##        print("Initial Dictionary")
-##        print("--------------------")
-##        print(state_d)
-##        
-##    def endTest(self,state_d,i):
-##        print("Dictionary after ", i+1, "runs")
-##        print("--------------------------------")
-##        print(state_d)
-##        print("Number of zeros: ", self.getZeros(state_d))
-##        print("Number of ones: ", self.getOnes(state_d))
+    def sendExcel(self):
+        """A file that sends the data ran from the most recent
+           MonteCarlo().simulate to an excel sheet. Must run the simulate
+           method in order to have this method work."""
+        workbook = xlsxwriter.Workbook('monteCarloData.xlsx')
+        worksheet = workbook.add_worksheet()
+        worksheet.write(0,0,"Timestep")
+        for x in range(len(self.state_d)):
+            worksheet.write(x+1,0,"Node "+str(x))
+        for y in range(len(self.state_d)):
+            worksheet.write(0,y+1,str(y))
+        for y in range(len(self.list_cache)):
+            for x in range(self.tree.nodeNumber()):
+                worksheet.write(x+1,y+1,self.list_cache[y][x])
+##        for x in range(len(self.state_d)):
+##            worksheet.write(len(self.state_d)+1,x+1,"=SUM(B1:B4)")
+        workbook.close()
