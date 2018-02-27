@@ -18,6 +18,7 @@ class CayleyTree(object):
            links."""
         self.generations = generations
         self.links = links
+        self.cayleyProtect()
         self.linkCreator()
 
     def __str__(self):
@@ -29,6 +30,26 @@ class CayleyTree(object):
         e = "Links of the Cayley Tree: " + str(self.linkCreator()) 
         return a+b+c+d+e
 
+    def __eq__(self,other):
+        """Define equality of Cayley Tree objects, based on the idea that they
+           must have same number of generations and links per node."""
+        if self is other:
+            return True
+        if type(self) != type(other):
+            return False
+        elif self.links == other.links and self.generations == other.generations:
+            return True
+        else:
+            return False
+    
+    def cayleyProtect(self):
+        """Protects the user from creating and using a Cayley Tree object that
+           cannont exist."""
+        if self.generations == 0 and self.links > 0:
+            raise ValueError("Inappropriate argument value: Cayley Tree cannot exist")
+        if self.links < self.generations:
+            raise ValueError("Inappropriate argument value: Cayley Tree cannon exist")
+        
     def nodeNumber(self):
         """Returns the total number of nodes in the Cayley tree. """
         number_nodes = 1

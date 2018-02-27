@@ -7,12 +7,8 @@ a MonteCarlo simullation on it. Also there exists methods that allow data
 to be analyzed and exported.
 """
 
-import networkx as nx
-import matplotlib.pyplot as plt
 import random
 import xlsxwriter #http://xlsxwriter.readthedocs.io/tutorial01.html 
-import math
-
 from cayleytree import CayleyTree
 
 class MonteCarlo(object):
@@ -28,8 +24,8 @@ class MonteCarlo(object):
         self.generations = generations
         self.links = links
         self.state_d = dict()
+        self.list_cache = None
         
-
     def setGamma(self,gamma):
         """Sets the desired gamma value for the monte carlo simulation"""
         self.gamma = gamma
@@ -130,6 +126,8 @@ class MonteCarlo(object):
         """A file that sends the data ran from the most recent
            MonteCarlo().simulate to an excel sheet. Must run the simulate
            method in order to have this method work."""
+        if self.list_cache == None:
+            raise ValueError("No data to send to excel. Must run simulation")
         workbook = xlsxwriter.Workbook('monteCarloData.xlsx')
         worksheet = workbook.add_worksheet()
         worksheet.write(0,0,"Timestep")
