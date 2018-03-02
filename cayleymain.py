@@ -26,7 +26,7 @@ def main():
     monte.sendExcel()
 
     cayley = CayleyGraphics(generations, links)
-    cayley.drawGraph()
+    cayley.drawCayley()
     
 if __name__ == "__main__":
     main()

@@ -2,7 +2,7 @@
 Authors: Justin Pusztay, Matt Lubas, Griffin Noe
 Filename: cayleygraphics.py
 
-Contains the class cayleygraphics, which generates a GUI image of the
+Contains the class CayleyGraphics, which generates a GUI image of the
 Cayley Tree. 
 
 Code Adapted from: https://www.udacity.com/wiki/creating-network-graphs-with-python
@@ -20,19 +20,19 @@ class CayleyGraphics(object):
         
         self.tree = CayleyTree(generations, links)
 
-    def drawGraph(self,labels=None, graph_layout='spring',
+    def drawCayley(self,labels=None, graph_layout='spring',
                    node_size=1000, node_color='blue', node_alpha=0.3,
                    node_text_size=12,
                    edge_color='blue', edge_alpha=0.3, edge_thickness=2,
                    edge_text_pos=0.3,
                    text_font='sans-serif'):
-        """Method that physically draws the graph based on generations
+        """Method that physically draws the Cayley Tree graph based on generations
            and connections"""
         # create networkx graph
         graph=nx.Graph()
 
         #creates a Cayley-like tree with links and connections
-        #G =nx.balanced_tree(connections,generations)
+        #graph =nx.balanced_tree(connections,generations)
 
         # add edges
         for edge in self.tree.linkCreator():
@@ -75,3 +75,5 @@ class CayleyGraphics(object):
         """
         # show graph
         plt.show()
+
+    
