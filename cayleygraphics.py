@@ -21,7 +21,7 @@ class CayleyGraphics(object):
         self.tree = CayleyTree(generations, links)
 
     def drawGraph(self,labels=None, graph_layout='spring',
-                   node_size=1000, node_color='cyan', node_alpha=0.3,
+                   node_size=1000, node_color='blue', node_alpha=0.3,
                    node_text_size=12,
                    edge_color='blue', edge_alpha=0.3, edge_thickness=2,
                    edge_text_pos=0.3,
@@ -29,32 +29,39 @@ class CayleyGraphics(object):
         """Method that physically draws the graph based on generations
            and connections"""
         # create networkx graph
-        G=nx.Graph()
+        graph=nx.Graph()
 
         #creates a Cayley-like tree with links and connections
         #G =nx.balanced_tree(connections,generations)
 
         # add edges
         for edge in self.tree.linkCreator():
-            G.add_edge(edge[0], edge[1])
+            graph.add_edge(edge[0], edge[1])
 
         # these are different layouts for the network you may try
         # shell seems to work best
         if graph_layout == 'spring':
-            graph_pos=nx.spring_layout(G)
+            graph_pos=nx.spring_layout(graph)
         elif graph_layout == 'spectral':
-            graph_pos=nx.spectral_layout(G)
+            graph_pos=nx.spectral_layout(graph)
         elif graph_layout == 'random':
-            graph_pos=nx.random_layout(G)
+            graph_pos=nx.random_layout(graph)
         else:
-            graph_pos=nx.shell_layout(G)
+            graph_pos=nx.shell_layout(graph)
 
+        color_map = []
+        for node in graph:
+            if node == 0:
+                color_map.append('red')
+            else:
+                color_map.append('blue')
+                
         # draw graph
-        nx.draw_networkx_nodes(G,graph_pos,node_size=node_size, 
-                               alpha=node_alpha, node_color=node_color)
-        nx.draw_networkx_edges(G,graph_pos,width=edge_thickness,
+        nx.draw_networkx_nodes(graph,graph_pos,node_size=node_size, 
+                               alpha=node_alpha, node_color=color_map)
+        nx.draw_networkx_edges(graph,graph_pos,width=edge_thickness,
                                alpha=edge_alpha,edge_color=edge_color)
-        nx.draw_networkx_labels(G, graph_pos,font_size=node_text_size,
+        nx.draw_networkx_labels(graph, graph_pos,font_size=node_text_size,
                                 font_family=text_font)
 
         if labels is None:
@@ -63,7 +70,7 @@ class CayleyGraphics(object):
         edge_labels = dict(zip(self.tree.linkCreator(), labels))
         """
         #Below on how to label edges.
-        nx.draw_networkx_edge_labels(G, graph_pos, edge_labels=edge_labels, 
+        nx.draw_networkx_edge_labels(graph, graph_pos, edge_labels=edge_labels, 
                                      label_pos=edge_text_pos)
         """
         # show graph

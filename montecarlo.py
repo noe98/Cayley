@@ -18,28 +18,17 @@ class MonteCarlo(object):
     #all from empty, random % filled, and the 0 node is filled
     #graph will now be self.tree.linkCreator()
     
-    def __init__(self, generations, links):
+    def __init__(self, generations, links,
+                 alpha = .5, beta = .8, gamma = .2):
         """Runs the Monte Carlo simulation the desired number of times."""
         self.tree = CayleyTree(generations, links)
         self.generations = generations
         self.links = links
         self.state_d = dict()
         self.list_cache = None
-        
-    def setGamma(self,gamma):
-        """Sets the desired gamma value for the monte carlo simulation"""
-        self.gamma = gamma
-        return self.gamma
-
-    def setAlpha(self,alpha):
-        """Sets the desired alpha value for the monte carlo simulation."""
         self.alpha = alpha
-        return self.alpha
-
-    def setBeta(self,beta):
-        """Sets the desired beta value for the monte carlo simulation."""
         self.beta = beta
-        return self.beta
+        self.gamma = gamma
 
     def emptyDictionary(self):
         """Sets the initial state of the nodes to empty, a value of 0, in the
