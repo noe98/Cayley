@@ -30,6 +30,18 @@ class MonteCarlo(object):
         self.beta = beta
         self.gamma = gamma
 
+    def getAlpha(self):
+        """Returns alpha value."""
+        return self.alpha
+
+    def getBeta(self):
+        """Returns beta value."""
+        return self.beta
+    
+    def getGamma(self):
+        """Returns gamma value."""
+        return self.gamma
+
     def emptyDictionary(self):
         """Sets the initial state of the nodes to empty, a value of 0, in the
            state dictionary."""
