@@ -12,11 +12,6 @@ import xlsxwriter #http://xlsxwriter.readthedocs.io/tutorial01.html
 from cayleytree import CayleyTree
 
 class MonteCarlo(object):
-
-    #Note to Matt and Griffin:
-    #state_d will be the new initial dictionary with the three possibilites:
-    #all from empty, random % filled, and the 0 node is filled
-    #graph will now be self.tree.linkCreator()
     
     def __init__(self, generations, links,
                  alpha = .5, beta = .8, gamma = .2):
@@ -142,3 +137,5 @@ class MonteCarlo(object):
 ##        for x in range(len(self.state_d)):
 ##            worksheet.write(len(self.state_d)+1,x+1,"=SUM(B1:B4)")
         workbook.close()
+
+        
