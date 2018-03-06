@@ -4,13 +4,15 @@ Authors: Justin Pusztay, Matt Lubas, Griffin Noe
 Filename: cayleymain.py
 
 A main file that runs the Monte Carlo simulation and draws a picture
-of the cayley tree.
+of the Lattice tree.
 """
 
 from montecarlo import MonteCarlo
-from cayleygraphics import CayleyGraphics
+from latticegraphics import LatticeGraphics
 
 def main():
+    
+    """
     generations = int(input("Number of generations: "))
     links = int(input("Number of links: "))
     custom = input("Custom A, B, G Values? [Y/N]: ")
@@ -22,14 +24,12 @@ def main():
     else:
         monte = MonteCarlo(generations, links)
     monte.emptyDictionary() #can change to other inital states
-    for n in time_steps:
-        monte.simulate()
-        cayley = CayleyGraphics(generations, links, monte)
-        cayley.drawGraph()
+    monte.simulate()
     monte.sendExcel()
+    """
 
-    cayley = CayleyGraphics(generations, links)
-    cayley.drawCayley()
+    a = LatticeGraphics()
+    a.drawLattice(a.GraphList)
     
 if __name__ == "__main__":
     main()

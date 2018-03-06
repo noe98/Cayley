@@ -80,4 +80,21 @@ class CayleyTree(object):
                     link_list.append((x,nodes_done))
                     nodes_done += 1
         return link_list
-        
+
+    def genFinder(self,node):
+        """Takes a node and returns the generation that the node is in."""
+        b = self.nodeGeneration()
+        count_gen = -1
+        for x in range(len(b)):
+            node = node - b[x]
+            count_gen += 1
+            if node < 0:
+                return count_gen
+
+    def nodeFinder(self,gen):
+        """Takes a generation and returns a list with the nodes in
+            the generation."""
+        b = self.nodeGeneration()
+        a = sum(b[0:gen])
+        c = self.nodeNumber()-sum(b[gen+1:self.generations+1])
+        return list(range(a,c))
