@@ -48,7 +48,8 @@ class CayleyGraphics(object):
             graph_pos=nx.random_layout(graph)
         else:
             graph_pos=nx.shell_layout(graph)
-
+            
+        #Stop motion picture of state progression
         color_map = []
         for node in graph:
             if node == 0:
