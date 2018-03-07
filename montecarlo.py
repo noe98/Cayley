@@ -20,7 +20,7 @@ class MonteCarlo(object):
         self.generations = generations
         self.links = links
         self.state_d = dict()
-        self.list_cache = None
+        self._list_cache = None
         self.alpha = alpha
         self.beta = beta
         self.gamma = gamma
@@ -36,6 +36,10 @@ class MonteCarlo(object):
     def getGamma(self):
         """Returns gamma value."""
         return self.gamma
+
+    def getListCache(self):
+        """Returns the list cache."""
+        return self._list_cache
 
     def emptyDictionary(self):
         """Sets the initial state of the nodes to empty, a value of 0, in the
@@ -89,6 +93,15 @@ class MonteCarlo(object):
                 neighbors_list.append(x[1])
         return neighbors_list
 
+    def densityCalculator(self,gen,state_d):
+        """Takes a generation and a state dictionary and returns the density
+           of the generation."""
+        nodes = self.tree.nodeFinder(gen)
+        density = 0
+        for node in nodes:
+            density += state_d.get(node)
+        return density 
+            
     def simulate(self):
         """Simulates the Monte Carlo simulation on the Cayley Tree. Runs the
            simulation an equal number of times to the number of nodes in the
@@ -115,14 +128,14 @@ class MonteCarlo(object):
                 
             #print("cache: ",cache)
             list_cache.append(cache)
-        self.list_cache = list_cache
-        return self.list_cache
+        self._list_cache = list_cache
+        return self._list_cache
 
     def sendExcel(self):
         """A file that sends the data ran from the most recent
            MonteCarlo().simulate to an excel sheet. Must run the simulate
            method in order to have this method work."""
-        if self.list_cache == None:
+        if self._list_cache == None:
             raise ValueError("No data to send to excel. Must run simulation")
         workbook = xlsxwriter.Workbook('monteCarloData.xlsx')
         worksheet = workbook.add_worksheet()
@@ -131,9 +144,9 @@ class MonteCarlo(object):
             worksheet.write(x+1,0,"Node "+str(x))
         for y in range(len(self.state_d)):
             worksheet.write(0,y+1,str(y))
-        for y in range(len(self.list_cache)):
+        for y in range(len(self._list_cache)):
             for x in range(self.tree.nodeNumber()):
-                worksheet.write(x+1,y+1,self.list_cache[y][x])
+                worksheet.write(x+1,y+1,self._list_cache[y][x])
 ##        for x in range(len(self.state_d)):
 ##            worksheet.write(len(self.state_d)+1,x+1,"=SUM(B1:B4)")
         workbook.close()

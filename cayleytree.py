@@ -8,7 +8,6 @@ which allow for some basic analysis of the class such as number of nodes
 and nodes per generation. 
 """
 
-
 class CayleyTree(object):
     """Creates the Cayley Tree object. The class needs integer values
        for number of generations and links."""
@@ -52,10 +51,7 @@ class CayleyTree(object):
         
     def nodeNumber(self):
         """Returns the total number of nodes in the Cayley tree. """
-        number_nodes = 1
-        for x in range(1,self.generations+1):
-            number_nodes += (self.links * (self.links - 1)**(x - 1))
-        return number_nodes
+        return sum(self.nodeGeneration())
 
     def nodeGeneration(self):
         """Returns a list with the number of nodes per generation in the Cayley
@@ -80,6 +76,15 @@ class CayleyTree(object):
                     link_list.append((x,nodes_done))
                     nodes_done += 1
         return link_list
+
+    def linkCreator2(self):
+        link_dict = dict()
+        link_dict['0'] = list(range(1,self.links+1,1)) #sets up 0
+        for y in range(1,self.nodeNumber() + 1):
+            for x in range(1,self.links+1):
+                pass
+            
+        return link_dict
 
     def genFinder(self,node):
         """Takes a node and returns the generation that the node is in."""
