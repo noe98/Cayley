@@ -42,7 +42,7 @@ class MonteCarlo(object):
         """Returns the list cache."""
         return self._list_cache
 
-    def getStateD(self):
+    def getStates(self):
         """Returns the state_d dictionary."""
         return self.state_d
 
@@ -116,7 +116,7 @@ class MonteCarlo(object):
         list_cache.append(self.state_d)
         for n in time_steps:
             cache = dict()
-            for x in time_steps:
+            for x in len(self.getStates):
                 summ = self.nearestNeighborCalculator(x,list_cache[n])
                 #print("summ: ", summ)
                 transition_rate_prob = self.gamma*list_cache[n][x] + \
