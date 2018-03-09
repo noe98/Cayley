@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 """
 Authors: Justin Pusztay, Matt Lubas, Griffin Noe
-Filename: cayleymain.py
+Filename: latticemain.py
+Project: Research for Irina Mazilu, Ph.D.
 
 A main file that runs the Monte Carlo simulation and draws a picture
 of the Lattice tree.

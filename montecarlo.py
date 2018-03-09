@@ -1,6 +1,7 @@
 """
 Authors: Justin Pusztay, Matt Lubas, and Griffin Noe
 Filename: montecarlo.py
+Project: Research for Irina Mazilu, Ph.D.
 
 This file contains the MonteCarlo class. It creates a Cayley Tree and performs
 a MonteCarlo simullation on it. Also there exists methods that allow data
@@ -106,12 +107,11 @@ class MonteCarlo(object):
             density += state_d.get(node)
         return density 
             
-    def simulate(self):
+    def simulate(self, time_steps = range(len(self.state_d))):
         """Simulates the Monte Carlo simulation on the Cayley Tree. Runs the
            simulation an equal number of times to the number of nodes in the
            tree. Returns a list filled with dictionaries, each containing the state
            of each node after a certain timestep."""
-        time_steps = range(len(self.state_d)) #should this be optional variable?
         list_cache = list()
         list_cache.append(self.state_d)
         for n in time_steps:

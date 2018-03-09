@@ -1,9 +1,10 @@
 """
 Authors: Justin Pusztay, Matt Lubas, Griffin Noe
-Filename: cayleygraphics.py
+Filename: latticegraphics.py
+Project: Research for Irina Mazilu, Ph.D.
 
 Contains the class LatticeGraphics, which generates a GUI image of the
-Cayley Tree. 
+Lattice Graph. 
 
 Code Adapted from: https://www.udacity.com/wiki/creating-network-graphs-with-python
 """

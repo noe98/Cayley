@@ -1,6 +1,7 @@
 """
 Authors: Justin Pusztay, Matt Lubas, and Griffin Noe
 Filename: cayleytree.py
+Project: Research for Irina Mazilu, Ph.D.
 
 This file contains the CayleyTree class. This class creates a Cayley Tree
 object, by setting up the nodes and links between nodes. It also has methods

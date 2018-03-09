@@ -2,6 +2,7 @@
 """
 Authors: Justin Pusztay, Matt Lubas, Griffin Noe
 Filename: cayleymain.py
+Project: Research for Irina Mazilu, Ph.D.
 
 A main file that runs the Monte Carlo simulation and draws a picture
 of the cayley tree.

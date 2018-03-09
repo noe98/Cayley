@@ -1,3 +1,12 @@
+#!/usr/bin/env python
+"""
+Authors: Justin Pusztay, Matt Lubas, Griffin Noe
+Filename: xl.py
+Project: Research for Irina Mazilu, Ph.D.
+
+Creates excel file for states of figure.
+"""
+
 import xlwt
 import math
 import random

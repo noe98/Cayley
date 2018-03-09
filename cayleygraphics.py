@@ -1,6 +1,7 @@
 """
 Authors: Justin Pusztay, Matt Lubas, Griffin Noe
 Filename: cayleygraphics.py
+Project: Research for Irina Mazilu, Ph.D.
 
 Contains the class CayleyGraphics, which generates a GUI image of the
 Cayley Tree. 
