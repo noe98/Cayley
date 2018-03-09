@@ -45,9 +45,11 @@ class CayleyTree(object):
         """Protects the user from creating and using a Cayley Tree object that
            cannont exist."""
         if self.generations == 0 and self.links > 0:
-            raise ValueError("Inappropriate argument value: Cayley Tree cannot exist")
+            raise ValueError("Inappropriate argument value: Cayley Tree cannot \
+                             exist")
         if self.links < self.generations:
-            raise ValueError("Inappropriate argument value: Cayley Tree cannon exist")
+            raise ValueError("Inappropriate argument value: Cayley Tree cannot \
+                             exist")
         
     def nodeNumber(self):
         """Returns the total number of nodes in the Cayley tree. """
@@ -77,14 +79,20 @@ class CayleyTree(object):
                     nodes_done += 1
         return link_list
 
-    def linkCreator2(self):
-        link_dict = dict()
-        link_dict['0'] = list(range(1,self.links+1,1)) #sets up 0
-        for y in range(1,self.nodeNumber() + 1):
-            for x in range(1,self.links+1):
-                pass
+    def FastLinkCreator(self):
+        link_d = dict()
+        link_d[0] = list(range(1,self.nodeGeneration()[1]+1)) #sets up 0
+        #goes up tree
+        a = sum(self.nodeGeneration()[0:len(self.nodeGeneration())-1]) 
+        node_count = self.nodeGeneration()[1] + 1
+        for x in range(1,a):
+            link_d[x] = [node_count, node_count + 1]
+            node_count += self.links - 1
+        #goes down tree
+        
+       
+        return link_d
             
-        return link_dict
 
     def genFinder(self,node):
         """Takes a node and returns the generation that the node is in."""

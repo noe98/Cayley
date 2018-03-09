@@ -41,6 +41,10 @@ class MonteCarlo(object):
         """Returns the list cache."""
         return self._list_cache
 
+    def getStateD(self):
+        """Returns the state_d dictionary."""
+        return self.state_d
+
     def emptyDictionary(self):
         """Sets the initial state of the nodes to empty, a value of 0, in the
            state dictionary."""
