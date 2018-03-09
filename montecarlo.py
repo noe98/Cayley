@@ -21,7 +21,8 @@ class MonteCarlo(object):
         self.generations = generations
         self.links = links
         self.state_d = dict()
-        self._list_cache = None
+        self.list_cache = list()
+        self.cache = dict()
         self.alpha = alpha
         self.beta = beta
         self.gamma = gamma
@@ -40,7 +41,7 @@ class MonteCarlo(object):
 
     def getListCache(self):
         """Returns the list cache."""
-        return self._list_cache
+        return self.list_cache
 
     def getStates(self):
         """Returns the state_d dictionary."""
@@ -107,39 +108,34 @@ class MonteCarlo(object):
             density += state_d.get(node)
         return density 
             
-    def simulate(self, time_steps = range(len(self.state_d))):
+    def simulate(self,n):
         """Simulates the Monte Carlo simulation on the Cayley Tree. Runs the
-           simulation an equal number of times to the number of nodes in the
-           tree. Returns a list filled with dictionaries, each containing the state
-           of each node after a certain timestep."""
-        list_cache = list()
-        list_cache.append(self.state_d)
-        for n in time_steps:
-            cache = dict()
-            for x in len(self.getStates):
-                summ = self.nearestNeighborCalculator(x,list_cache[n])
-                #print("summ: ", summ)
-                transition_rate_prob = self.gamma*list_cache[n][x] + \
-                                       (1 - list_cache[n][x])*self.alpha*(self.beta\
-                                                                          **(summ))
-                if random.uniform(0, 1) <= transition_rate_prob and list_cache[n][x] == 0:
-                    cache[x] = 1 
-                elif random.uniform(0, 1) <= transition_rate_prob and \
-                     list_cache[n][x] == 1:
-                    cache[x] = 0 
-                else:
-                    cache[x] = list_cache[n][x]
-                
-            #print("cache: ",cache)
-            list_cache.append(cache)
-        self._list_cache = list_cache
-        return self._list_cache
+           simulation once. Returns a list filled with dictionaries, each containing the state
+           of each node after a certain timestep, n."""
+        self.list_cache.append(self.state_d)
+        for x in range(len(self.getStates())):
+            summ = self.nearestNeighborCalculator(x,self.list_cache[n])
+            #print("summ: ", summ)
+            probability = self.gamma*self.list_cache[n][x] + \
+                                   (1 - self.list_cache[n][x])*\
+                                   self.alpha*(self.beta**(summ))
+            if random.uniform(0, 1) <= probability and self.list_cache[n][x] == 0:
+                self.cache[x] = 1 
+            elif random.uniform(0, 1) <= probability and \
+                 self.list_cache[n][x] == 1:
+                self.cache[x] = 0 
+            else:
+                self.cache[x] = self.list_cache[n][x]
+            
+        #print("cache: ",self.cache)
+        self.list_cache.append(self.cache)
+        return self.list_cache
 
     def sendExcel(self):
         """A file that sends the data ran from the most recent
            MonteCarlo().simulate to an excel sheet. Must run the simulate
            method in order to have this method work."""
-        if self._list_cache == None:
+        if self.list_cache == None:
             raise ValueError("No data to send to excel. Must run simulation")
         workbook = xlsxwriter.Workbook('monteCarloData.xlsx')
         worksheet = workbook.add_worksheet()
@@ -148,9 +144,9 @@ class MonteCarlo(object):
             worksheet.write(x+1,0,"Node "+str(x))
         for y in range(len(self.state_d)):
             worksheet.write(0,y+1,str(y))
-        for y in range(len(self._list_cache)):
+        for y in range(len(self.list_cache)):
             for x in range(self.tree.nodeNumber()):
-                worksheet.write(x+1,y+1,self._list_cache[y][x])
+                worksheet.write(x+1,y+1,self.list_cache[y][x])
 ##        for x in range(len(self.state_d)):
 ##            worksheet.write(len(self.state_d)+1,x+1,"=SUM(B1:B4)")
         workbook.close()
