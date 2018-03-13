@@ -135,6 +135,10 @@ class MonteCarlo(object):
         """A file that sends the data ran from the most recent
            MonteCarlo().simulate to an excel sheet. Must run the simulate
            method in order to have this method work."""
+
+        #If File exists, load file. If sheet 1 is occupied, create a second
+        #sheet. Rename / use input for naming sheet.
+        
         if self.list_cache == None:
             raise ValueError("No data to send to excel. Must run simulation")
         workbook = xlsxwriter.Workbook('monteCarloData.xlsx')
