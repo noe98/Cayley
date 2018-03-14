@@ -12,14 +12,16 @@ Code Adapted from: https://www.udacity.com/wiki/creating-network-graphs-with-pyt
 import networkx as nx
 import matplotlib.pyplot as plt
 from cayleytree import CayleyTree
+import tkinter
 
 class CayleyGraphics(object):
 
     def __init__(self,generations,links):
         """Creates a CayleyTree object in order to create an image
            of the graph."""
-        
         self.tree = CayleyTree(generations, links)
+        top = self.tkinter.Tk()
+        top.mainloop()
 
     def drawCayley(self,labels=None, graph_layout='spring',
                    node_size=1000, node_color='blue', node_alpha=0.3,
@@ -77,5 +79,7 @@ class CayleyGraphics(object):
         """
         # show graph
         plt.show()
+
+
 
     

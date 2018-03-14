@@ -81,7 +81,8 @@ class CayleyTree(object):
 
     def fastLinkCreator(self):
         """Creates a dictionary with the node number as the key and with a list of
-           its neighbors as the value. This method will be used in MonteCarlo, since
+           its neighbors as the value. This method will be used in MonteCarlo,
+           since
            this dictionary will reduce the runtime of its simulate method."""
         
         def recursion(node_count):
