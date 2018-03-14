@@ -19,8 +19,7 @@ class CayleyTree(object):
         self.generations = generations
         self.links = links
         self.cayleyProtect()
-        self.linkCreator()
-
+        
     def __str__(self):
         """Creates a string representation of the Cayley Tree."""
         a = "Cayley Tree has " + str(self.generations) + " generations" + "\n"
@@ -138,3 +137,7 @@ class CayleyTree(object):
         a = sum(b[0:gen])
         c = self.nodeNumber()-sum(b[gen+1:self.generations+1])
         return list(range(a,c))
+
+    def nearestNeighborFinder(self,node):
+        """Finds the nodes that are neighbors to the node in question."""
+        return self.fastLinkCreator()[node]

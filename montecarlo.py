@@ -83,21 +83,10 @@ class MonteCarlo(object):
     def nearestNeighborCalculator(self,node,state_d):
         """Takes the node number and caculates the sum of the neartest
            nieghbors."""
-        sum_of_neighbors = 0
-        for node in self.nearestNeighborFinder(node):
-            sum_of_neighbors += state_d[node]
-        return sum_of_neighbors
-
-    def nearestNeighborFinder(self,node):
-        """Finds the nodes that are neighbors to the node in question."""
-        neighbors = list(filter(lambda x: x.count(node) > 0, self.tree.linkCreator()))
-        neighbors_list = list()
-        for x in neighbors:
-            if x[0] != node:
-                neighbors_list.append(x[0])
-            elif x[1] != node: 
-                neighbors_list.append(x[1])
-        return neighbors_list
+        sumOfStates = 0
+        for x in self.tree.fastLinkCreator()[node]:
+            sumOfStates += state_d[x]
+        return sumOfStates
 
     def densityCalculator(self,gen,state_d):
         """Takes a generation and a state dictionary and returns the density
