@@ -85,7 +85,7 @@ class CayleyTree(object):
            since
            this dictionary will reduce the runtime of its simulate method."""
         
-        def recursion(node_count):
+        def helper(node_count):
             """A helper function used within fastLinkCreation in order to make
                code read easier."""
             links = list()
@@ -114,7 +114,7 @@ class CayleyTree(object):
         a = sum(self.nodeGeneration()[0:len(self.nodeGeneration())-1]) 
         node_count = self.nodeGeneration()[1] + 1
         for x in range(1,a):
-            link_d[x] = link_d.get(x,list()) + recursion(node_count) 
+            link_d[x] = link_d.get(x,list()) + helper(node_count) 
             node_count += self.links - 1 
         #finishes up first generation
         for x in range(1,sum(self.nodeGeneration()[0:2])):
