@@ -23,8 +23,8 @@ def main():
     else:
         monte = MonteCarlo(generations, links)
     monte.emptyDictionary() #can change to other inital states
-    for n in range(len(monte.getStates())):
-        monte.simulate(n)
+    #for n in range(len(monte.getStates())):
+    monte.simulate()
 ##        cayley = CayleyGraphics(generations, links, monte)
 ##        cayley.drawGraph()
     monte.sendExcel()
