@@ -21,8 +21,7 @@ class MonteCarlo(object):
         self.generations = generations
         self.links = links
         self.state_d = dict()
-        self.list_cache = list()
-        self.cache = dict()
+        self.list_cache = None
         self.alpha = alpha
         self.beta = beta
         self.gamma = gamma
@@ -85,7 +84,7 @@ class MonteCarlo(object):
            nieghbors."""
         sumOfStates = 0
         for x in self.tree.fastLinkCreator()[node]:
-            sumOfStates += state_d[x]
+            sumOfStates += state_d.get(x)
         return sumOfStates
 
     def densityCalculator(self,gen,state_d):
@@ -97,27 +96,33 @@ class MonteCarlo(object):
             density += state_d.get(node)
         return density 
             
-    def simulate(self,n):
+    def simulate(self):
         """Simulates the Monte Carlo simulation on the Cayley Tree. Runs the
-           simulation once. Returns a list filled with dictionaries, each containing the state
-           of each node after a certain timestep, n."""
-        self.list_cache.append(self.state_d)
-        for x in range(len(self.getStates())):
-            summ = self.nearestNeighborCalculator(x,self.list_cache[n])
-            #print("summ: ", summ)
-            probability = self.gamma*self.list_cache[n][x] + \
-                                   (1 - self.list_cache[n][x])*\
-                                   self.alpha*(self.beta**(summ))
-            if random.uniform(0, 1) <= probability and self.list_cache[n][x] == 0:
-                self.cache[x] = 1 
-            elif random.uniform(0, 1) <= probability and \
-                 self.list_cache[n][x] == 1:
-                self.cache[x] = 0 
-            else:
-                self.cache[x] = self.list_cache[n][x]
-            
-        #print("cache: ",self.cache)
-        self.list_cache.append(self.cache)
+           simulation an equal number of times to the number of nodes in the
+           tree. Returns a list filled with dictionaries, each containing the state
+           of each node after a certain timestep."""
+        time_steps = range(len(self.state_d)) 
+        list_cache = list()
+        list_cache.append(self.state_d)
+        for n in time_steps:
+            cache = dict()
+            for x in range(len(self.getStates())):
+                summ = self.nearestNeighborCalculator(x,list_cache[n])
+                #print("summ: ", summ)
+                probability = self.gamma*list_cache[n][x] + \
+                                       (1 - list_cache[n][x])*\
+                                       self.alpha*(self.beta**(summ))
+                if random.uniform(0, 1) <= probability and list_cache[n][x] == 0:
+                    cache[x] = 1 
+                elif random.uniform(0, 1) <= probability and \
+                     list_cache[n][x] == 1:
+                    cache[x] = 0 
+                else:
+                    cache[x] = list_cache[n][x]
+               
+            #print("cache: ",cache)
+            list_cache.append(cache)
+        self.list_cache = list_cache
         return self.list_cache
 
     def sendExcel(self):
