@@ -97,31 +97,32 @@ class MonteCarlo(object):
         return density 
             
     def simulate(self):
-        """Simulates the Monte Carlo simulation on the Cayley Tree. Runs the
-           simulation an equal number of times to the number of nodes in the
-           tree. Returns a list filled with dictionaries, each containing the state
-           of each node after a certain timestep."""
+        """Simulates the Monte Carlo simulation on the Cayley Tree for one
+           time step and stores that data."""
         time_steps = range(len(self.state_d)) 
-        list_cache = list()
-        list_cache.append(self.state_d)
-        for n in time_steps:
-            cache = dict()
-            for x in range(len(self.getStates())):
-                summ = self.nearestNeighborCalculator(x,list_cache[n])
-                #print("summ: ", summ)
-                probability = self.gamma*list_cache[n][x] + \
-                                       (1 - list_cache[n][x])*\
-                                       self.alpha*(self.beta**(summ))
-                if random.uniform(0, 1) <= probability and list_cache[n][x] == 0:
-                    cache[x] = 1 
-                elif random.uniform(0, 1) <= probability and \
-                     list_cache[n][x] == 1:
-                    cache[x] = 0 
-                else:
-                    cache[x] = list_cache[n][x]
+        if self.list_cache == None:
+            list_cache = list()
+            list_cache.append(self.state_d)
+        else:
+            list_cache = self.list_cache
+        cache = dict()
+        for x in range(len(self.getStates())):
+            summ = self.nearestNeighborCalculator(x,list_cache[-1])
+            print("summ: ", summ)
+            probability = self.gamma*list_cache[-1][x] + \
+                                    (1 - list_cache[-1][x])*\
+                                    self.alpha*(self.beta**(summ))
+            if random.uniform(0, 1) <= probability and list_cache[-1][x] == 0:
+                cache[x] = 1
+            elif random.uniform(0, 1) <= probability and \
+                 list_cache[-1][x] == 1:
+                cache[x] = 0 
+            else:
+                cache[x] = list_cache[-1][x]
                
-            #print("cache: ",cache)
-            list_cache.append(cache)
+
+        print("cache: ",cache)
+        list_cache.append(cache)
         self.list_cache = list_cache
         return self.list_cache
 
