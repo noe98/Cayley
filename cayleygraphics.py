@@ -3,7 +3,7 @@ Authors: Justin Pusztay, Matt Lubas, Griffin Noe
 Filename: cayleygraphics.py
 Project: Research for Irina Mazilu, Ph.D.
 
-Contains the class CayleyGraphics, which generates a GUI image of the
+Contains the class CayleyGraphics, which generates a graphic image of the
 Cayley Tree. 
 
 Code Adapted from: https://www.udacity.com/wiki/creating-network-graphs-with-python
