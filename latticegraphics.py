@@ -7,6 +7,9 @@ Contains the class LatticeGraphics, which generates a GUI image of the
 Lattice Graph. 
 
 Code Adapted from: https://www.udacity.com/wiki/creating-network-graphs-with-python
+
+USE THIS LINK JUSTIN!
+https://networkx.github.io/documentation/networkx-1.9.1/reference/classes.graph.html#iterating-over-nodes-and-edges
 """
 
 import networkx as nx
@@ -67,7 +70,21 @@ class LatticeGraphics(object):
                 labels = range(len(graph))
 
             edge_labels = dict(zip(graph, labels))
+
+            #Nodes prints the coordinates of the node positions
+            #n = nx.nodes(graph)
+            #print(n)
+
+            #Number of Nodes is helpful
+            nn = nx.number_of_nodes(graph)
+            print(nn)
+
+            #Prints <dict_keyiterator object at 0x116fd3318>
+            neighbors = nx.all_neighbors(graph, (0,0,1))
+            print(neighbors)
             
+            #e = nx.edges(graph)
+            #print(e)
             
             # show graph
             plt.show()
