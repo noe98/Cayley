@@ -20,8 +20,8 @@ class CayleyGraphics(object):
         """Creates a CayleyTree object in order to create an image
            of the graph."""
         self.tree = CayleyTree(generations, links)
-        self.top = Tk()
-        self.top.mainloop()
+##        self.top = Tk()
+##        self.top.mainloop()
 
     def drawCayley(self,labels=None, graph_layout='spring',
                    node_size=1000, node_color='blue', node_alpha=0.3,
@@ -55,10 +55,10 @@ class CayleyGraphics(object):
         #Stop motion picture of state progression
         color_map = []
         for node in graph:
-            if node == 0:
-                color_map.append('red')
-            else:
-                color_map.append('blue')
+##            if node == 0:
+##                color_map.append('red')
+##            else:
+            color_map.append('blue')
                 
         # draw graph
         nx.draw_networkx_nodes(graph,graph_pos,node_size=node_size, 
@@ -79,6 +79,8 @@ class CayleyGraphics(object):
         """
         # show graph
         plt.show()
+        #print(type(plt.gcf()))
+        
 
 
 

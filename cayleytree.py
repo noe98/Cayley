@@ -66,7 +66,8 @@ class CayleyTree(object):
 
     def linkCreator(self): 
         """Returns a list of tuples that represents each link in the Cayley
-           Tree."""
+           Tree. Only useful for CayleyGraphics class because of the Networkx
+           package."""
         link_list = list()
         exclude = self.nodeGeneration()[-1]
         for x in range(1,self.links + 1):
@@ -81,9 +82,9 @@ class CayleyTree(object):
 
     def fastLinkCreator(self):
         """Creates a dictionary with the node number as the key and with a list of
-           its neighbors as the value. This method will be used in MonteCarlo,
-           since
-           this dictionary will reduce the runtime of its simulate method."""
+           its neighbors as the value. This method will be used in MonteCarlo
+           class, since this dictionary will reduce the runtime of its simulate
+           method."""
         
         def helper(node_count):
             """A helper function used within fastLinkCreation in order to make

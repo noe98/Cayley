@@ -108,7 +108,7 @@ class MonteCarlo(object):
         cache = dict()
         for x in range(len(self.getStates())):
             summ = self.nearestNeighborCalculator(x,list_cache[-1])
-            print("summ: ", summ)
+            #print("summ: ", summ)
             probability = self.gamma*list_cache[-1][x] + \
                                     (1 - list_cache[-1][x])*\
                                     self.alpha*(self.beta**(summ))
@@ -119,9 +119,7 @@ class MonteCarlo(object):
                 cache[x] = 0 
             else:
                 cache[x] = list_cache[-1][x]
-               
-
-        print("cache: ",cache)
+        #print("cache: ",cache)
         list_cache.append(cache)
         self.list_cache = list_cache
         return self.list_cache
