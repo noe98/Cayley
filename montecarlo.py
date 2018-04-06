@@ -46,6 +46,9 @@ class MonteCarlo(object):
         """Returns the state_d dictionary."""
         return self.state_d
 
+    def setProbability(self):
+        pass
+
     def emptyDictionary(self):
         """Sets the initial state of the nodes to empty, a value of 0, in the
            state dictionary."""
@@ -79,12 +82,12 @@ class MonteCarlo(object):
         """Calculates the number of nodes in the filled state- a value of 1."""
         return sum(self.state_d.values())
 
-    def nearestNeighborCalculator(self,node,state_d):
+    def nearestNeighborSum(self,node,timestep):
         """Takes the node number and caculates the sum of the neartest
            nieghbors."""
         sumOfStates = 0
         for x in self.tree.fastLinkCreator()[node]:
-            sumOfStates += state_d.get(x)
+            sumOfStates += timestep.get(x)
         return sumOfStates
 
     def densityCalculator(self,gen,state_d):
@@ -107,11 +110,9 @@ class MonteCarlo(object):
             list_cache = self.list_cache
         cache = dict()
         for x in range(len(self.getStates())):
-            summ = self.nearestNeighborCalculator(x,list_cache[-1])
+            summ = self.nearestNeighborSum(x,list_cache[-1])
             #print("summ: ", summ)
-            probability = self.gamma*list_cache[-1][x] + \
-                                    (1 - list_cache[-1][x])*\
-                                    self.alpha*(self.beta**(summ))
+            probability = random.uniform(0,1)
             if random.uniform(0, 1) <= probability and list_cache[-1][x] == 0:
                 cache[x] = 1
             elif random.uniform(0, 1) <= probability and \

@@ -40,6 +40,9 @@ class CayleyTree(object):
             return True
         else:
             return False
+
+    def __len__(self):
+        return self.nodeNumber()
     
     def cayleyProtect(self):
         """Protects the user from creating and using a Cayley Tree object that
@@ -63,6 +66,11 @@ class CayleyTree(object):
             nodes = (self.links * (self.links - 1)**(x - 1))
             list_of_nodes_by_generation.append(nodes)
         return list_of_nodes_by_generation
+
+    def nodeCountGen(self,gen):
+        """Takes a generation and returns the number of generations in the
+           node."""
+        return (self.links * (self.links - 1)**(gen - 1))
 
     def linkCreator(self): 
         """Returns a list of tuples that represents each link in the Cayley
