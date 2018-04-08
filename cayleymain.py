@@ -14,7 +14,11 @@ from cayleygraphics import CayleyGraphics
 def main():
     generations = int(input("Number of generations: "))
     links = int(input("Number of links: "))
-    custom = input("Custom A, B, G Values? [Y/N]: ")
+    print("\n" + "The default values for alpha, beta, gamma are: \n"
+          + "Alpha = 0.5 \n"
+          + "Beta = 0.8 \n"
+          + "Gamma = 0.2 \n")
+    custom = input("Do you want to customize alpha, beta, gamma values? [Y/N]: ")
     if(custom.upper()=="Y"):
         alpha = float(input("Value for alpha: "))
         beta = float(input("Value for beta: "))

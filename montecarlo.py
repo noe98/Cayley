@@ -25,6 +25,7 @@ class MonteCarlo(object):
         self.alpha = alpha
         self.beta = beta
         self.gamma = gamma
+        self.user_input = None
 
     def getAlpha(self):
         """Returns alpha value."""
@@ -46,9 +47,10 @@ class MonteCarlo(object):
         """Returns the state_d dictionary."""
         return self.state_d
 
-    def setProbability(self):
-        pass
+##    def setProbability(self, user_input):
+##        return self.user_input = user_input
 
+    #Initial State Methods
     def emptyDictionary(self):
         """Sets the initial state of the nodes to empty, a value of 0, in the
            state dictionary."""
@@ -74,6 +76,7 @@ class MonteCarlo(object):
             self.state_d[x] = 0
         return self.state_d
 
+    #Analysis Methods
     def getZeros(self):
         """Calculates the number of nodes in the empty state- a value of 0."""
         return len(self.state_d) - sum(self.state_d.values())
@@ -98,7 +101,8 @@ class MonteCarlo(object):
         for node in nodes:
             density += state_d.get(node)
         return density 
-            
+
+    #Monte Carlo Algorithm methods            
     def simulate(self):
         """Simulates the Monte Carlo simulation on the Cayley Tree for one
            time step and stores that data."""
@@ -112,7 +116,9 @@ class MonteCarlo(object):
         for x in range(len(self.getStates())):
             summ = self.nearestNeighborSum(x,list_cache[-1])
             #print("summ: ", summ)
-            probability = random.uniform(0,1)
+            probability = self.gamma*list_cache[-1][x] + \
+                                    (1 - list_cache[-1][x])*\
+                                    self.alpha*(self.beta**(summ))
             if random.uniform(0, 1) <= probability and list_cache[-1][x] == 0:
                 cache[x] = 1
             elif random.uniform(0, 1) <= probability and \
@@ -125,6 +131,7 @@ class MonteCarlo(object):
         self.list_cache = list_cache
         return self.list_cache
 
+    #Data Export Methods
     def sendExcel(self):
         """A file that sends the data ran from the most recent
            MonteCarlo().simulate to an excel sheet. Must run the simulate
