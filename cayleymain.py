@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Authors: Justin Pusztay, Matt Lubas, Griffin Noe
+Authors: Justin Pusztay, Matt Lubas, Griffin Noe, Irina Mazilu
 Filename: cayleymain.py
 Project: Research for Irina Mazilu, Ph.D.
 
