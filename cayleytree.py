@@ -42,6 +42,7 @@ class CayleyTree(object):
             return False
 
     def __len__(self):
+        """Returns the number of nodes in the Cayley Tree."""
         return self.nodeNumber()
     
     def cayleyProtect(self):
@@ -95,7 +96,7 @@ class CayleyTree(object):
            method."""
         
         def helper(node_count):
-            """A helper function used within fastLinkCreation in order to make
+            """A helper function used within fastLinkCreatior in order to make
                code read easier."""
             links = list()
             for x in range(self.links-1):

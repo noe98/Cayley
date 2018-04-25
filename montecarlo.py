@@ -81,12 +81,12 @@ class MonteCarlo(object):
         """Calculates the number of nodes in the empty state- a value of 0."""
         return len(self.state_d) - sum(self.state_d.values())
 
-    def getOnes(self):
+    def getOnes(self,timestep):
         """Calculates the number of nodes in the filled state- a value of 1."""
-        return sum(self.state_d.values())
+        return sum(self.list_cache[timestep].values())
 
     def nearestNeighborSum(self,node,timestep):
-        """Takes the node number and caculates the sum of the neartest
+        """Takes the node number and caculates the sum of the nearest
            nieghbors."""
         sumOfStates = 0
         for x in self.tree.fastLinkCreator()[node]:
@@ -131,6 +131,11 @@ class MonteCarlo(object):
         self.list_cache = list_cache
         return self.list_cache
 
+    def clear(self):
+        """Clears the data from the tree."""
+        self.state_d = dict()
+        self.list_cache = None
+
     #Data Export Methods
     def sendExcel(self):
         """A file that sends the data ran from the most recent
@@ -143,7 +148,7 @@ class MonteCarlo(object):
         if self.list_cache == None:
             raise ValueError("No data to send to excel. Must run simulation")
         workbook = xlsxwriter.Workbook('monteCarloData.xlsx')
-        worksheet = workbook.add_worksheet()
+        worksheet = workbook.add_worksheet("Monte Carlo Data")
         worksheet.write(0,0,"Timestep")
         for x in range(len(self.state_d)):
             worksheet.write(x+1,0,"Node "+str(x))
@@ -154,6 +159,15 @@ class MonteCarlo(object):
                 worksheet.write(x+1,y+1,self.list_cache[y][x])
 ##        for x in range(len(self.state_d)):
 ##            worksheet.write(len(self.state_d)+1,x+1,"=SUM(B1:B4)")
+        worksheet2 = workbook.add_worksheet("Density")
+        worksheet2.write(0,0,"Timestep")
+        for x in range(self.tree.generations+1):
+            worksheet2.write(x+1,0,"Gen. "+str(x))
+        for y in range(len(self.state_d)):
+            worksheet2.write(0,y+1,str(y))
+        for y in range(len(self.list_cache)):
+            for x in range(self.tree.generations+1):
+                worksheet2.write(x+1,y+1,self.densityCalculator(x,self.list_cache[y]))
         workbook.close()
 
         
