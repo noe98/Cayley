@@ -167,11 +167,11 @@ class CayleyGUI:
         beta  = float(self.bet_entry.get())
         gamma = float(self.gam_entry.get())
         graphic = CayleyGraphics(gens, link)
-        plot = graphic.drawCayley()
-        photo = self.draw_tree(self.tree_canvas, plot)
+        figure = graphic.drawCayley()
+        photo = self.draw_tree(self.tree_canvas, figure)
         canvas.create_image(0,0, image = photo, anchor = NW)
 
-    def draw_tree(self, canvas, figure, loc = (0,0)):
+    def draw_tree(canvas, figure, loc = (0,0)):
         """Draws the tree figure onto the tree canvas."""
         figure_canvas_agg = FigureCanvasAgg(figure)
         figure_canvas_agg.draw()
