@@ -26,10 +26,14 @@ def main():
         monte = MonteCarlo(generations, links, alpha, beta, gamma)
     else:
         monte = MonteCarlo(generations, links)
+    print("\n" + "Enter Excel file name \n"
+          + "Example: monteCarloData")
+    filename = str(input("Filename: "))
+    full_filename = filename + ".xlsx"
     monte.emptyDictionary() #can change to other inital states
     for x in range(len(monte.tree)):
         monte.simulate()
-    monte.sendExcel()
+    monte.sendExcel(full_filename)
     cayley = CayleyGraphics(generations, links)
     cayley.drawCayley()
     

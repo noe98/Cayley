@@ -137,7 +137,7 @@ class MonteCarlo(object):
         self.list_cache = None
 
     #Data Export Methods
-    def sendExcel(self):
+    def sendExcel(self,filename = "monteCarloData.xlsx"):
         """A file that sends the data ran from the most recent
            MonteCarlo().simulate to an excel sheet. Must run the simulate
            method in order to have this method work."""
@@ -147,7 +147,7 @@ class MonteCarlo(object):
         
         if self.list_cache == None:
             raise ValueError("No data to send to excel. Must run simulation")
-        workbook = xlsxwriter.Workbook('monteCarloData.xlsx')
+        workbook = xlsxwriter.Workbook(filename)
         worksheet = workbook.add_worksheet("Monte Carlo Data")
         worksheet.write(0,0,"Timestep")
         for x in range(len(self.state_d)):
