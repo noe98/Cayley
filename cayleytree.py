@@ -18,7 +18,7 @@ class CayleyTree(object):
            links."""
         self.generations = generations
         self.links = links
-        self.cayleyProtect()
+        #self.cayleyProtect()
         
     def __str__(self):
         """Creates a string representation of the Cayley Tree."""

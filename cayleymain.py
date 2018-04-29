@@ -9,6 +9,7 @@ of the cayley tree.
 """
 
 from montecarlo import MonteCarlo
+from cayleytree import CayleyTree
 from cayleygraphics import CayleyGraphics
 
 def main():
@@ -23,15 +24,15 @@ def main():
         alpha = float(input("Value for alpha: "))
         beta = float(input("Value for beta: "))
         gamma = float(input("Value for gamma: "))
-        monte = MonteCarlo(generations, links, alpha, beta, gamma)
+        monte = MonteCarlo(CayleyTree(generations,links), alpha, beta, gamma)
     else:
-        monte = MonteCarlo(generations, links)
+        monte = MonteCarlo(CayleyTree(generations,links))
     print("\n" + "Enter Excel file name \n"
           + "Example: monteCarloData")
     filename = str(input("Filename: "))
     full_filename = filename + ".xlsx"
     monte.emptyDictionary() #can change to other inital states
-    for x in range(len(monte.tree)):
+    for x in range(len(monte.network)):
         monte.simulate()
     monte.sendExcel(full_filename)
     cayley = CayleyGraphics(generations, links)

@@ -1,6 +1,6 @@
 """
 Authors: Justin Pusztay, Matt Lubas, and Griffin Noe
-Filename: montecarlo.py
+Filename: testmontecarlo.py
 Project: Research for Irina Mazilu, Ph.D.
 
 This file contains the MonteCarlo class. It creates a Cayley Tree and performs
@@ -11,23 +11,22 @@ to be analyzed and exported.
 import random
 import xlsxwriter #http://xlsxwriter.readthedocs.io/tutorial01.html 
 from cayleytree import CayleyTree
+from lattice import Lattice
 
 
 class MonteCarlo(object):
     
-    def __init__(self, generations, links,
+    def __init__(self, network,
                  alpha = .5, beta = .8, gamma = .2):
         """Runs the Monte Carlo simulation the desired number of times."""
-        self.tree = CayleyTree(generations, links)
-        self.generations = generations
-        self.links = links
+        self.network = network
         self.state_d = dict()
         self.list_cache = None
         self.alpha = alpha
         self.beta = beta
         self.gamma = gamma
         self.user_input = None
-
+        
     def getAlpha(self):
         """Returns alpha value."""
         return self.alpha
@@ -48,23 +47,20 @@ class MonteCarlo(object):
         """Returns the state_d dictionary."""
         return self.state_d
 
-##    def setProbability(self, user_input):
-##        return self.user_input = user_input
-
     #Initial State Methods
     def emptyDictionary(self):
         """Sets the initial state of the nodes to empty, a value of 0, in the
            state dictionary."""
-        for x in range(self.tree.nodeNumber()):
+        for x in range(self.network.nodeNumber()):
             self.state_d[x] = 0
         return self.state_d
 
     def randomDictionary(self):
         """Assigns a filled state, a value of 1, to a random number of nodes in the
            state dictionary."""
-        random_num = random.randint(0,self.tree.nodeNumber())
-        for x in range(self.tree.nodeNumber()):
-            if random.randint(0,self.tree.nodeNumber()) <= random_num:
+        random_num = random.randint(0,self.network.nodeNumber())
+        for x in range(self.network.nodeNumber()):
+            if random.randint(0,self.network.nodeNumber()) <= random_num:
                 self.state_d[x] = 0
             else:
                 self.state_d[x] = 1
@@ -73,7 +69,7 @@ class MonteCarlo(object):
     def zeroDictionary(self):
         """Assigns a filled state to the central node, and a zero elsewhere."""
         self.state_d[0] = 1
-        for x in range(1,self.tree.nodeNumber()):
+        for x in range(1,self.network.nodeNumber()):
             self.state_d[x] = 0
         return self.state_d
 
@@ -90,20 +86,23 @@ class MonteCarlo(object):
         """Takes the node number and caculates the sum of the nearest
            nieghbors."""
         sumOfStates = 0
-        for x in self.tree.fastLinkCreator()[node]:
+        for x in self.network.nearestNeighborFinder(node):
             sumOfStates += timestep.get(x)
         return sumOfStates
 
     def densityCalculator(self,gen,state_d):
         """Takes a generation and a state dictionary and returns the density
            of the generation."""
-        nodes = self.tree.nodeFinder(gen)
-        density = 0
-        for node in nodes:
-            density += state_d.get(node)
-        return density 
-
-    #Monte Carlo Algorithm methods            
+        if type(self.network) == type(CayleyTree):
+            nodes = self.network.nodeFinder(gen)
+            density = 0
+            for node in nodes:
+                density += state_d.get(node)
+            return density
+        else:
+            return TypeError("Inappropriate Arguement Type.")
+        
+    #Monte Carlo Algorithm methods 
     def simulate(self):
         """Simulates the Monte Carlo simulation on the Cayley Tree for one
            time step and stores that data."""
@@ -156,19 +155,22 @@ class MonteCarlo(object):
         for y in range(len(self.state_d)):
             worksheet.write(0,y+1,str(y))
         for y in range(len(self.list_cache)):
-            for x in range(self.tree.nodeNumber()):
+            for x in range(self.network.nodeNumber()):
                 worksheet.write(x+1,y+1,self.list_cache[y][x])
 ##        for x in range(len(self.state_d)):
 ##            worksheet.write(len(self.state_d)+1,x+1,"=SUM(B1:B4)")
-        worksheet2 = workbook.add_worksheet("Density")
-        worksheet2.write(0,0,"Timestep")
-        for x in range(self.tree.generations+1):
-            worksheet2.write(x+1,0,"Gen. "+str(x))
-        for y in range(len(self.state_d)):
-            worksheet2.write(0,y+1,str(y))
-        for y in range(len(self.list_cache)):
-            for x in range(self.tree.generations+1):
-                worksheet2.write(x+1,y+1,self.densityCalculator(x,self.list_cache[y]))
-        workbook.close()
+        if type(self.network) == type(CayleyTree):
+            worksheet2 = workbook.add_worksheet("Density")
+            worksheet2.write(0,0,"Timestep")
+            for x in range(self.network.generations+1):
+                worksheet2.write(x+1,0,"Gen. "+str(x))
+            for y in range(len(self.state_d)):
+                worksheet2.write(0,y+1,str(y))
+            for y in range(len(self.list_cache)):
+                for x in range(self.network.generations+1):
+                    worksheet2.write(x+1,y+1,self.densityCalculator(x,self.list_cache[y]))
+            workbook.close()
+        else:
+            workbook.close()
 
-        
+    
