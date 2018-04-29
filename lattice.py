@@ -80,3 +80,8 @@ class Lattice(object):
             if count % self.floorArea() == self.floorArea() - 1:
                 floor_count += 1
         return link_d
+
+    def nearestNeighborFinder(self,node):
+        """Finds the nodes that are neighbors to the node in question."""
+        return self.linkCreator()[node]
+        

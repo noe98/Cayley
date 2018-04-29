@@ -12,6 +12,7 @@ import random
 import xlsxwriter #http://xlsxwriter.readthedocs.io/tutorial01.html 
 from cayleytree import CayleyTree
 
+
 class MonteCarlo(object):
     
     def __init__(self, generations, links,
