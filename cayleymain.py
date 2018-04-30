@@ -31,7 +31,16 @@ def main():
           + "Example: monteCarloData")
     filename = str(input("Filename: "))
     full_filename = filename + ".xlsx"
-    monte.emptyDictionary() #can change to other inital states
+    print("Press 1 for starting all nodes empty. \n" +
+          "Press 2 for starting random percentage of nodes filled. \n" +
+          "Press 3 for only having the 0 node filled.")
+    num_select = int(input("Starting state: "))
+    if num_select == 1:
+        monte.emptyDictionary() #can change to other inital states
+    elif num_select == 2:
+        monte.randomDictionary()
+    else:
+        monte.zeroDictionary()
     for x in range(len(monte.network)):
         monte.simulate()
     monte.sendExcel(full_filename)
