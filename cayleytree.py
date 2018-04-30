@@ -94,43 +94,34 @@ class CayleyTree(object):
            its neighbors as the value. This method will be used in MonteCarlo
            class, since this dictionary will reduce the runtime of its simulate
            method."""
-        
-        def helper(node_count):
-            """A helper function used within fastLinkCreatior in order to make
-               code read easier."""
-            links = list()
-            for x in range(self.links-1):
-                links += [node_count + x]
-            return links
-        
         link_d = dict()
+        node_gens = self.nodeGeneration()
         #sets up 0
         link_d[0] = list(range(1,self.nodeGeneration()[1]+1))
-        #goes down tree
-        connection_node_count = 1
-        node_count = sum(self.nodeGeneration()[0:2])
-        for x in range(self.nodeNumber() - sum(self.nodeGeneration()[0:2])):
-            if node_count == sum(self.nodeGeneration()[0:2]):
-                link_d[node_count] = [connection_node_count]
-                node_count += 1
-            elif x % (self.links - 1) == 0:
-                link_d[node_count] = [connection_node_count]
-                node_count += 1
-            if x % (self.links - 1) != 0:
-                link_d[node_count] = [connection_node_count]
-                node_count += 1
-                connection_node_count += 1
+        node_count = self.nodeGeneration()[1]
         #goes up tree
-        a = sum(self.nodeGeneration()[0:len(self.nodeGeneration())-1]) 
-        node_count = self.nodeGeneration()[1] + 1
-        for x in range(1,a):
-            link_d[x] = link_d.get(x,list()) + helper(node_count) 
-            node_count += self.links - 1 
-        #finishes up first generation
-        for x in range(1,sum(self.nodeGeneration()[0:2])):
-            link_d[x] = [0] + link_d.get(x,list())
+        for node in range(1,self.nodeNumber()):
+            if node_count + 1 != self.nodeNumber():
+                link_d[node] = [node_count+x for x in range(1,self.links)]
+                node_count += self.links-1
+            else:
+                link_d[node] = list()
+        #goes down tree
+        node_count = 0
+        link_tally = 0
+        for node in range(1,self.nodeNumber()):
+            if node <= self.links:
+                link_d[node] = link_d.get(node,list()) + [0]
+                if node == self.links:
+                    node_count += 1
+            else:
+                link_d[node] = link_d.get(node,list()) + [node_count]
+                link_tally += 1 
+                if link_tally == self.links - 1:
+                    node_count += 1
+                    link_tally = 0
         return link_d
-    
+        
     def genFinder(self,node):
         """Takes a node and returns the generation that the node is in."""
         b = self.nodeGeneration()
