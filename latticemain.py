@@ -45,8 +45,8 @@ def main():
     for x in range(len(monte.network)):
         monte.simulate()
     monte.sendExcel(full_filename)
-##    a = LatticeGraphics()
-##    a.drawLattice(a.GraphList)
+    a = LatticeGraphics(x_dir,y_dir,z_dir)
+    a.drawLattice()
     
 if __name__ == "__main__":
     main()

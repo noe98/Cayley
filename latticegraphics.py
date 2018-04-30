@@ -7,23 +7,21 @@ Contains the class LatticeGraphics, which generates a GUI image of the
 Lattice Graph. 
 
 Code Adapted from: https://www.udacity.com/wiki/creating-network-graphs-with-python
-
-USE THIS LINK JUSTIN!
-https://networkx.github.io/documentation/networkx-1.9.1/reference/classes.graph.html#iterating-over-nodes-and-edges
 """
 
 import networkx as nx
 import matplotlib.pyplot as plt
 
-
-
 class LatticeGraphics(object):
     
-    def __init__(self):
+    def __init__(self,length,width,height):
             """Creates a CayleyTree object in order to create an image
                of the graph."""
+            self.x = length
+            self.y = width
+            self.z = height
             self.GraphList = []            
-            #self.tree = LatticeGraphics(length, width, height)
+            
 
     def drawLattice(self,labels=None, graph_layout='spring',
                        node_size=1000, node_color='blue', node_alpha=0.3,
@@ -33,16 +31,7 @@ class LatticeGraphics(object):
                        text_font='sans-serif'):
             """Method that physically draws the lattice graph based on length,
             width, and height."""
-
-            
-            l = int( input("What is the length of the lattice?"))
-            w = int( input("What is the width of the lattice?"))
-            h = int( input("What is the height of the lattice?"))
-                                
-            
-            graph=nx.grid_graph([l,w,h])
-
-            
+            graph=nx.grid_graph([self.x,self.y,self.z])
             # add edges
             for edge in self.GraphList:
                 graph.add_edge(edge[0], edge[1])
@@ -77,11 +66,11 @@ class LatticeGraphics(object):
 
             #Number of Nodes is helpful
             nn = nx.number_of_nodes(graph)
-            print(nn)
+            #print(nn)
 
             #Prints <dict_keyiterator object at 0x116fd3318>
             neighbors = nx.all_neighbors(graph, (0,0,1))
-            print(neighbors)
+            #print(neighbors)
             
             #e = nx.edges(graph)
             #print(e)
@@ -89,6 +78,3 @@ class LatticeGraphics(object):
             # show graph
             plt.show()
                     
-
-#LatticeGraphics.drawLattice(GraphList)
-
