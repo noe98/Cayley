@@ -33,6 +33,9 @@ class Lattice(object):
         else:
             return False
 
+    def __len__(self):
+        return self.nodeNumber()
+
     def latticeProtect(self):
         """Protects the user from creating a lattice that cannot exist."""
         if self.y < 0 or self.x < 0 or self.z < 0:
