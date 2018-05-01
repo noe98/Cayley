@@ -1,12 +1,14 @@
-# Stochastic Absorption Rates Modeled on Cayley Trees
+# Stochastic Absorption Rates Modeled on Networks
 Research by Justin Pusztay, Matt Lubas, and Griffin Noe, for research with Dr. Irina Mazilu at Washington and Lee University.
 
 ## Getting Started
 
-The code on Github provides a framework for understanding attachment and de-attachment, or change of states for many different applications like drug encapsulations, thin films interference, voter models, epidemic models, social models, community dynamics and more.
+The code on Github provides a framework for understanding attachment and de-attachment, or change of states for many different applications like drug encapsulations, thin films interference, voter models, epidemic models, social models, community dynamics and more. This code creates various networks and allows for users to run monte carlo simulations on those networks according to various probabilty functions. 
 
 Cayley Tree (also known as Bethe Lattice) and Lattice are examples of different network structures to represent occupation of nodes (each circle) depending on the status of their neighbors (the circles connected by lines). 
 Each Cayley Tree has a specified number of generations and number of connections. The number of generations (starting with 0) is the beginning of the Cayley Tree, and represents the number of connections away from the central node. The connections represent the number of edges each node has (except for the last generation of nodes).
+
+Each Lattice can be represented by a grid that can be written as a length x width x height by counting the number of nodes in that direction. 
 
 ![alt text](https://upload.wikimedia.org/wikipedia/commons/e/e7/Reseau_de_Bethe.svg) 
 
