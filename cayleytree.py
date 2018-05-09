@@ -143,3 +143,7 @@ class CayleyTree(object):
     def nearestNeighborFinder(self,node):
         """Finds the nodes that are neighbors to the node in question."""
         return self.fastLinkCreator()[node]
+
+    def degree(self,node):
+        """Finds degree of a node."""
+        return len(self.fastLinkCreator()[node])

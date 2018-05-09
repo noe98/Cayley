@@ -87,4 +87,6 @@ class Lattice(object):
     def nearestNeighborFinder(self,node):
         """Finds the nodes that are neighbors to the node in question."""
         return self.linkCreator()[node]
-        
+
+    def degree(self,node):
+        return len(self.linkCreator()[node])
