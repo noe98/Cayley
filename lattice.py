@@ -5,8 +5,8 @@ Project: Research for Irina Mazilu, Ph.D.
 
 This file contains the Lattice class. This class creates a Cayley Tree
 object, by setting up the nodes and links between nodes. It also has methods
-which allow for some basic analysis of the class such as number of nodes and nodes
-per floor. 
+which allow for some basic analysis of the class such as number of nodes and
+nodes per floor. 
 """
 
 class Lattice(object):
