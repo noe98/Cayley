@@ -51,7 +51,9 @@ class MonteCarlo(object):
     def emptyDictionary(self):
         """Sets the initial state of the nodes to empty, a value of 0, in the
            state dictionary."""
-        for x in range(self.network.nodeNumber()):
+        #this method adds number by copying the network, no need to copy
+        #just need to iterate the network. 
+        for x in self.network:
             self.state_d[x] = 0
         return self.state_d
 
@@ -59,7 +61,7 @@ class MonteCarlo(object):
         """Assigns a filled state, a value of 1, to a random number of nodes in the
            state dictionary."""
         random_num = random.randint(0,self.network.nodeNumber())
-        for x in range(self.network.nodeNumber()):
+        for x in self.network:
             if random.randint(0,self.network.nodeNumber()) <= random_num:
                 self.state_d[x] = 0
             else:
@@ -69,7 +71,7 @@ class MonteCarlo(object):
     def zeroDictionary(self):
         """Assigns a filled state to the central node, and a zero elsewhere."""
         self.state_d[0] = 1
-        for x in range(1,self.network.nodeNumber()):
+        for x in self.network:
             self.state_d[x] = 0
         return self.state_d
 
@@ -113,7 +115,7 @@ class MonteCarlo(object):
         else:
             list_cache = self.list_cache
         cache = dict()
-        for x in range(len(self.getStates())):
+        for x in self.network:
             summ = self.nearestNeighborSum(x,list_cache[-1])
             #print("summ: ", summ)
             probability = self.gamma*list_cache[-1][x] + \
@@ -151,12 +153,12 @@ class MonteCarlo(object):
         worksheet = workbook.add_worksheet("Monte Carlo Data")
         worksheet.write(0,0,"Timestep")
         for x in range(len(self.state_d)):
-            worksheet.write(x+1,0,"Node "+str(x))
+            worksheet.write(x+1,0,"Node "+ str(self.network.keys[x]))
         for y in range(len(self.state_d)):
             worksheet.write(0,y+1,str(y))
         for y in range(len(self.list_cache)):
             for x in range(self.network.nodeNumber()):
-                worksheet.write(x+1,y+1,self.list_cache[y][x])
+                worksheet.write(x+1,y+1,self.list_cache[y][self.network.keys[x]])
 ##        for x in range(len(self.state_d)):
 ##            worksheet.write(len(self.state_d)+1,x+1,"=SUM(B1:B4)")
         if type(self.network) == type(CayleyTree):

@@ -9,7 +9,9 @@ which allow for some basic analysis of the class such as number of nodes
 and nodes per generation. 
 """
 
-class CayleyTree(object):
+from abstractnetwork import AbstractNetwork
+
+class CayleyTree(AbstractNetwork):
     """Creates the Cayley Tree object. The class needs integer values
        for number of generations and links."""
     
@@ -18,6 +20,8 @@ class CayleyTree(object):
            links."""
         self.generations = generations
         self.links = links
+        self.keys = list(range(self.nodeNumber()))
+        AbstractNetwork.__init__(self)
         #self.cayleyProtect()
         
     def __str__(self):
@@ -40,11 +44,7 @@ class CayleyTree(object):
             return True
         else:
             return False
-
-    def __len__(self):
-        """Returns the number of nodes in the Cayley Tree."""
-        return self.nodeNumber()
-    
+            
     def cayleyProtect(self):
         """Protects the user from creating and using a Cayley Tree object that
            cannont exist."""
@@ -71,7 +71,7 @@ class CayleyTree(object):
     def nodeCountGen(self,gen):
         """Takes a generation and returns the number of generations in the
            node."""
-        return (self.links * (self.links - 1)**(gen - 1))
+        return (self.links*(self.links - 1)**(gen - 1))
 
     def linkCreator(self): 
         """Returns a list of tuples that represents each link in the Cayley
@@ -120,6 +120,7 @@ class CayleyTree(object):
                 if link_tally == self.links - 1:
                     node_count += 1
                     link_tally = 0
+        self.link_d = link_d
         return link_d
         
     def genFinder(self,node):
@@ -142,8 +143,5 @@ class CayleyTree(object):
 
     def nearestNeighborFinder(self,node):
         """Finds the nodes that are neighbors to the node in question."""
+        #return self.link_d[node]
         return self.fastLinkCreator()[node]
-
-    def degree(self,node):
-        """Finds degree of a node."""
-        return len(self.fastLinkCreator()[node])

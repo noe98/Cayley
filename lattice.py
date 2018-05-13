@@ -6,10 +6,12 @@ Project: Research for Irina Mazilu, Ph.D.
 This file contains the Lattice class. This class creates a Cayley Tree
 object, by setting up the nodes and links between nodes. It also has methods
 which allow for some basic analysis of the class such as number of nodes and
-nodes per floor. 
+nodes per floor. 	
 """
 
-class Lattice(object):
+from abstractnetwork import AbstractNetwork
+
+class Lattice(AbstractNetwork):
     """Creates the Lattice object. The class needs integer values for the
     length, width, and height based on the number of nodes. It defaults to a
     2-demensional lattice."""
@@ -20,7 +22,9 @@ class Lattice(object):
         self.y = width
         self.z = height-1
         self.latticeProtect()
-
+        self.keys = list(range(self.nodeNumber()))
+        AbstractNetwork.__init__(self)
+        
     def __eq__(self,other):
         """Defines equality of a lattice based on the demensions."""
         if self is other:
@@ -32,9 +36,6 @@ class Lattice(object):
             return True
         else:
             return False
-
-    def __len__(self):
-        return self.nodeNumber()
 
     def latticeProtect(self):
         """Protects the user from creating a lattice that cannot exist."""
@@ -82,11 +83,10 @@ class Lattice(object):
                 link_d[count] = link_d.get(count,list()) + [count-self.floorArea()]
             if count % self.floorArea() == self.floorArea() - 1:
                 floor_count += 1
+        self.link_d = link_d
         return link_d
 
     def nearestNeighborFinder(self,node):
         """Finds the nodes that are neighbors to the node in question."""
+        #return self.link_d[node]
         return self.linkCreator()[node]
-
-    def degree(self,node):
-        return len(self.linkCreator()[node])
