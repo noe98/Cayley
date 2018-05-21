@@ -30,7 +30,7 @@ class CayleyTree(AbstractNetwork):
         b = "Cayley Tree has " + str(self.links) + " links per node" + "\n"
         c = "Number of Nodes: " + str(self.nodeNumber()) + "\n"
         d = "Nodes per Generation: " + str(self.nodeGeneration())  + "\n"
-        e = "Links of the Cayley Tree: " + str(self.linkCreator()) 
+        e = "Links of the Cayley Tree: " + str(self.link_d) 
         return a+b+c+d+e
 
     def __eq__(self,other):
@@ -93,7 +93,7 @@ class CayleyTree(AbstractNetwork):
         """Creates a dictionary with the node number as the key and with a list of
            its neighbors as the value. This method will be used in MonteCarlo
            class, since this dictionary will reduce the runtime of its simulate
-           method."""
+           method."""       
         link_d = dict()
         node_gens = self.nodeGeneration()
         #sets up 0
@@ -140,8 +140,3 @@ class CayleyTree(AbstractNetwork):
         a = sum(b[0:gen])
         c = self.nodeNumber()-sum(b[gen+1:self.generations+1])
         return list(range(a,c))
-
-    def nearestNeighborFinder(self,node):
-        """Finds the nodes that are neighbors to the node in question."""
-        #return self.link_d[node]
-        return self.fastLinkCreator()[node]

@@ -26,18 +26,4 @@ class Graph(AbstractNetwork):
         """Returns the total number of nodes in the Lattice."""
         return len(self.link_d)
 
-    def add(self,node):
-        """Adds a node to graph."""
-        self.link_d[node] = list()
-        self.keys.append(node)
-    
-    def linkCreator(self,node,connection):
-        """Adds a link in between two nodes."""
-        if connection not in self.link_d:
-            return NameError("Node not found in graph")
-        self.link_d[node] = self.link_d.get(node,list()) + [connection]
-        self.link_d[connection] = self.link_d.get(connection,list()) + [node]
-
-    def nearestNeighborFinder(self,node):
-        """Finds the neighbors between of the node."""
-        return self.link_d[node]        
+       

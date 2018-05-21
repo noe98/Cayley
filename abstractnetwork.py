@@ -30,15 +30,21 @@ class AbstractNetwork(object):
         """Returns the degree of a node."""
         return len(self.link_d[node])
 
-    def getModCount(self):
-        """Returns the number of mutations to this collection."""
-        return self._modCount
+    def add(self,node):
+        """Adds a node to graph."""
+        self.link_d[node] = list()
+        self.keys.append(node)
 
-    def incModCount(self):
-        """Increments the number of mutations by one."""
-        self._modCount += 1
+    def linkCreator(self,node,connection):
+        """Adds a link in between two nodes."""
+        if connection not in self.link_d:
+            return NameError("Nde not found in graph")
+        self.link_d[node] = self.link_d.get(node,list()) + [connection]
+        self.link_d[connection] = self.link_d.get(connection,list()) + [node]
 
-    def resetSizeAndModCount(self):
-        """Resets the numbers of items and mutations to 0."""
-        self._size = 0
-        self._modCount = 0
+    def clear(self):
+        self.link_d = dict()
+
+    def nearestNeighborFinder(self,node):
+        """Finds the neighbors between of the node."""
+        return self.link_d[node] 

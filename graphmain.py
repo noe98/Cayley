@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+
 from graph import Graph
 from montecarlo import MonteCarlo
 
