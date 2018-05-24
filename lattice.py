@@ -24,6 +24,7 @@ class Lattice(AbstractNetwork):
         self.latticeProtect()
         self.keys = list(range(self.nodeNumber()))
         AbstractNetwork.__init__(self)
+        self.autoCreate()
         
     def __eq__(self,other):
         """Defines equality of a lattice based on the demensions."""
@@ -54,39 +55,31 @@ class Lattice(AbstractNetwork):
         """Returns the number of nodes in a cross section of the z-plane."""
         return self.x*self.y
 
-    def linkCreator(self):
-        """Creates the links present in a lattice. Has a dictionary with the node
-        number as the key and a list of neighbors as the value."""
-        link_d = dict()
-        #in x-direction
-        for count in range(self.nodeNumber()):
-            column_count = count % self.x
-            if column_count % self.x != self.x -1: #checks if at x-max
-                link_d[count] = [count+1]
-            if column_count % self.x != 0: #checks if at x-min
-                link_d[count] = link_d.get(count,list()) + [count-1]
-        #in y-direction
+    def autoCreate(self):
+        """Creates the links present in a lattice. Has a dictionary with the
+        node number as the key and a list of neighbors as the value."""
+        for x in range(self.nodeNumber()):
+            self.add(x)
         row_count = 0
-        for count in range(self.nodeNumber()):
-            if row_count % self.y != self.y-1: #checks if at y-max
-                link_d[count] = link_d.get(count,list()) + [count+self.x]
-            if row_count % self.y != 0: #checks if at y-min
-                link_d[count] = link_d.get(count,list()) + [count - self.x]
-            if count % self.x == self.x - 1:
-                row_count += 1
-        #in-z-dirction
         floor_count = 0
-        for count in range(self.nodeNumber()):
+        for node in self:
+            column_count = node % self.x
+            if column_count % self.x != self.x -1: #checks if at x-max
+                self.linkCreator(node,node+1)
+            if column_count % self.x != 0: #checks if at x-min
+               self.linkCreator(node,node-1)
+               
+            if row_count % self.y != self.y-1: #checks if at y-max
+                self.linkCreator(node,node+self.x)
+            if row_count % self.y != 0: #checks if at y-min
+                self.linkCreator(node,node-self.x)
+            if node % self.x == self.x - 1:
+                row_count += 1
+                
             if floor_count != self.z: #checks if at z-max
-                link_d[count] = link_d.get(count,list()) + [count+self.floorArea()]
+                self.linkCreator(node,node+self.floorArea())
             if floor_count != 0: #checks if at z-min
-                link_d[count] = link_d.get(count,list()) + [count-self.floorArea()]
-            if count % self.floorArea() == self.floorArea() - 1:
+                self.linkCreator(node,node-self.floorArea())
+            if node % self.floorArea() == self.floorArea() - 1:
                 floor_count += 1
-        self.link_d = link_d
-        return link_d
-
-    def nearestNeighborFinder(self,node):
-        """Finds the nodes that are neighbors to the node in question."""
-        #return self.link_d[node]
-        return self.linkCreator()[node]
+ 

@@ -38,7 +38,7 @@ class CayleyGraphics(object):
         #graph =nx.balanced_tree(connections,generations)
 
         # add edges
-        for edge in self.tree.linkCreator():
+        for edge in self.tree.graphicsLinks():
             graph.add_edge(edge[0], edge[1])
 
         # these are different layouts for the network you may try

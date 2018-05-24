@@ -9,9 +9,10 @@ Contains the implentation of the abstract network.
 class AbstractNetwork(object):
 
     def __init__(self):
+        """Sets up the link dictionary and the mod count."""
         self.link_d = dict()
         self._modCount = 0
-
+        
     def __iter__(self):
         """Allows iteration over self."""
         temp = self._modCount
@@ -32,17 +33,18 @@ class AbstractNetwork(object):
 
     def add(self,node):
         """Adds a node to graph."""
-        self.link_d[node] = list()
+        self.link_d[node] = set()
         self.keys.append(node)
 
     def linkCreator(self,node,connection):
         """Adds a link in between two nodes."""
         if connection not in self.link_d:
             return NameError("Nde not found in graph")
-        self.link_d[node] = self.link_d.get(node,list()) + [connection]
-        self.link_d[connection] = self.link_d.get(connection,list()) + [node]
+        (self.link_d[node]).add(connection)
+        (self.link_d[connection]).add(node)
 
     def clear(self):
+        """Clears the network of all links and nodes."""
         self.link_d = dict()
 
     def nearestNeighborFinder(self,node):

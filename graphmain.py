@@ -1,4 +1,12 @@
 #!/usr/bin/env python
+"""
+Authors: Justin K. Pusztay
+Filename: graphmain.py
+Project: Research for Irina Mazilu, Ph.D.
+
+Below is an example of a custom graph being created and a MonteCarlo simulation
+being run on the graph.
+"""
 
 from graph import Graph
 from montecarlo import MonteCarlo

@@ -15,10 +15,10 @@ class CayleyTree(AbstractNetwork):
     """Creates the Cayley Tree object. The class needs integer values
        for number of generations and links."""
     
-    def __init__(self,generations,links):
+    def __init__(self,generations,links): #constructor method with parameters
         """Creates a Cayley Tree with desired number of generations and
            links."""
-        self.generations = generations
+        self.generations = generations #instance variables
         self.links = links
         self.keys = list(range(self.nodeNumber()))
         AbstractNetwork.__init__(self)
@@ -73,7 +73,7 @@ class CayleyTree(AbstractNetwork):
            node."""
         return (self.links*(self.links - 1)**(gen - 1))
 
-    def linkCreator(self): 
+    def graphicsLinks(self): 
         """Returns a list of tuples that represents each link in the Cayley
            Tree. Only useful for CayleyGraphics class because of the Networkx
            package."""
@@ -89,33 +89,33 @@ class CayleyTree(AbstractNetwork):
                     nodes_done += 1
         return link_list
 
-    def fastLinkCreator(self):
+    def linkCreator(self):
         """Creates a dictionary with the node number as the key and with a list of
            its neighbors as the value. This method will be used in MonteCarlo
            class, since this dictionary will reduce the runtime of its simulate
-           method."""       
+           method."""
         link_d = dict()
         node_gens = self.nodeGeneration()
         #sets up 0
-        link_d[0] = list(range(1,self.nodeGeneration()[1]+1))
+        link_d[0] = set(range(1,self.nodeGeneration()[1]+1))
         node_count = self.nodeGeneration()[1]
         #goes up tree
         for node in range(1,self.nodeNumber()):
             if node_count + 1 != self.nodeNumber():
-                link_d[node] = [node_count+x for x in range(1,self.links)]
+                link_d[node] = {node_count+x for x in range(1,self.links)}
                 node_count += self.links-1
             else:
-                link_d[node] = list()
+                link_d[node] = set()
         #goes down tree
         node_count = 0
         link_tally = 0
         for node in range(1,self.nodeNumber()):
             if node <= self.links:
-                link_d[node] = link_d.get(node,list()) + [0]
+                link_d[node] = link_d.get(node,set()).union({0})
                 if node == self.links:
                     node_count += 1
             else:
-                link_d[node] = link_d.get(node,list()) + [node_count]
+                link_d[node] = link_d.get(node,set()).union({node_count})
                 link_tally += 1 
                 if link_tally == self.links - 1:
                     node_count += 1

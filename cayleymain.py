@@ -15,6 +15,8 @@ from cayleygraphics import CayleyGraphics
 def main():
     generations = int(input("Number of generations: "))
     links = int(input("Number of links: "))
+    network = CayleyTree(generations,links)
+    network.linkCreator()
     print("\n" + "The default values for alpha, beta, gamma are: \n"
           + "Alpha = 0.5 \n"
           + "Beta = 0.8 \n"
@@ -24,9 +26,9 @@ def main():
         alpha = float(input("Value for alpha: "))
         beta = float(input("Value for beta: "))
         gamma = float(input("Value for gamma: "))
-        monte = MonteCarlo(CayleyTree(generations,links), alpha, beta, gamma)
+        monte = MonteCarlo(network, alpha, beta, gamma)
     else:
-        monte = MonteCarlo(CayleyTree(generations,links))
+        monte = MonteCarlo(network)
     print("\n" + "Enter Excel file name \n"
           + "Example: monteCarloData")
     filename = str(input("Filename: "))
