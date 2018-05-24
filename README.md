@@ -3,7 +3,9 @@ Research by Justin Pusztay, Matt Lubas, and Griffin Noe, for research with Dr. I
 
 ## Getting Started
 
-The code on Github provides a framework for understanding attachment and de-attachment, or change of states for many different applications like drug encapsulations, thin films interference, voter models, epidemic models, social models, community dynamics and more. This code creates various networks and allows for users to run monte carlo simulations on those networks according to various probabilty functions. 
+The code on Github provides a framework for agent-based modeling on networks. The model follows concepts from statistical physics where particles can attach and de-attach from nodes based on a probability function. The modeling of particle attachment has many different applications from drug encapsulations, thin films interference, voter models, epidemic models, social models, community dynamics and more. This code creates networks and allows for users to run monte carlo simulations on those networks according to various probabilty functions. 
+
+We create an interface for a network and allow implentations to be a Cayley Tree, Lattice, or a build-your-own network. The creation of the Cayley Tree and Lattice are dependent on the demensions requested, the network implentation is automated. 
 
 Cayley Tree (also known as Bethe Lattice) and Lattice are examples of different network structures to represent occupation of nodes (each circle) depending on the status of their neighbors (the circles connected by lines). 
 Each Cayley Tree has a specified number of generations and number of connections. The number of generations (starting with 0) is the beginning of the Cayley Tree, and represents the number of connections away from the central node. The connections represent the number of edges each node has (except for the last generation of nodes).
@@ -47,8 +49,9 @@ git clone https://github.com/noe98/Cayley
 If you are having trouble navigating around Terminal, you can use the following as a resource. https://www.tbi.univie.ac.at/~ronny/Leere/270038/tutorial/node8.html
 
 
-Once dowloaded, run cayleymain.py or latticemain.py depending on the structure you desire.
-Using this, a GUI will pop, up, and you can decide the number of generations and connections you want for a Cayley Tree, or the dimensions of the lattice graphics. 
+Once dowloaded, run cayleymain.py or latticemain.py depending on the structure you desire. If you desire to build your own network, please look at graphmain.py to see an example of the implentation of the interface. 
+
+Using this, a TUI will pop, up, and you can decide the number of generations and connections you want for a Cayley Tree, or the dimensions of the lattice graphics. 
 
 By simulating using the variables alpha, beta, and gamma for the following equations, the code can demonstrate the occupation/ emptiness of nodes over large periods of time.
 
