@@ -20,6 +20,7 @@ class MonteCarlo(object):
                  alpha = .5, beta = .8, gamma = .2):
         """Runs the Monte Carlo simulation the desired number of times."""
         self.network = network
+        self.network.linkCreator()
         self.state_d = dict()
         self.list_cache = None
         self.alpha = alpha
@@ -121,6 +122,7 @@ class MonteCarlo(object):
             probability = self.gamma*list_cache[-1][x] + \
                                     (1 - list_cache[-1][x])*\
                                     self.alpha*(self.beta**(summ))
+            print(probability)
             if random.uniform(0, 1) <= probability and list_cache[-1][x] == 0:
                 cache[x] = 1
             elif random.uniform(0, 1) <= probability and \
