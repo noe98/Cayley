@@ -55,12 +55,6 @@ Using this, a TUI will pop, up, and you can decide the number of generations and
 
 By simulating using the variables alpha, beta, and gamma for the following equations, the code can demonstrate the occupation/ emptiness of nodes over large periods of time.
 
-![alt text](https://raw.githubusercontent.com/noe98/Cayley/Photos/nearestneighbors.png)
-
-
-![alt text](https://raw.githubusercontent.com/noe98/Cayley/Photos/particleattachment.png)
-
-
 ## Built With
 
 * Python 3 [https://www.python.org/]
