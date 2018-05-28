@@ -104,6 +104,10 @@ class MonteCarlo(object):
             return density
         else:
             return TypeError("Inappropriate Arguement Type.")
+
+    def probability():
+        x_var = self.state_d[x]
+        y_var = self.nearestNeighborSum(x,list_cache[-1])
         
     #Monte Carlo Algorithm methods 
     def simulate(self):
@@ -119,10 +123,11 @@ class MonteCarlo(object):
         for x in self.network:
             summ = self.nearestNeighborSum(x,list_cache[-1])
             #print("summ: ", summ)
-            probability = self.gamma*list_cache[-1][x] + \
-                                    (1 - list_cache[-1][x])*\
-                                    self.alpha*(self.beta**(summ))
-            print(probability)
+            probability = 3*(1-list_cache[-1][x])
+##            probability = self.gamma*list_cache[-1][x] + \
+##                                    (1 - list_cache[-1][x])*\
+##                                    self.alpha*(self.beta**(summ))
+            print(probability) #ask if greater than 1
             if random.uniform(0, 1) <= probability and list_cache[-1][x] == 0:
                 cache[x] = 1
             elif random.uniform(0, 1) <= probability and \
