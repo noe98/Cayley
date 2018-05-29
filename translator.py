@@ -24,18 +24,19 @@ class Translator(object):
         """Returns a list of tokens that represent the postfix
         form of sourceStr.  Assumes that the infix expression
         in sourceStr is syntactically correct"""
-        postfix = list()
+        self.postfix = list()
         for currentToken in self._scanner:
             self._expressionSoFar += str(currentToken) + " "
             if currentToken.getType() == Token.INT or \
-               currentToken.getType() == Token.FLOAT:
-                postfix.append(currentToken)
+               currentToken.getType() == Token.FLOAT or \
+               currentToken.getType() == Token.VAR:
+                self.postfix.append(currentToken)
             elif currentToken.getType() == Token.LPAR:
                 self._operatorStack.push(currentToken)
             elif currentToken.getType() == Token.RPAR:
                 topOperator = self._operatorStack.pop()
                 while topOperator.getType() != Token.LPAR:
-                    postfix.append(topOperator)
+                    self.postfix.append(topOperator)
                     topOperator = self._operatorStack.pop()
             elif currentToken.getType() == Token.POWER:
                 self._operatorStack.push(currentToken)
@@ -43,11 +44,11 @@ class Translator(object):
                 while not self._operatorStack.isEmpty() and \
                       self._operatorStack.peek().getPrecedence() >= \
                       currentToken.getPrecedence():
-                    postfix.append(self._operatorStack.pop())
+                    self.postfix.append(self._operatorStack.pop())
                 self._operatorStack.push(currentToken)
         while not self._operatorStack.isEmpty():
-            postfix.append(self._operatorStack.pop())
-        return postfix
+            self.postfix.append(self._operatorStack.pop())
+        return self.postfix
    
     def __str__(self):
         """Returns a string containing the contents of the expression
@@ -68,6 +69,9 @@ class Translator(object):
     def translationStatus(self):
         """Returns how much of the expression was processed."""
         return str(self)
+
+    def getStack(self):
+        return self._operatorStack
 
 def main():
     """Tester function for translators."""

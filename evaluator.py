@@ -27,6 +27,8 @@ class Evaluator(object):
                 self._operandStack.push(currentToken)
             elif currentToken.getType() == Token.FLOAT:
                 self._operandStack.push(currentToken)
+            elif currentToken.getType() == Token.VAR:
+                self._operandStack.push(currentToken)
             elif currentToken.isOperator(): 
                 right = self._operandStack.pop()
                 left = self._operandStack.pop()

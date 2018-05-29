@@ -12,6 +12,7 @@ import random
 import xlsxwriter #http://xlsxwriter.readthedocs.io/tutorial01.html 
 from cayleytree import CayleyTree
 from lattice import Lattice
+from probability import Probability
 
 
 class MonteCarlo(object):
@@ -105,10 +106,6 @@ class MonteCarlo(object):
         else:
             return TypeError("Inappropriate Arguement Type.")
 
-    def probability():
-        x_var = self.state_d[x]
-        y_var = self.nearestNeighborSum(x,list_cache[-1])
-        
     #Monte Carlo Algorithm methods 
     def simulate(self):
         """Simulates the Monte Carlo simulation on the Cayley Tree for one

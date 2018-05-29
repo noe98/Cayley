@@ -14,7 +14,7 @@ class Token(object):
     RPAR     = 2        # right parentheses 
     INT      = 4        # integer
     FLOAT    = 5        # float
-    VAR      = 6        # variables not currently used
+    VAR      = 6        # variables 
     MINUS    = 7        # minus    operator
     PLUS     = 8        # plus     operator
     MUL      = 9        # multiply operator
@@ -73,7 +73,7 @@ class Token(object):
         elif string == "%": return Token.MOD
         elif string == "(": return Token.LPAR
         elif string == ")": return Token.RPAR
-        #elif string.lower() in "abcdefghigjklmnopqrstuvwxyz": return Token.VAR
+        elif str(string) in "abcdefghigjklmnopqrstuvwxyz": return Token.VAR
         else:               return Token.UNKNOWN;
 
 def main():
