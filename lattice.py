@@ -55,6 +55,10 @@ class Lattice(AbstractNetwork):
             return 2*self.x*self.y
         return (self.z+1)*self.y*self.x
 
+    def getType(self):
+        """Quick fix for MonteCarlo"""
+        return "Lattice"
+
     def floorArea(self):
         """Returns the number of nodes in a cross section of the z-plane."""
         return self.x*self.y
