@@ -31,6 +31,9 @@ class MonteCarlo(object):
         self.beta = beta
         self.gamma = gamma
         self.user_input = None
+
+    def getType(self):
+        return type(self.network)
         
     def getAlpha(self):
         """Returns alpha value."""
@@ -100,7 +103,8 @@ class MonteCarlo(object):
     def densityCalculator(self,gen,state_d):
         """Takes a generation and a state dictionary and returns the density
            of the generation."""
-        if type(self.network) == type(CayleyTree):
+        if type(self.network) == type(CayleyTree(self.network.generations,
+                                                 self.network.links)):
             nodes = self.network.nodeFinder(gen)
             density = 0
             for node in nodes:
@@ -165,7 +169,8 @@ class MonteCarlo(object):
                 worksheet.write(x+1,y+1,self.list_cache[y][self.network.keys[x]])
 ##        for x in range(len(self.state_d)):
 ##            worksheet.write(len(self.state_d)+1,x+1,"=SUM(B1:B4)")
-        if type(self.network) == type(CayleyTree):
+        if type(self.network) == type(CayleyTree(self.network.generations,
+                                                 self.network.links)):
             worksheet2 = workbook.add_worksheet("Density")
             worksheet2.write(0,0,"Timestep")
             for x in range(self.network.generations+1):
