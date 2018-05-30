@@ -7,9 +7,13 @@ Contains the Translator class. The Translator takes Scanner objects
 and converts the infix source string to a postfix expression. 
 """
 
-from tokens import Token
-from scanner import Scanner
-from Cayley.linkedstack import *
+__author__ = "\n".join(['Justin Pusztay (pusztayj20@mail.wlu.edu)'])
+
+__all__ = ['Translator']
+
+from Cayley.parser.tokens import *
+from Cayley.parser.scanner import Scanner
+from Cayley.parser.linkedstack import *
 
 class Translator(object):
     """Translates infix expressions to postfix expressions."""

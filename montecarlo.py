@@ -169,8 +169,8 @@ class MonteCarlo(object):
                 worksheet.write(x+1,y+1,self.list_cache[y][self.network.keys[x]])
 ##        for x in range(len(self.state_d)):
 ##            worksheet.write(len(self.state_d)+1,x+1,"=SUM(B1:B4)")
-        if type(self.network) == type(CayleyTree(self.network.generations,
-                                                 self.network.links)):
+        
+        if self.network.getType() == "CayleyTree":
             worksheet2 = workbook.add_worksheet("Density")
             worksheet2.write(0,0,"Timestep")
             for x in range(self.network.generations+1):

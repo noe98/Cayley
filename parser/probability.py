@@ -13,9 +13,9 @@ __author__ = "\n".join(['Justin Pusztay (pusztayj20@mail.wlu.edu)'])
 
 __all__ = ['Probability']
 
-from scanner import Scanner
-from translator import Translator
-from evaluator import Evaluator
+from Cayley.parser.scanner import Scanner
+from Cayley.parser.translator import Translator
+from Cayley.parser.evaluator import Evaluator
 
 class Probability(object):
     

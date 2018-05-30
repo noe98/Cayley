@@ -6,6 +6,10 @@ Project: Research for Irina Mazilu, Ph.D.
 Tokens for processing expressions.
 """
 
+__author__ = "\n".join(['Justin Pusztay (pusztayj20@mail.wlu.edu)'])
+
+__all__ = ['Token']
+
 class Token(object):
     """Represents a word in the language."""
 

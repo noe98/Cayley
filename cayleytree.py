@@ -49,6 +49,10 @@ class CayleyTree(AbstractNetwork):
             return True
         else:
             return False
+
+    def getType(self):
+        """Just for quick fix in MonteCarlo."""
+        return "CayleyTree"
             
     def cayleyProtect(self):
         """Protects the user from creating and using a Cayley Tree object that
