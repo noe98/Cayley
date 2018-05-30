@@ -113,7 +113,6 @@ class MonteCarlo(object):
     def simulate(self):
         """Simulates the Monte Carlo simulation on the Cayley Tree for one
            time step and stores that data."""
-        time_steps = range(len(self.state_d)) 
         if self.list_cache == None:
             list_cache = list()
             list_cache.append(self.state_d)

@@ -6,6 +6,10 @@ Project: Research for Irina Mazilu, Ph.D.
 Contains the Evaluator class, which evaluates a postfix expression.  
 """
 
+__author__ = "\n".join(['Justin Pusztay (pusztayj20@mail.wlu.edu)'])
+
+__all__ = ['Evaluator']
+
 from tokens import Token
 from scanner import Scanner
 from linkedstack import LinkedStack
