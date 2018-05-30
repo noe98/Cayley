@@ -8,12 +8,16 @@ a MonteCarlo simullation on it. Also there exists methods that allow data
 to be analyzed and exported.
 """
 
+__author__ = "\n".join(['Justin Pusztay (pusztayj20@mail.wlu.edu)',
+                        'Matt Lubas (lubasm18@mail.wlu.edu',
+                        'Griffin Noe (noeg21@mail.wlu.edu'])
+
+__all__ = ['MonteCarlo']
+
 import random
 import xlsxwriter #http://xlsxwriter.readthedocs.io/tutorial01.html 
-from cayleytree import CayleyTree
-from lattice import Lattice
-from probability import Probability
-
+from Cayley.cayleytree import *
+from Cayley.lattice import *
 
 class MonteCarlo(object):
     
@@ -21,7 +25,6 @@ class MonteCarlo(object):
                  alpha = .5, beta = .8, gamma = .2):
         """Runs the Monte Carlo simulation the desired number of times."""
         self.network = network
-        self.network.linkCreator()
         self.state_d = dict()
         self.list_cache = None
         self.alpha = alpha
@@ -120,11 +123,9 @@ class MonteCarlo(object):
         for x in self.network:
             summ = self.nearestNeighborSum(x,list_cache[-1])
             #print("summ: ", summ)
-            probability = 3*(1-list_cache[-1][x])
-##            probability = self.gamma*list_cache[-1][x] + \
-##                                    (1 - list_cache[-1][x])*\
-##                                    self.alpha*(self.beta**(summ))
-            print(probability) #ask if greater than 1
+            probability = self.gamma*list_cache[-1][x] + \
+                                    (1 - list_cache[-1][x])*\
+                                    self.alpha*(self.beta**(summ))
             if random.uniform(0, 1) <= probability and list_cache[-1][x] == 0:
                 cache[x] = 1
             elif random.uniform(0, 1) <= probability and \

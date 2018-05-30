@@ -9,7 +9,11 @@ which allow for some basic analysis of the class such as number of nodes
 and nodes per generation. 
 """
 
-from abstractnetwork import AbstractNetwork
+__author__ = "\n".join(['Justin Pusztay (pusztayj20@mail.wlu.edu)'])
+
+__all__ = ['CayleyTree']
+
+from Cayley.abstractnetwork import *
 
 class CayleyTree(AbstractNetwork):
     """Creates the Cayley Tree object. The class needs integer values
@@ -22,6 +26,7 @@ class CayleyTree(AbstractNetwork):
         self.links = links
         self.keys = list(range(self.nodeNumber()))
         AbstractNetwork.__init__(self)
+        self.autoCreate()
         #self.cayleyProtect()
         
     def __str__(self):
@@ -89,7 +94,7 @@ class CayleyTree(AbstractNetwork):
                     nodes_done += 1
         return link_list
 
-    def linkCreator(self):
+    def autoCreate(self):
         """Creates a dictionary with the node number as the key and with a list of
            its neighbors as the value. This method will be used in MonteCarlo
            class, since this dictionary will reduce the runtime of its simulate

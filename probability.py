@@ -8,6 +8,11 @@ which can have variables with values plugged into them. It also can evaluate an
 equation by translating the function to postfix notation and evaluating it there.
 """
 
+
+__author__ = "\n".join(['Justin Pusztay (pusztayj20@mail.wlu.edu)'])
+
+__all__ = ['Probability']
+
 from scanner import Scanner
 from translator import Translator
 from evaluator import Evaluator

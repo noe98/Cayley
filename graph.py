@@ -6,7 +6,11 @@ Project: Research for Irina Mazilu, Ph.D.
 This file contains the graph class. Allows users to build their own graph.
 """
 
-from abstractnetwork import AbstractNetwork
+__author__ = "\n".join(['Justin Pusztay (pusztayj20@mail.wlu.edu)'])
+
+__all__ = ['Graph']
+
+from Cayley.abstractnetwork import *
 
 class Graph(AbstractNetwork):
 

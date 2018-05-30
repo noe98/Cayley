@@ -1,7 +1,11 @@
 """
 File: abstractcollection.py
-Author: YOUR NAME GOES HERE
+Author: Justin Pusztay
 """
+
+__author__ = "\n".join(['Justin Pusztay (pusztayj20@mail.wlu.edu)'])
+
+__all__ = ['AbstractCollection']
 
 class AbstractCollection(object):
     """An abstract collection implementation."""

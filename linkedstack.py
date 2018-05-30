@@ -1,13 +1,16 @@
 """
 Author: Justin Pusztay, Angel Vela
 File: linkedstack.py
-Project 6
 
 This file contains the LinkedStack class
 """
 
-from abstractstack import AbstractStack
-from node import Node
+__author__ = "\n".join(['Justin Pusztay (pusztayj20@mail.wlu.edu)'])
+
+__all__ = ['LinkedStack']
+
+from Cayley.abstractstack import *
+from Cayley.node import *
 
 class LinkedStack(AbstractStack):
     """Represents a link-based stack."""

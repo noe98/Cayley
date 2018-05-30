@@ -69,9 +69,9 @@ class CayleyGraphics(object):
                                 font_family=text_font)
 
         if labels is None:
-            labels = range(len(self.tree.linkCreator()))
+            labels = range(len(self.tree.graphicsLinks()))
 
-        edge_labels = dict(zip(self.tree.linkCreator(), labels))
+        edge_labels = dict(zip(self.tree.graphicsLinks(), labels))
         """
         #Below on how to label edges.
         nx.draw_networkx_edge_labels(graph, graph_pos, edge_labels=edge_labels, 

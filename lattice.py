@@ -9,7 +9,11 @@ which allow for some basic analysis of the class such as number of nodes and
 nodes per floor. 	
 """
 
-from abstractnetwork import AbstractNetwork
+__author__ = "\n".join(['Justin Pusztay (pusztayj20@mail.wlu.edu)'])
+
+__all__ = ['Lattice']
+
+from Cayley.abstractnetwork import *
 
 class Lattice(AbstractNetwork):
     """Creates the Lattice object. The class needs integer values for the

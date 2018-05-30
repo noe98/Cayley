@@ -1,7 +1,11 @@
 """
 File: node.py
-Author: Ken Lambert
+Author: Justin Pusztay
 """
+
+__author__ = "\n".join(['Justin Pusztay (pusztayj20@mail.wlu.edu)'])
+
+__all__ = ['Node']
 
 class Node(object):
     """Nodes for singly linked structures."""

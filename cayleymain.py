@@ -8,15 +8,14 @@ A main file that runs the Monte Carlo simulation and draws a picture
 of the cayley tree.
 """
 
-from montecarlo import MonteCarlo
-from cayleytree import CayleyTree
+from Cayley.montecarlo import *
+from Cayley.cayleytree import *
 from cayleygraphics import CayleyGraphics
 
 def main():
     generations = int(input("Number of generations: "))
     links = int(input("Number of links: "))
     network = CayleyTree(generations,links)
-    network.linkCreator()
     print("\n" + "The default values for alpha, beta, gamma are: \n"
           + "Alpha = 0.5 \n"
           + "Beta = 0.8 \n"

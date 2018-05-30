@@ -6,6 +6,10 @@ Project: Research for Irina Mazilu, Ph.D.
 Contains the implentation of the abstract network.
 """
 
+__author__ = "\n".join(['Justin Pusztay (pusztayj20@mail.wlu.edu)'])
+
+__all__ = ['AbstractNetwork']
+
 class AbstractNetwork(object):
 
     def __init__(self):

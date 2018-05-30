@@ -1,9 +1,13 @@
 """
 File: abstractstack.py
-Author: Ken Lambert
+Author: Justin Pusztay
 """
 
-from abstractcollection import AbstractCollection
+__author__ = "\n".join(['Justin Pusztay (pusztayj20@mail.wlu.edu)'])
+
+__all__ = ['AbstractStack']
+
+from Cayley.abstractcollection import *
 
 class AbstractStack(AbstractCollection):
     """Represents an abstract stack."""

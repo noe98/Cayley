@@ -9,7 +9,7 @@ and converts the infix source string to a postfix expression.
 
 from tokens import Token
 from scanner import Scanner
-from linkedstack import LinkedStack
+from Cayley.linkedstack import *
 
 class Translator(object):
     """Translates infix expressions to postfix expressions."""
