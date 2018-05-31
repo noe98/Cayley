@@ -8,14 +8,13 @@ A main file that runs the Monte Carlo simulation and draws a picture
 of the cayley tree.
 """
 
-from Cayley.montecarlo import *
-from Cayley.cayleytree import *
-from cayleygraphics import CayleyGraphics
+import Cayley as cy
+import Cayley.graphics as cg
 
 def main():
     generations = int(input("Number of generations: "))
     links = int(input("Number of links: "))
-    network = CayleyTree(generations,links)
+    network = cy.CayleyTree(generations,links)
     print("\n" + "The default values for alpha, beta, gamma are: \n"
           + "Alpha = 0.5 \n"
           + "Beta = 0.8 \n"
@@ -25,9 +24,9 @@ def main():
         alpha = float(input("Value for alpha: "))
         beta = float(input("Value for beta: "))
         gamma = float(input("Value for gamma: "))
-        monte = MonteCarlo(network, alpha, beta, gamma)
+        monte = cy.MonteCarlo(network, alpha, beta, gamma)
     else:
-        monte = MonteCarlo(network)
+        monte = cy.MonteCarlo(network)
     print("\n" + "Enter Excel file name \n"
           + "Example: monteCarloData")
     filename = str(input("Filename: "))
@@ -45,7 +44,7 @@ def main():
     for x in range(len(monte.network)):
         monte.simulate()
     monte.sendExcel(full_filename)
-    cayley = CayleyGraphics(generations, links)
+    cayley = cg.CayleyGraphics(generations, links)
     cayley.drawCayley()
     
 if __name__ == "__main__":

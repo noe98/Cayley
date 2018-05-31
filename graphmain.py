@@ -8,11 +8,10 @@ Below is an example of a custom graph being created and a MonteCarlo simulation
 being run on the graph.
 """
 
-from graph import Graph
-from montecarlo import MonteCarlo
+import Cayley as cy
 
 def main():
-    a = Graph()
+    a = cy.Graph()
     a.add("Justin")
     a.add("Maria")
     a.add("Joe")
@@ -23,7 +22,7 @@ def main():
     a.linkCreator("Joe","Cole")
     a.linkCreator("Maria","John")
     print(a.link_d)
-    monte = MonteCarlo(a)
+    monte = cy.MonteCarlo(a)
     monte.emptyDictionary()
     print(monte.emptyDictionary())
     for x in range(len(monte.network)):

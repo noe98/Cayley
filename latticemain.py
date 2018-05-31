@@ -8,9 +8,8 @@ A main file that runs the Monte Carlo simulation and draws a picture
 of the Lattice tree.
 """
 
-from lattice import Lattice
-from montecarlo import MonteCarlo
-from latticegraphics import LatticeGraphics
+import Cayley as cy
+import Cayley.graphics as cg
 
 def main():
     x_dir = int(input("What is length? "))
@@ -25,9 +24,9 @@ def main():
         alpha = float(input("Value for alpha: "))
         beta = float(input("Value for beta: "))
         gamma = float(input("Value for gamma: "))
-        monte = MonteCarlo(Lattice(x_dir,y_dir,z_dir), alpha, beta, gamma)
+        monte = cy.MonteCarlo(cy.Lattice(x_dir,y_dir,z_dir), alpha, beta, gamma)
     else:
-        monte = MonteCarlo(Lattice(x_dir,y_dir,z_dir))
+        monte = cy.MonteCarlo(cy.Lattice(x_dir,y_dir,z_dir))
     print("\n" + "Enter Excel file name \n"
           + "Example: monteCarloData")
     filename = str(input("Filename: "))
@@ -45,7 +44,7 @@ def main():
     for x in range(len(monte.network)):
         monte.simulate()
     monte.sendExcel(full_filename)
-    a = LatticeGraphics(x_dir,y_dir,z_dir)
+    a = cg.LatticeGraphics(x_dir,y_dir,z_dir)
     a.drawLattice()
     
 if __name__ == "__main__":
