@@ -205,7 +205,7 @@ class MonteCarlo(object):
         cache = dict()
         no_nodes = (self.network.links*(self.network.links-1)**(self.network.generations-1))
         if timestep == 0:
-            dens = 0
+            dens = 0 #density function
         else:
             dens = self.getOnes(timestep)/no_nodes ### make sure this calls correct timestep
         for x in self.network:
