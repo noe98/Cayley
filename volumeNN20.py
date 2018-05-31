@@ -19,7 +19,8 @@ alpha_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
 beta_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
 gamma_list = [0, 0.05, 0.1, 0.15, 0.2]
 mu_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
-
+r1_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+r2_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
 
 def main(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials):
     ## The important one
@@ -29,14 +30,14 @@ def main(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials):
     b_tag = "%.2f" % beta
     g_tag = "%.2f" % gamma
     m_tag = "%.2f" % mu
-    1_tag = "%.2f" % r1
-    2_tag = "%.2f" % r2
+    r1_tag = "%.2f" % r1
+    r2_tag = "%.2f" % r2
     if method == 'NN':
         name = ("NN%dGen_%dLin_%sα_%sβ_%sγ.xlsx" % (generations, links, a_tag, b_tag, g_tag))
     elif method == 'TL':
         name = ("TL%dGen_%dLin_%sαμ_%sγ.xlsx" % (generations, links, m_tag, g_tag))
     elif method == 'EI':
-        name = ("EI%dGen_%dLin_%sr1_%sr2_%sγ.xlsx" % (generations, links, 1_tag, 2_tag, g_tag))
+        name = ("EI%dGen_%dLin_%sr1_%sr2_%sγ.xlsx" % (generations, links, r1_tag, r2_tag, g_tag))
     else: print("Method not recognized")
     workbook = xl.Workbook(name)
     density_list = {}
