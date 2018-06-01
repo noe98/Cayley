@@ -17,20 +17,32 @@ from math import sqrt
 
 alpha_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
 beta_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
-gamma_list = [0.05, 0.1, 0.15, 0.2]
+gamma_list = [0, 0.05, 0.1, 0.15, 0.2]
+mu_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+r1_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+r2_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
 
-
-def main(generations, links, alpha, beta, gamma, trials):
+def main(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials):
     ## The important one
     network = cy.CayleyTree(generations, links)
-    monte = cy.MonteCarlo(network, alpha, beta, gamma)
+    monte = cy.MonteCarlo(network, alpha, beta, gamma, mu, r1, r2)
     a_tag = "%.2f" % alpha
     b_tag = "%.2f" % beta
     g_tag = "%.2f" % gamma
-    name = ("%dGen_%dLin_%sα_%sβ_%sγ.xlsx" % (generations, links, a_tag, b_tag, g_tag))
+    m_tag = "%.2f" % mu
+    r1_tag = "%.2f" % r1
+    r2_tag = "%.2f" % r2
+    if method == 'NN':
+        name = ("NN%dGen_%dLin_%sα_%sβ_%sγ.xlsx" % (generations, links, a_tag, b_tag, g_tag))
+    elif method == 'TL':
+        name = ("TL%dGen_%dLin_%sαμ_%sγ.xlsx" % (generations, links, m_tag, g_tag))
+    elif method == 'EI':
+        name = ("EI%dGen_%dLin_%sr1_%sr2_%sγ.xlsx" % (generations, links, r1_tag, r2_tag, g_tag))
+    else: print("Method not recognized")
     workbook = xl.Workbook(name)
     density_list = {}
     worksheet3 = workbook.add_worksheet("Overall")
+    
     for j in range(generations+1):
         density_list[j] = []    #First index is generation, 
                                 #second is maybe trial number?    
@@ -38,7 +50,12 @@ def main(generations, links, alpha, beta, gamma, trials):
         monte.emptyDictionary()
         monte.list_cache = None
         for j in range(len(monte.network)):
-            monte.simulate()
+            if method == 'NN':
+                monte.simulateNN()
+            elif method == 'EI':
+                monte.edgeSimulate()
+            elif method == 'TL':
+                monte.simulateTL()
         
         worksheet = workbook.add_worksheet("Data trial %d" % (i))
         worksheet.write(0,0,"Timestep")
@@ -110,32 +127,61 @@ def monkey():
     ## Just the main method, will run automatically.
     ## Yes, I know that the other one is called main().
     ## Deal with it.
+    print("Enter 'NN', 'TL', 'EI' for nearest neighbors, total lattice " + \
+          "density, or empty interval methods.")
+    method = input("Method: ").upper()
     generations = int(input("Number of generations: "))
     links = int(input("Number of links: "))
-    alpha = float(input("Alpha value: "))
-    beta = float(input("Beta value: "))
-    gamma = float(input("Value for gamma: "))
     trials = int(input("Number of trials: "))
+    if method == 'NN':
+        alpha = float(input("Alpha value: "))
+        beta = float(input("Beta value: "))
+        gamma = float(input("Value for gamma: "))
+        mu = r1 = r2 = 0
+    elif method == 'TL':
+        mu = float(input("Mu value: "))
+        gamma = float(input("Value for gamma: "))
+        alpha = beta = r1 = r2 = 0
+    elif method == 'EI':
+        r1 = float(input("R1 value: "))
+        r2 = float(input("R2 value: "))
+        gamma = float(input("Value for gamma: "))
+        alpha = beta = mu = 0
+    else: print("Method not recognized")
     start_time = time.time()
-    main(generations, links, alpha, beta, gamma, trials)
+    main('NN',generations, links, alpha, beta, gamma, mu, r1, r2, trials)
     print("--- %s seconds ---" % (time.time() - start_time))
 
-def alpha_range(generations, links, beta, gamma, trials):
+def alpha_range(generations, links, beta, gamma, trials): #Redo
     ## To run tests with a range of alpha values
     for a in alpha_list:
         main(generations, links, a, beta, gamma, trials)
 
-def beta_range(generations, links, alpha, gamma, trials):
+def beta_range(generations, links, alpha, gamma, trials): #Redo
     ## To run tests with a range of beta values
     for b in beta_list:
         main(generations, links, alpha, b, gamma, trials)        
 
-def much_data(generations, links, trials):
+def much_data(generations, links, trials): ## REVISE
     start_time = time.time()
-    for a in alpha_list:
-        for b in beta_list:
+    if method == 'NN':
+        mu = r1 = r2 = 0
+        for a in alpha_list:
+            for b in beta_list:
+                for g in gamma_list:
+                    main('NN', generations, links, a, b, g, mu, r1, r2, trials)
+    elif method == 'EI':
+        alpha = beta = mu = 0
+        for rt1 in r1_list:
+            for rt2 in r2_list:
+                for g in gamma_list:
+                    if rt2 >= rt1:
+                        main('EI',generations, links, alpha, beta, g, rt1, rt2, trials)
+    elif method == 'TL':
+        alpha = beta = r1 = r2 = 0
+        for m in mu_list:
             for g in gamma_list:
-                main(generations, links, a, b, g, trials)
+                main('TL', generations, links, alpha, beta, g, m, r1, r2, trials)
     print("--- runtime is %s seconds ---" % (time.time() - start_time))
     
 

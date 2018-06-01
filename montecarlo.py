@@ -22,7 +22,8 @@ from Cayley.lattice import *
 class MonteCarlo(object):
     
     def __init__(self, network,
-                 alpha = .5, beta = .8, gamma = 0.0):
+                 alpha = .5, beta = .8, gamma = 0.0, mu = 0.3,
+                 r1 = 0.3, r2 = 0.5):
         """Runs the Monte Carlo simulation the desired number of times."""
         self.network = network
         self.state_d = dict()
@@ -30,6 +31,9 @@ class MonteCarlo(object):
         self.alpha = alpha
         self.beta = beta
         self.gamma = gamma
+        self.mu = mu
+        self.r1 = r1
+        self.r2 = r2
         self.user_input = None
 
     def getType(self):
@@ -47,8 +51,18 @@ class MonteCarlo(object):
         """Returns gamma value."""
         return self.gamma
 
-## Make get functions for other parameters?
+    def getMu(self):
+        """Returns mu value"""
+        return self.mu
+        
+    def getR1(self):
+        """Returns r1 value"""
+        return self.r1
 
+    def getR2(self):
+        """Returns r2 value"""
+        return self.r2
+    
     def getListCache(self):
         """Returns the list cache."""
         return self.list_cache
@@ -104,6 +118,10 @@ class MonteCarlo(object):
         """Gets the state of a node on an edge."""
         return timestep.get(neighbor)
 
+    def edgeSum(self,neighbor,timestep):
+        """Gets the state of a node on an edge."""
+        return timestep.get(neighbor)
+
     def densityCalculator(self,gen,state_d):
         """Takes a generation and a state dictionary and returns the density
            of the generation."""
@@ -118,7 +136,7 @@ class MonteCarlo(object):
             return TypeError("Inappropriate Arguement Type.")
 
     #Monte Carlo Algorithm methods 
-    def simulate(self):
+    def simulateNN(self):
         """Simulates the Monte Carlo simulation on the Cayley Tree for one
            time step and stores that data."""
         if self.list_cache == None:
@@ -145,38 +163,79 @@ class MonteCarlo(object):
         self.list_cache = list_cache
         return self.list_cache
 
-##    def edgeSimulate(self):
-##        """Runs a timestep of a MonteCarlo by picking the edge and then a random
-##        node on the edge."""
-##        if self.list_cache == None:
-##            list_cache = list()
-##            list_cache.append(self.state_d)
-##        else:
-##            list_cache = self.list_cache
-##        count = 0
-##        cache = dict()
-##        for x in self.network.graphicsLinks():
-##            node_picked = random.randint(0,1)
-##            summ = self.edgeSum(x[1-node_picked],list_cache[-1])
-##            #print("summ: ", summ)
-##            probability = self.gamma*list_cache[-1][x[node_picked]] + \
-##                                (1 - list_cache[-1][x[node_picked]])*\
-##                                self.alpha*(self.beta**(summ))
-##            if random.uniform(0, 1) <= probability and \
-##               list_cache[-1][x[node_picked]] == 0:
-##                cache[x[node_picked]] = 1
-##                cache[x[1-node_picked]] = list_cache[-1][x[1-node_picked]]
-##            elif random.uniform(0, 1) <= probability and \
-##                 list_cache[-1][x[node_picked]] == 1:
-##                cache[x[node_picked]] = 0
-##                cache[x[1-node_picked]] = list_cache[-1][x[1-node_picked]]
-##            else:
-##                cache[x[node_picked]] = list_cache[-1][x[node_picked]]
-##                cache[x[1-node_picked]] = list_cache[-1][x[1-node_picked]]
-##        #print("cache: ",cache)
-##        list_cache.append(cache)
-##        self.list_cache = list_cache
-##        return self.list_cache
+    def simulateEI(self):
+        """Runs a timestep of a MonteCarlo by picking the edge and then a random
+        node on the edge."""
+        if self.list_cache == None:
+            list_cache = list()
+            list_cache.append(self.state_d)
+        else:
+            list_cache = self.list_cache
+        count = 0
+        cache = dict()
+        for x in self.network.graphicsLinks():
+            node_picked = random.randint(0,1)
+            #print("Node picked: ", x[node_picked])
+            #print("Node NOT picked ", x[1-node_picked])
+            summ = self.edgeSum(x[1-node_picked],list_cache[-1])
+            #print("summ: ", summ)
+            probability = self.gamma*list_cache[-1][x[node_picked]] + \
+                                (1 - list_cache[-1][x[node_picked]])*\
+                                self.alpha*(self.beta**(summ))
+            #print(probability)
+            if random.uniform(0, 1) <= probability and \
+               list_cache[-1][x[node_picked]] == 0:
+                cache[x[node_picked]] = 1
+                if x[1-node_picked] not in cache:
+                    cache[x[1-node_picked]] = list_cache[-1][x[1-node_picked]]
+                #print("Changed!")
+            elif random.uniform(0, 1) <= probability and \
+                 list_cache[-1][x[node_picked]] == 1:
+                cache[x[node_picked]] = 0
+                if x[1-node_picked] not in cache:
+                    cache[x[1-node_picked]] = list_cache[-1][x[1-node_picked]]
+                #print("Changed!")
+            else:
+                cache[x[node_picked]] = list_cache[-1][x[node_picked]]
+                if x[1-node_picked] not in cache:
+                    cache[x[1-node_picked]] = list_cache[-1][x[1-node_picked]]
+                #print("Not Changed!")
+        #print("cache: ",cache)
+        list_cache.append(cache)
+        self.list_cache = list_cache
+        return self.list_cache
+
+    def simulateTL(self,timestep): #Only works for first timestep
+        """Simulates the Monte Carlo simulation on the Cayley Tree for one
+           time step and stores that data."""
+        time_steps = range(len(self.state_d)) 
+        if self.list_cache == None:
+            list_cache = list()
+            list_cache.append(self.state_d)
+        else:
+            list_cache = self.list_cache
+        cache = dict()
+        no_nodes = (self.network.links*(self.network.links-1)**(self.network.generations-1))
+        if timestep == 0:
+            dens = 0 #density function
+        else:
+            dens = self.getOnes(timestep)/no_nodes ### make sure this calls correct timestep
+        for x in self.network:
+            summ = self.nearestNeighborSum(x,list_cache[-1])
+            #print("summ: ", summ)
+            probability = self.gamma*list_cache[-1][x] + \
+                                    (1 - list_cache[-1][x])*(1-dens)*self.mu
+            if random.uniform(0, 1) <= probability and list_cache[-1][x] == 0:
+                cache[x] = 1
+            elif random.uniform(0, 1) <= probability and \
+                 list_cache[-1][x] == 1:
+                cache[x] = 0 
+            else:
+                cache[x] = list_cache[-1][x]
+        #print("cache: ",cache)
+        list_cache.append(cache)
+        self.list_cache = list_cache
+        return self.list_cache
 
     def clear(self):
         """Clears the data from the tree."""
