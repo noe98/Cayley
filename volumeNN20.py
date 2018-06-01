@@ -7,7 +7,7 @@ gather data quickly. We'll see what happens.
 """
 
 # N.B. Because I'm lazy, don't run this with parameters that go beyond
-# two decimal place. Or if you want to, change how the file name is saved. 
+# two decimal places. Or if you want to, change how the file name is saved. 
 
 import Cayley as cy
 import Cayley.graphics as cg
@@ -23,7 +23,7 @@ r1_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
 r2_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
 
 def simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials):
-    ## The important one
+    """The important one"""
     network = cy.CayleyTree(generations, links)
     monte = cy.MonteCarlo(network, alpha, beta, gamma, mu, r1, r2)
     a_tag = "%.2f" % alpha
@@ -149,32 +149,33 @@ def main():
     simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials)
     print("--- %s seconds ---" % (time.time() - start_time))
 
-def alpha_range( generations, links, beta, gamma, trials):
-    ## To run tests with a range of alpha values
+def alpha_range(generations, links, beta, gamma, trials):
+    """To run tests with a range of alpha values"""
     for a in alpha_list:
         simulate('NN', generations, links, a, beta, gamma, 0, 0, 0, trials)
 
 def beta_range(generations, links, alpha, gamma, trials):
-    ## To run tests with a range of beta values
+    """To run tests with a range of beta values"""
     for b in beta_list:
         simulate('NN', generations, links, alpha, b, gamma, 0, 0, 0, trials)        
 
 def mu_range(generations, links, gamma, trials):
-    ## To run tests with a range of mu values
+    """To run tests with a range of mu values"""
     for m in mu_list:
         simulate('TL', generations, links, 0, 0, gamma, m, 0, 0, trials)
 
 def r1_range(generations, links, r2, gamma, trials):
-    ## To run tests with a range of r1 values
+    """To run tests with a range of r1 values"""
     for rt1 in r1_list:
         simulate('EI', generations, links, 0, 0, gamma, 0, rt1, r2, trials)
 
 def r2_range(generations, links, r1, gamma, trials):
-    ## To run tests with a range of r2 values
+    """To run tests with a range of r2 values"""
     for rt2 in r2_list:
         simulate('EI', generations, links, 0, 0, gamma, 0, r1, rt2, trials)
 
 def full(method, generations, links, trials):
+    """You'll have data coming out of your ears"""
     start_time = time.time()
     if method == 'NN':
         mu = r1 = r2 = 0
