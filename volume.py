@@ -44,7 +44,7 @@ def simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials)
     if method == 'NN':
         name = ("NN%dGen_%dLin_%sα_%sβ_%sγ.xlsx" % (generations, links, a_tag, b_tag, g_tag))
     elif method == 'TL':
-        name = ("TL%dGen_%dLin_%sαμ_%sγ.xlsx" % (generations, links, m_tag, g_tag))
+        name = ("TL%dGen_%dLin_%sμ_%sγ.xlsx" % (generations, links, m_tag, g_tag))
     elif method == 'EI':
         name = ("EI%dGen_%dLin_%sr1_%sr2_%sγ.xlsx" % (generations, links, r1_tag, r2_tag, g_tag))
     else: raise ValueError("Method not recognized")
