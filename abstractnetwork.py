@@ -60,6 +60,8 @@ class AbstractNetwork(object):
         return self.link_d[node]
 
     def edgeList(self):
+        """Uses the link dictionary to create a numpy array that is the
+        adjacency matrix for any network."""
         self.edge_list = np.zeros([len(self),len(self)], dtype = int)
         for node in self:
             for connection in self.link_d[node]:
