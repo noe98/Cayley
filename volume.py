@@ -175,7 +175,7 @@ def main():
         gamma = float(input("Value for gamma: "))
         alpha = beta = r1 = r2 = 0
     elif method == 'EI':
-        print("R1 should be less than R2 for electrostatic models."
+        print("R1 should be less than R2 for electrostatic models.")
         r1 = float(input("R1 value: "))
         r2 = float(input("R2 value: "))
         gamma = float(input("Value for gamma: "))
