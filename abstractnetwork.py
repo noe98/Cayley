@@ -68,3 +68,15 @@ class AbstractNetwork(object):
                 self.edge_list[node,connection] = 1
                 self.edge_list[connection,node] = 1    
         return self.edge_list
+
+    def linksAsTuples(self):
+        """Returns a list of tuples that can represent each link in a
+        network."""
+        tuples = list()
+        for x in self:
+            edges = list(filter(lambda node: node[0] > x or \
+                                                node[1] > x,
+                                                list(map(lambda node:(x,node),
+                                                         self.link_d[x]))))
+            tuples = tuples + edges
+        return tuples

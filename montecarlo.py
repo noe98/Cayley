@@ -17,6 +17,7 @@ import random
 import xlsxwriter #http://xlsxwriter.readthedocs.io/tutorial01.html 
 from Cayley.cayleytree import *
 from Cayley.lattice import *
+import numpy as np
 
 class MonteCarlo(object):
     
@@ -169,7 +170,7 @@ class MonteCarlo(object):
         else:
             list_cache = self.list_cache
         cache = dict()
-        for x in self.network.graphicsLinks():
+        for x in self.network.linksAsTuples():
             node_picked = random.randint(0,1)
             summ = self.edgeSum(x[1-node_picked],list_cache[-1])
             #print("summ: ", summ)
