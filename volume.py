@@ -247,7 +247,7 @@ def no_evaporation(method, generations, links, trials):
         for rt1 in r1_list:
             for rt2 in r2_list:
                 if rt2 >= rt1:
-                    simulate('EI',generations, links, alpha, beta, 0, rt1, rt2, trials)
+                    simulate('EI',generations, links, alpha, beta, 0, mu, rt1, rt2, trials)
     elif method == 'TL':
         alpha = beta = r1 = r2 = 0
         for m in mu_list:
