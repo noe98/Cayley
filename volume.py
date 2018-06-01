@@ -6,8 +6,8 @@ Hopefully this will run more than one simulation at a time, so that I can
 gather data quickly. We'll see what happens.
 """
 
-# N.B. Because I'm lazy, don't run this with α, β, or γ values that go beyond
-# two decimal place. Or if you want to, change how the file name is saved. 
+# N.B. Because I'm lazy, don't run this with parameters that go beyond
+# two decimal places. Or if you want to, change how the file name is saved. 
 
 import Cayley as cy
 import Cayley.graphics as cg
@@ -22,8 +22,8 @@ mu_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
 r1_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
 r2_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
 
-def main(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials):
-    ## The important one
+def simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials):
+    """The important one"""
     network = cy.CayleyTree(generations, links)
     monte = cy.MonteCarlo(network, alpha, beta, gamma, mu, r1, r2)
     a_tag = "%.2f" % alpha
@@ -38,7 +38,7 @@ def main(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials):
         name = ("TL%dGen_%dLin_%sαμ_%sγ.xlsx" % (generations, links, m_tag, g_tag))
     elif method == 'EI':
         name = ("EI%dGen_%dLin_%sr1_%sr2_%sγ.xlsx" % (generations, links, r1_tag, r2_tag, g_tag))
-    else: print("Method not recognized")
+    else: raise ValueError("Method not recognized")
     workbook = xl.Workbook(name)
     density_list = {}
     worksheet3 = workbook.add_worksheet("Overall")
@@ -53,9 +53,9 @@ def main(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials):
             if method == 'NN':
                 monte.simulateNN()
             elif method == 'EI':
-                monte.edgeSimulate()
+                monte.simulateEI()
             elif method == 'TL':
-                monte.simulateTL()
+                monte.simulateTL(j)
         
         worksheet = workbook.add_worksheet("Data trial %d" % (i))
         worksheet.write(0,0,"Timestep")
@@ -123,10 +123,7 @@ def main(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials):
     
     workbook.close
         
-def monkey():
-    ## Just the main method, will run automatically.
-    ## Yes, I know that the other one is called main().
-    ## Deal with it.
+def main():
     print("Enter 'NN', 'TL', 'EI' for nearest neighbors, total lattice " + \
           "density, or empty interval methods.")
     method = input("Method: ").upper()
@@ -147,48 +144,65 @@ def monkey():
         r2 = float(input("R2 value: "))
         gamma = float(input("Value for gamma: "))
         alpha = beta = mu = 0
-    else: print("Method not recognized")
+    else: raise ValueError("Method not recognized")
     start_time = time.time()
-    main('NN',generations, links, alpha, beta, gamma, mu, r1, r2, trials)
+    simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials)
     print("--- %s seconds ---" % (time.time() - start_time))
 
-def alpha_range(generations, links, beta, gamma, trials): #Redo
-    ## To run tests with a range of alpha values
+def alpha_range(generations, links, beta, gamma, trials):
+    """To run tests with a range of alpha values"""
     for a in alpha_list:
-        main(generations, links, a, beta, gamma, trials)
+        simulate('NN', generations, links, a, beta, gamma, 0, 0, 0, trials)
 
-def beta_range(generations, links, alpha, gamma, trials): #Redo
-    ## To run tests with a range of beta values
+def beta_range(generations, links, alpha, gamma, trials):
+    """To run tests with a range of beta values"""
     for b in beta_list:
-        main(generations, links, alpha, b, gamma, trials)        
+        simulate('NN', generations, links, alpha, b, gamma, 0, 0, 0, trials)        
 
-def much_data(generations, links, trials): ## REVISE
+def mu_range(generations, links, gamma, trials):
+    """To run tests with a range of mu values"""
+    for m in mu_list:
+        simulate('TL', generations, links, 0, 0, gamma, m, 0, 0, trials)
+
+def r1_range(generations, links, r2, gamma, trials):
+    """To run tests with a range of r1 values"""
+    for rt1 in r1_list:
+        simulate('EI', generations, links, 0, 0, gamma, 0, rt1, r2, trials)
+
+def r2_range(generations, links, r1, gamma, trials):
+    """To run tests with a range of r2 values"""
+    for rt2 in r2_list:
+        simulate('EI', generations, links, 0, 0, gamma, 0, r1, rt2, trials)
+
+def full(method, generations, links, trials):
+    """You'll have data coming out of your ears"""
     start_time = time.time()
     if method == 'NN':
         mu = r1 = r2 = 0
         for a in alpha_list:
             for b in beta_list:
                 for g in gamma_list:
-                    main('NN', generations, links, a, b, g, mu, r1, r2, trials)
+                    simulate('NN', generations, links, a, b, g, mu, r1, r2, trials)
     elif method == 'EI':
         alpha = beta = mu = 0
         for rt1 in r1_list:
             for rt2 in r2_list:
                 for g in gamma_list:
                     if rt2 >= rt1:
-                        main('EI',generations, links, alpha, beta, g, rt1, rt2, trials)
+                        simulate('EI',generations, links, alpha, beta, g, rt1, rt2, trials)
     elif method == 'TL':
         alpha = beta = r1 = r2 = 0
         for m in mu_list:
             for g in gamma_list:
-                main('TL', generations, links, alpha, beta, g, m, r1, r2, trials)
+                simulate('TL', generations, links, alpha, beta, g, m, r1, r2, trials)
     print("--- runtime is %s seconds ---" % (time.time() - start_time))
     
 
 if __name__ == "__main__":
-    monkey()
+    main()
 
     
 ## Things to look at/fix:
-##  Number of nodes per gen (cayleytree)
-##  Impossible trees?
+## Make sure all simulate() calls have correct args
+## Finish range functions
+## Find issue with EI
