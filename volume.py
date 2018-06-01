@@ -51,17 +51,17 @@ def simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials)
     workbook = xl.Workbook(name)
     density_list = {}
     other_density_list = {} #key is trial#, index is timestep, gives density
-    worksheet3 = workbook.add_worksheet("Overall")
     worksheet4 = workbook.add_worksheet("Over Time")
+    worksheet3 = workbook.add_worksheet("Overall")
     
     for j in range(generations+1):
         density_list[j] = []    #First index is generation, 
                                 #second is maybe trial number?    
     for i in range(trials):
-        other_density_list[i] = [0]*(timesteps+1)
+        other_density_list[i] = [0]*(timesteps+2)
         monte.emptyDictionary()
         monte.list_cache = None
-        for j in range(timesteps):
+        for j in range(timesteps+1):
             if method == 'NN':
                 monte.simulateNN()
             elif method == 'EI':
@@ -85,7 +85,7 @@ def simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials)
         worksheet2.write(monte.network.generations+3,0,"Density")        
         for x in range(monte.network.generations+1):
             worksheet2.write(x+1,0,"Gen. "+str(x))
-        for y in range(timesteps):
+        for y in range(timesteps+1):
             worksheet2.write(0,y+1,str(y))
         for y in range(len(monte.list_cache)):
             for x in range(monte.network.generations+1):
@@ -148,7 +148,7 @@ def simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials)
     worksheet4.write(1,0,"Average")
     #for t in range(trials):
         #worksheet4.write(t+2,0,"Trial "+str(t))
-    for k in range(timesteps):
+    for k in range(timesteps+1):
         t_sum = 0
         worksheet4.write(0,k+1,k)
         for t in range(trials):
@@ -175,6 +175,7 @@ def main():
         gamma = float(input("Value for gamma: "))
         alpha = beta = r1 = r2 = 0
     elif method == 'EI':
+        print("R1 should be less than R2 for electrostatic models."
         r1 = float(input("R1 value: "))
         r2 = float(input("R2 value: "))
         gamma = float(input("Value for gamma: "))
@@ -232,6 +233,8 @@ def full(method, generations, links, trials):
                 simulate('TL', generations, links, alpha, beta, g, m, r1, r2, trials)
     print("--- runtime is %s seconds ---" % (time.time() - start_time))
     
+def timestep(number_of_timesteps):
+    timesteps = number_of_timesteps
 
 if __name__ == "__main__":
     main()
