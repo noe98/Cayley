@@ -26,8 +26,8 @@ class MonteCarlo(object):
                  r1 = 0.3, r2 = 0.5):
         """Runs the Monte Carlo simulation the desired number of times."""
         self.network = network
-        self.state_d = dict()
-        self.list_cache = None
+        self.state_d = dict() ## Is dict. w/ node# key
+        self.list_cache = None ## Is array w/ timestep first index, node# second
         self.alpha = alpha
         self.beta = beta
         self.gamma = gamma
@@ -135,7 +135,7 @@ class MonteCarlo(object):
     def simulateNN(self):
         """Runs a monte carlo simulation by iterating through network. Nearest
         neighbors are the nodes that are connected to the node the probability
-        funciton is being applied to."""
+        function is being applied to."""
         if self.list_cache == None:
             list_cache = list()
             list_cache.append(self.state_d)
@@ -176,7 +176,7 @@ class MonteCarlo(object):
             #print("summ: ", summ)
             probability = self.gamma*list_cache[-1][x[node_picked]] + \
                                 (1 - list_cache[-1][x[node_picked]])*\
-                                self.alpha*(self.beta**(summ))
+                                (self.r1*summ + self.r2*(1 - summ))
             if random.uniform(0, 1) <= probability and \
                list_cache[-1][x[node_picked]] == 0:
                 cache[x[node_picked]] = 1
@@ -198,24 +198,29 @@ class MonteCarlo(object):
 
     def simulateTL(self,timestep): #Only works for first timestep
         """Simulates the Monte Carlo simulation on the Cayley Tree for one
-           time step and stores that data.""" 
+           time step and stores that data."""
+        #print("Timestep: " + str(timestep))
+        time_steps = range(len(self.state_d))
+        f=1#sho
+        for x in range(1,self.network.generations+1):#sho
+            f= f+ self.network.links*(self.network.links-1)**(x-1)#sho
+        #print("f: " +str(f))
         if self.list_cache == None:
             list_cache = list()
             list_cache.append(self.state_d)
         else:
             list_cache = self.list_cache
         cache = dict()
-        no_nodes = (self.network.links*(self.network.links-1)**\
-                    (self.network.generations-1))
+        #no_nodes = (self.network.links*(self.network.links-1)**(self.network.generations-1))
         if timestep == 0:
             dens = 0 #density function
         else:
-            dens = self.getOnes(timestep)/no_nodes ###make sure this calls correct timestep
+            dens = self.getOnes(timestep)/f ### make sure this calls correct timestep
+        #print("dens: " +str(dens))
         for x in self.network:
-            summ = self.nearestNeighborSum(x,list_cache[-1])
-            #print("summ: ", summ)
             probability = self.gamma*list_cache[-1][x] + \
                                     (1 - list_cache[-1][x])*(1-dens)*self.mu
+            #print("probability: " +str(probability))
             if random.uniform(0, 1) <= probability and list_cache[-1][x] == 0:
                 cache[x] = 1
             elif random.uniform(0, 1) <= probability and \
@@ -256,6 +261,7 @@ class MonteCarlo(object):
                 worksheet.write(x+1,y+1,self.list_cache[y][self.network.keys[x]])
 ##        for x in range(len(self.state_d)):
 ##            worksheet.write(len(self.state_d)+1,x+1,"=SUM(B1:B4)")
+                
         if self.network.getType() == "CayleyTree":
             worksheet2 = workbook.add_worksheet("Density")
             worksheet2.write(0,0,"Timestep")
