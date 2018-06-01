@@ -198,12 +198,12 @@ class MonteCarlo(object):
     def simulateTL(self,timestep): #Only works for first timestep
         """Simulates the Monte Carlo simulation on the Cayley Tree for one
            time step and stores that data."""
-        print("Timestep: " + str(timestep))
+        #print("Timestep: " + str(timestep))
         time_steps = range(len(self.state_d))
         f=1#sho
         for x in range(1,self.network.generations+1):#sho
             f= f+ self.network.links*(self.network.links-1)**(x-1)#sho
-        print("f: " +str(f))
+        #print("f: " +str(f))
         if self.list_cache == None:
             list_cache = list()
             list_cache.append(self.state_d)
@@ -215,11 +215,11 @@ class MonteCarlo(object):
             dens = 0 #density function
         else:
             dens = self.getOnes(timestep)/f ### make sure this calls correct timestep
-        print("dens: " +str(dens))
+        #print("dens: " +str(dens))
         for x in self.network:
             probability = self.gamma*list_cache[-1][x] + \
                                     (1 - list_cache[-1][x])*(1-dens)*self.mu
-            print("probability: " +str(probability))
+            #print("probability: " +str(probability))
             if random.uniform(0, 1) <= probability and list_cache[-1][x] == 0:
                 cache[x] = 1
             elif random.uniform(0, 1) <= probability and \
@@ -227,7 +227,7 @@ class MonteCarlo(object):
                 cache[x] = 0 
             else:
                 cache[x] = list_cache[-1][x]
-        print("cache: ",cache)
+        #print("cache: ",cache)
         list_cache.append(cache)
         self.list_cache = list_cache
         return self.list_cache
