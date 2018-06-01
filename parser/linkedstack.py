@@ -9,8 +9,8 @@ __author__ = "\n".join(['Justin Pusztay (pusztayj20@mail.wlu.edu)'])
 
 __all__ = ['LinkedStack']
 
-from Cayley.abstractstack import *
-from Cayley.node import *
+from Cayley.parser.abstractstack import *
+from Cayley.parser.node import *
 
 class LinkedStack(AbstractStack):
     """Represents a link-based stack."""

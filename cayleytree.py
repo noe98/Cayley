@@ -9,7 +9,9 @@ which allow for some basic analysis of the class such as number of nodes
 and nodes per generation. 
 """
 
-__author__ = "\n".join(['Justin Pusztay (pusztayj20@mail.wlu.edu)'])
+__author__ = "\n".join(['Justin Pusztay (pusztayj20@mail.wlu.edu)',
+                        'Matt Lubas (lubasm18@mail.wlu.edu',
+                        'Griffin Noe (noeg21@mail.wlu.edu'])
 
 __all__ = ['CayleyTree']
 
@@ -49,6 +51,10 @@ class CayleyTree(AbstractNetwork):
             return True
         else:
             return False
+
+    def getType(self):
+        """Just for quick fix in MonteCarlo."""
+        return "CayleyTree"
             
     def cayleyProtect(self):
         """Protects the user from creating and using a Cayley Tree object that
@@ -145,3 +151,4 @@ class CayleyTree(AbstractNetwork):
         a = sum(b[0:gen])
         c = self.nodeNumber()-sum(b[gen+1:self.generations+1])
         return list(range(a,c))
+

@@ -9,6 +9,13 @@ Lattice Graph.
 Code Adapted from: https://www.udacity.com/wiki/creating-network-graphs-with-python
 """
 
+
+__author__ = "\n".join(['Justin Pusztay (pusztayj20@mail.wlu.edu)',
+                        'Matt Lubas (lubasm18@mail.wlu.edu',
+                        'Griffin Noe (noeg21@mail.wlu.edu'])
+
+__all__ = ['LatticeGraphics']
+
 import networkx as nx
 import matplotlib.pyplot as plt
 

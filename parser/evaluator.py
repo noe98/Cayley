@@ -10,9 +10,9 @@ __author__ = "\n".join(['Justin Pusztay (pusztayj20@mail.wlu.edu)'])
 
 __all__ = ['Evaluator']
 
-from tokens import Token
-from scanner import Scanner
-from linkedstack import LinkedStack
+from Cayley.parser.tokens import Token
+from Cayley.parser.scanner import Scanner
+from Cayley.parser.linkedstack import LinkedStack
 
 class Evaluator(object):
     """Evaluator for postfix expressions.

@@ -5,7 +5,12 @@ Project: Research for Irina Mazilu, Ph.D.
 A scanner for processing languages.
 """
 
-from tokens import Token
+__author__ = "\n".join(['Justin Pusztay (pusztayj20@mail.wlu.edu)'])
+
+__all__ = ['Scanner']
+
+
+from Cayley.parser.tokens import *
 
 class Scanner(object):
     """A scanner for simple languages."""

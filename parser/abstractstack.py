@@ -7,7 +7,7 @@ __author__ = "\n".join(['Justin Pusztay (pusztayj20@mail.wlu.edu)'])
 
 __all__ = ['AbstractStack']
 
-from Cayley.abstractcollection import *
+from Cayley.parser.abstractcollection import *
 
 class AbstractStack(AbstractCollection):
     """Represents an abstract stack."""
