@@ -152,5 +152,3 @@ class CayleyTree(AbstractNetwork):
         c = self.nodeNumber()-sum(b[gen+1:self.generations+1])
         return list(range(a,c))
 
-    def edgeList(self):
-        pass

@@ -15,18 +15,18 @@ def main():
     a.add("Justin")
     a.add("Maria")
     a.add("Joe")
-    a.add("John")
+    a.add(3)
     a.add("Cole")
     a.linkCreator("Justin","Maria")
     a.linkCreator("Justin","Joe")
     a.linkCreator("Joe","Cole")
-    a.linkCreator("Maria","John")
+    a.linkCreator("Maria",3)
     print(a.link_d)
     monte = cy.MonteCarlo(a)
     monte.emptyDictionary()
     print(monte.emptyDictionary())
     for x in range(len(monte.network)):
-        monte.simulate()
+        monte.simulateNN()
     monte.sendExcel()
 
 if __name__ == "__main__":
