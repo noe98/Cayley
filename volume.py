@@ -233,6 +233,26 @@ def full(method, generations, links, trials):
             for g in gamma_list:
                 simulate('TL', generations, links, alpha, beta, g, m, r1, r2, trials)
     print("--- runtime is %s seconds ---" % (time.time() - start_time))
+
+def no_evaporation(method, generations, links, trials):
+    """You'll have slightly unrealistic data coming out of your ears"""
+    start_time = time.time()
+    if method == 'NN':
+        mu = r1 = r2 = 0
+        for a in alpha_list:
+            for b in beta_list:
+                simulate('NN', generations, links, a, b, 0, mu, r1, r2, trials)
+    elif method == 'EI':
+        alpha = beta = mu = 0
+        for rt1 in r1_list:
+            for rt2 in r2_list:
+                if rt2 >= rt1:
+                    simulate('EI',generations, links, alpha, beta, 0, rt1, rt2, trials)
+    elif method == 'TL':
+        alpha = beta = r1 = r2 = 0
+        for m in mu_list:
+            simulate('TL', generations, links, alpha, beta, 0, m, r1, r2, trials)
+    print("--- runtime is %s seconds ---" % (time.time() - start_time))
     
 def timestep(number_of_timesteps):
     timesteps = number_of_timesteps
