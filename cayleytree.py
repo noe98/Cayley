@@ -84,22 +84,6 @@ class CayleyTree(AbstractNetwork):
            node."""
         return (self.links*(self.links - 1)**(gen - 1))
 
-    def graphicsLinks(self): 
-        """Returns a list of tuples that represents each link in the Cayley
-           Tree. Only useful for CayleyGraphics class because of the Networkx
-           package."""
-        link_list = list()
-        exclude = self.nodeGeneration()[-1]
-        for x in range(1,self.links + 1):
-            link_list.append((0,x))
-        nodes_done = self.links + 1
-        if nodes_done < self.nodeNumber():
-            for x in range(1,self.nodeNumber() - exclude):
-                for y in range(1,self.links):
-                    link_list.append((x,nodes_done))
-                    nodes_done += 1
-        return link_list
-
     def autoCreate(self):
         """Creates a dictionary with the node number as the key and with a list of
            its neighbors as the value. This method will be used in MonteCarlo
@@ -152,5 +136,3 @@ class CayleyTree(AbstractNetwork):
         c = self.nodeNumber()-sum(b[gen+1:self.generations+1])
         return list(range(a,c))
 
-    def edgeList(self):
-        pass
