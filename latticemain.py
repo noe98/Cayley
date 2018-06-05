@@ -42,7 +42,7 @@ def main():
     else:
         monte.zeroDictionary()
     for x in range(len(monte.network)):
-        monte.simulateEI()
+        monte.simulateNN()
     monte.sendExcel(full_filename)
     a = cg.LatticeGraphics(x_dir,y_dir,z_dir)
     a.drawLattice()

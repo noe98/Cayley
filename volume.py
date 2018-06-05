@@ -90,7 +90,7 @@ def simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials)
             worksheet2.write(0,y+1,str(y))
         for y in range(len(monte.list_cache)):
             for x in range(monte.network.generations+1): ## #
-                worksheet2.write(x+1,y+1,monte.densityCalculator(x,monte.list_cache[y]))
+                worksheet2.write(x+1,y+1,monte.density(x,monte.list_cache[y]))
         for y in range(len(monte.list_cache)):
             sum_t = 0
             for x in range(total_nodes[generations-1][links]): ## #
@@ -102,7 +102,7 @@ def simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials)
             other_density_list[i][y] = dens_t
         
         for k in range(generations+1):
-            density_list[k].append(monte.densityCalculator(k,monte.list_cache[len(monte.list_cache)-1]))
+            density_list[k].append(monte.density(k,monte.list_cache[len(monte.list_cache)-1]))
 
 ##    worksheet3 = workbook.add_worksheet("Overall")
     worksheet3.write(0,0,"Trial")
