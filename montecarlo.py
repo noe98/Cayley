@@ -410,8 +410,12 @@ class MonteCarlo(object):
         """Simulates the Monte Carlo simulation on the Cayley Tree for one
            time step and stores that data."""
         #print("Timestep: " + str(timestep))
-        time_steps = range(len(self.state_d))
         #no_nodes = (self.network.links*(self.network.links-1)**(self.network.generations-1))
+        if self.sim_data == []:
+            list_cache = []
+            list_cache.append(self.sim_data[timestep])
+        else: list_cache = self.sim_data
+        cache = {}
         nodes = len(self.network)
         if timestep == 0:
             dens = 0 #density function
@@ -432,13 +436,12 @@ class MonteCarlo(object):
                 cache[x] = list_cache[-1][x]
         #print("cache: ",cache)
         list_cache.append(cache)
-        self.list_cache = list_cache
-        return self.list_cache
+        self.sim_data = list_cache
+        return self.sim_data
 
     def clear(self):
         """Clears the data from the tree."""
-        self.state_d = dict()
-        self.list_cache = None
+        self.sim_data = []
 
     #Data Export Methods
     def simData(self,timestep):
@@ -453,28 +456,28 @@ class MonteCarlo(object):
         #If File exists, load file. If sheet 1 is occupied, create a second
         #sheet. Rename / use input for naming sheet.
         
-        if self.list_cache == None:
+        if self.sim_data == []:
             raise ValueError("No data to send to excel. Must run simulation")
         workbook = xlsxwriter.Workbook(filename)
         worksheet = workbook.add_worksheet("Monte Carlo Data")
         worksheet.write(0,0,"Timestep")
-        for x in range(len(self.state_d)):
+        for x in range(len(self.sim_data[0])):
             worksheet.write(x+1,0,"Node "+ str(self.network.keys[x]))
-        for y in range(len(self.state_d)):
+        for y in range(len(self.sim_data[0])):
             worksheet.write(0,y+1,str(y))
-        for y in range(len(self.list_cache)):
+        for y in range(len(self.sim_data)):
             for x in range(self.network.nodeNumber()):
-                worksheet.write(x+1,y+1,self.list_cache[y][self.network.keys[x]])
+                worksheet.write(x+1,y+1,self.sim_data[y][self.network.keys[x]])
         if self.network.getType() == "CayleyTree":
             worksheet2 = workbook.add_worksheet("Density")
             worksheet2.write(0,0,"Timestep")
             for x in range(self.network.generations+1):
                 worksheet2.write(x+1,0,"Gen. "+str(x))
-            for y in range(len(self.state_d)):
+            for y in range(len(self.sim_data[0])):
                 worksheet2.write(0,y+1,str(y))
-            for y in range(len(self.list_cache)):
+            for y in range(len(self.sim_data)):
                 for x in range(self.network.generations+1):
-                    worksheet2.write(x+1,y+1,self.density(x,self.list_cache[y]))
+                    worksheet2.write(x+1,y+1,self.density(x,self.sim_data[y]))
             workbook.close()
         else:
             workbook.close()
