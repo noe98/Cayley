@@ -163,7 +163,9 @@ class MonteCarlo(object):
         function to each node and generates a random number to try to satisfy
         probability. If satisfied, the state of the node is changed and recorded
         in the dictionary.
+
         This algorithm has a running time of $O(n)$ for $n$ nodes in a network.
+
         Returns
         -------
         self.list_cache: a list containing the dictionaries of all the data
