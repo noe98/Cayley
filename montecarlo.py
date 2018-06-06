@@ -333,6 +333,7 @@ class MonteCarlo(object):
         -> The process of running a monte carlo iterating through each node
            is that the probability of a node changing state is dependent on
            its nearest neighbors.
+           
         Examples
         --------
         >>> import Cayley as cy
@@ -411,10 +412,9 @@ class MonteCarlo(object):
            time step and stores that data."""
         #print("Timestep: " + str(timestep))
         #no_nodes = (self.network.links*(self.network.links-1)**(self.network.generations-1))
-        if self.sim_data == []:
-            list_cache = []
-            list_cache.append(self.sim_data[timestep])
-        else: list_cache = self.sim_data
+        if len(self.sim_data) == 0:
+            raise ValueError("Must set up initial state of simulation")
+        list_cache = self.sim_data
         cache = {}
         nodes = len(self.network)
         if timestep == 0:
@@ -441,7 +441,7 @@ class MonteCarlo(object):
 
     def clear(self):
         """Clears the data from the tree."""
-        self.sim_data = []
+        self.sim_data = list()
 
     #Data Export Methods
     def simData(self,timestep):
