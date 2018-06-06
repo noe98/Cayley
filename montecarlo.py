@@ -456,7 +456,7 @@ class MonteCarlo(object):
         #If File exists, load file. If sheet 1 is occupied, create a second
         #sheet. Rename / use input for naming sheet.
         
-        if self.sim_data == []:
+        if self.sim_data == list():
             raise ValueError("No data to send to excel. Must run simulation")
         workbook = xlsxwriter.Workbook(filename)
         worksheet = workbook.add_worksheet("Monte Carlo Data")
