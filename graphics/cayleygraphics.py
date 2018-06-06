@@ -45,7 +45,7 @@ class CayleyGraphics(object):
         #graph =nx.balanced_tree(connections,generations)
 
         # add edges
-        for edge in self.tree.graphicsLinks():
+        for edge in self.tree.linksAsTuples():
             graph.add_edge(edge[0], edge[1])
 
         # these are different layouts for the network you may try
@@ -76,9 +76,9 @@ class CayleyGraphics(object):
                                 font_family=text_font)
 
         if labels is None:
-            labels = range(len(self.tree.graphicsLinks()))
+            labels = range(len(self.tree.linksAsTuples()))
 
-        edge_labels = dict(zip(self.tree.graphicsLinks(), labels))
+        edge_labels = dict(zip(self.tree.linksAsTuples(), labels))
         """
         #Below on how to label edges.
         nx.draw_networkx_edge_labels(graph, graph_pos, edge_labels=edge_labels, 
