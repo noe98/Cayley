@@ -66,7 +66,7 @@ class Lattice(AbstractNetwork):
     def autoCreate(self):
         """Creates the links present in a lattice. Has a dictionary with the
         node number as the key and a list of neighbors as the value."""
-        for x in range(self.nodeNumber()):
+        for x in range(len(self)):
             self.add(x)
         row_count = 0
         floor_count = 0
@@ -83,7 +83,7 @@ class Lattice(AbstractNetwork):
                 self.linkCreator(node,node-self.x)
             if node % self.x == self.x - 1:
                 row_count += 1
-                
+    
             if floor_count != self.z: #checks if at z-max
                 self.linkCreator(node,node+self.floorArea())
             if floor_count != 0: #checks if at z-min

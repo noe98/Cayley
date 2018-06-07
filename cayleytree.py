@@ -29,16 +29,15 @@ class CayleyTree(AbstractNetwork):
         self.keys = list(range(self.nodeNumber()))
         AbstractNetwork.__init__(self)
         self.autoCreate()
-        #self.cayleyProtect()
         
-    def __str__(self):
-        """Creates a string representation of the Cayley Tree."""
-        a = "Cayley Tree has " + str(self.generations) + " generations" + "\n"
-        b = "Cayley Tree has " + str(self.links) + " links per node" + "\n"
-        c = "Number of Nodes: " + str(self.nodeNumber()) + "\n"
-        d = "Nodes per Generation: " + str(self.nodeGeneration())  + "\n"
-        e = "Links of the Cayley Tree: " + str(self.link_d) 
-        return a+b+c+d+e
+##    def __str__(self):
+##        """Creates a string representation of the Cayley Tree."""
+##        a = "Cayley Tree has " + str(self.generations) + " generations" + "\n"
+##        b = "Cayley Tree has " + str(self.links) + " links per node" + "\n"
+##        c = "Number of Nodes: " + str(self.nodeNumber()) + "\n"
+##        d = "Nodes per Generation: " + str(self.nodeGeneration())  + "\n"
+##        e = "Links of the Cayley Tree: " + str(self.link_d) 
+##        return a+b+c+d+e
 
     def __eq__(self,other):
         """Define equality of Cayley Tree objects, based on the idea that they
@@ -55,16 +54,6 @@ class CayleyTree(AbstractNetwork):
     def getType(self):
         """Just for quick fix in MonteCarlo."""
         return "CayleyTree"
-            
-    def cayleyProtect(self):
-        """Protects the user from creating and using a Cayley Tree object that
-           cannont exist."""
-        if self.generations == 0 and self.links > 0:
-            raise ValueError("Inappropriate argument value: Cayley Tree cannot \
-                             exist")
-        if self.links < self.generations:
-            raise ValueError("Inappropriate argument value: Cayley Tree cannot \
-                             exist")
         
     def nodeNumber(self):
         """Returns the total number of nodes in the Cayley tree. """
@@ -79,44 +68,19 @@ class CayleyTree(AbstractNetwork):
             list_of_nodes_by_generation.append(nodes)
         return list_of_nodes_by_generation
 
-    def nodeCountGen(self,gen):
-        """Takes a generation and returns the number of generations in the
-           node."""
-        return (self.links*(self.links - 1)**(gen - 1))
-
     def autoCreate(self):
         """Creates a dictionary with the node number as the key and with a list of
            its neighbors as the value. This method will be used in MonteCarlo
            class, since this dictionary will reduce the runtime of its simulate
            method."""
-        link_d = dict()
-        node_gens = self.nodeGeneration()
-        #sets up 0
-        link_d[0] = set(range(1,self.nodeGeneration()[1]+1))
+        self.addMultipleNodes(range(len(self)))
+        self.multipleLinkCreator(0,range(1,self.nodeGeneration()[1]+1))
         node_count = self.nodeGeneration()[1]
-        #goes up tree
         for node in range(1,self.nodeNumber()):
             if node_count + 1 != self.nodeNumber():
-                link_d[node] = {node_count+x for x in range(1,self.links)}
+                self.multipleLinkCreator(node,
+                                {node_count+x for x in range(1,self.links)})
                 node_count += self.links-1
-            else:
-                link_d[node] = set()
-        #goes down tree
-        node_count = 0
-        link_tally = 0
-        for node in range(1,self.nodeNumber()):
-            if node <= self.links:
-                link_d[node] = link_d.get(node,set()).union({0})
-                if node == self.links:
-                    node_count += 1
-            else:
-                link_d[node] = link_d.get(node,set()).union({node_count})
-                link_tally += 1 
-                if link_tally == self.links - 1:
-                    node_count += 1
-                    link_tally = 0
-        self.link_d = link_d
-        return link_d
         
     def genFinder(self,node):
         """Takes a node and returns the generation that the node is in."""

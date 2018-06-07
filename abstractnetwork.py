@@ -46,6 +46,22 @@ class AbstractNetwork(object):
         self.keys.append(node)
         self.graph[node]["Neighbors"] = set()
 
+    def remove(self,node):
+        """Does not remove links."""
+        copy = self.graph
+        del copy[node]
+        self.graph = copy
+        return self.graph
+
+    def addMultipleNodes(self,nodes):
+        try:
+            for node in nodes:
+                self.graph[node] = dict()
+                self.keys.append(node)
+                self.graph[node]["Neighbors"] = set()
+        except TypeError:
+            raise "Nodes object is not iterable"
+
     def setNodeFeature(self,name,value = None):
         for x in self:
             self.graph[x][name] = value
@@ -60,6 +76,14 @@ class AbstractNetwork(object):
             (self.graph[connection]["Neighbors"]).add(node)
         except KeyError:
             return "Nodes not in graph"
+
+    def multipleLinkCreator(self,node,connections):
+        try:
+            for connection in connections:
+                (self.graph[node]["Neighbors"]).add(connection)
+                (self.graph[connection]["Neighbors"]).add(node)
+        except TypeError:
+            return "Connections object is not iterable"
         
     def clear(self):
         """Clears the network of all links, nodes, and data."""
