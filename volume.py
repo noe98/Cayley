@@ -30,12 +30,6 @@ mu_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
 r1_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
 r2_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
 
-##### CHANGEABLE VALUES ###
-##timesteps = 50 #change this if you want
-##node_list = [[0,1],[0,4]] #change this if you want
-##initial_state = empty #empty, random, or zero
-##### CHANGEABLE VALUES ###
-
 ## # <-- indicates adjusted generations (account for last gen fluctuations)
 
 def simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials):
