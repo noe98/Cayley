@@ -21,6 +21,7 @@ class AbstractNetwork(object):
         
     def __iter__(self):
         """Allows iteration over self."""
+        #self._nodes = [x[0] for x in self.graph.items()]
         temp = self._modCount
         cursor = 0
         while cursor < len(self):
@@ -40,11 +41,42 @@ class AbstractNetwork(object):
         """Returns the degree of a node."""
         return len(self.graph[node]["Neighbors"])
 
-    def add(self,node):
-        """Adds a node to graph."""
-        self.graph[node] = dict()
-        self.keys.append(node)
-        self.graph[node]["Neighbors"] = set()
+    def add(self,node,**kwargs):
+        """Adds a node to graph. Also adds a feature to a node. Can be a new
+        feature or updates an old one."""
+        if node not in self.graph: #handles adding a new node with new features
+            self.graph[node] = dict()
+            self.keys.append(node)
+            self.graph[node] = kwargs
+            self.graph[node]["Neighbors"] = set()
+        else: #if node is already in graph, handles updating features.
+            for key in kwargs.items():
+                try:
+                    if key[1] != self.graph[node][key[0]]: #handles update
+                        self.graph[node][key[0]] = key[1]
+                except KeyError:
+                    self.graph[node][key[0]] = key[1] #handles new feature to
+                                                      #node that exits.
+    def addMultipleNodes(self,nodes,**kwargs):
+        try:
+            for node in nodes:
+                self.add(node,**kwargs)
+        except TypeError:
+            return "Nodes object is not iterable"
+
+    def setNodeFeature(self,name,data):
+        """Applies new feature or updates feature for all nodes in
+        graph."""
+        try:
+            for node,datum in zip(self,data.items()):
+                self.add(node,state = datum[1])
+        except AttributeError:
+            for node in self:
+                self.add(node,name = data)
+
+
+    def getNodeFeature(self,name):
+        return {n: self.graph[n][name] for n in self if name in self.graph[n]}
 
     def remove(self,node):
         """Does not remove links."""
@@ -52,22 +84,6 @@ class AbstractNetwork(object):
         del copy[node]
         self.graph = copy
         return self.graph
-
-    def addMultipleNodes(self,nodes):
-        try:
-            for node in nodes:
-                self.graph[node] = dict()
-                self.keys.append(node)
-                self.graph[node]["Neighbors"] = set()
-        except TypeError:
-            raise "Nodes object is not iterable"
-
-    def setNodeFeature(self,name,value = None):
-        for x in self:
-            self.graph[x][name] = value
-
-    def getNodeFeature(self,name):
-        return {n: self.graph[n][name] for n in self if name in self.graph[n]}
             
     def linkCreator(self,node,connection):
         """Adds a link in between two nodes."""
