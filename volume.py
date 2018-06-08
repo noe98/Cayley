@@ -31,7 +31,7 @@ r1_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
 r2_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
 
 timesteps = 50 #change this if you want
-node_list = [[0,1],[0,4]] #change this if you want
+node_list = [[0,1],[0,4],[1,6]] #change this if you want
 
 
 ## # <-- indicates adjusted generations (account for last gen fluctuations)
