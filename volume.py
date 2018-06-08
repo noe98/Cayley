@@ -17,11 +17,11 @@ import time
 from math import sqrt
 
 total_nodes = [[1,None,None,None,None], #total_nodes[gens][links]
-               [None,2,3,4,5],
-               [None,None,5,10,17],
-               [None,None,7,22,53],
-               [None,None,9,46,161],
-               [None,None,11,94,485]]
+               [None,2,3,4,5,6],
+               [None,None,5,10,17,26],
+               [None,None,7,22,53,106],
+               [None,None,9,46,161,426],
+               [None,None,11,94,485,1706]]
 
 alpha_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
 beta_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
@@ -30,9 +30,11 @@ mu_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
 r1_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
 r2_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
 
-timesteps = 50 #change this if you want
-node_list = [[0,1],[0,4]] #change this if you want
-
+##### CHANGEABLE VALUES ###
+##timesteps = 50 #change this if you want
+##node_list = [[0,1],[0,4]] #change this if you want
+##initial_state = empty #empty, random, or zero
+##### CHANGEABLE VALUES ###
 
 ## # <-- indicates adjusted generations (account for last gen fluctuations)
 
@@ -41,6 +43,10 @@ def simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials)
     generations = generations + 1 ## #
     network = cy.CayleyTree(generations, links)
     monte = cy.MonteCarlo(network, alpha, beta, gamma, mu, r1, r2)
+    run_time = time.time()
+    from change_me import timesteps
+    from change_me import node_list
+    from change_me import initial_state
 
     a_tag = "%.2f" % alpha
     b_tag = "%.2f" % beta
@@ -72,7 +78,9 @@ def simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials)
        
     for i in range(trials):
         monte.sim_data = []
-        monte.emptyDictionary()
+        if initial_state == "empty": monte.emptyDictionary()
+        elif initial_state == "random": monte.randomDictionary()
+        elif initial_state == "zero": monte.zeroDictionary()
         for j in range(timesteps+1):
             if method == 'NN':
                 monte.simulateNN()
@@ -122,6 +130,13 @@ def simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials)
                 for x in range(monte.network.generations+1): ## # double-check line below
                     worksheet2.write(x+1,y+1,monte.density(x,monte.sim_data[y]))
                 worksheet2.write(monte.network.generations+1,y+1,density_list[i][y]) ## #
+
+        if (trials >= 100) and ((10*i)%trials == 0):
+            try:
+                ti = (time.time()-run_time)
+                print("Trial: "+str(i))
+                print(str(ti)+" secs")
+            except NameError: pass
 
     corr_t = {}
     for n in range(len(node_list)):
