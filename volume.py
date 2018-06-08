@@ -1,9 +1,13 @@
+#!/usr/bin/env python
 """
-Adapted from cayleymain module by Justin Pusztay et al.
-Project: Nanoparticle deposition
+Authors: Justin Pusztay, Sho Gibbs, Will Hanstedt
+Filename: volume.py
+Project: Research for Irina Mazilu, Ph.D.
+
+Adapted from cayleymain.py module by Justin Pusztay et al.
 
 Runs Cayley tree simulations in bulk according to the methods laid out in
-montecarlo.py
+montecarlo.py.
 """
 
 import Cayley as cy
@@ -26,7 +30,9 @@ mu_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
 r1_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
 r2_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
 
-timesteps = 50
+timesteps = 50 #change this if you want
+node_list = [[0,1],[0,4]] #change this if you want
+
 
 ## # <-- indicates adjusted generations (account for last gen fluctuations)
 
@@ -54,6 +60,7 @@ def simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials)
     density_list = {} #[trial][timestep] stores overall densities
     state_collect = {} #[trial] stores final state dictionaries
     dens_collect = {} #[trial][generation] stores generational densities
+    node_d = {} #[trial#][pair index][node index][timestep] stores node values
     overtime = workbook.add_worksheet("Over Time")
     overall = workbook.add_worksheet("Overall")
 
@@ -62,7 +69,7 @@ def simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials)
 
     for k in range(trials):
         dens_collect[k] = [0]*(generations)
-        
+       
     for i in range(trials):
         monte.sim_data = []
         monte.emptyDictionary()
@@ -76,6 +83,15 @@ def simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials)
 
         ### FOR RECORDING DATA ###
         state_collect[i] = monte.sim_data[(len(monte.sim_data)-1)]
+
+        node_d[i] = []
+
+        for n in range(len(node_list)):
+            node_d[i].append([])
+            for j in range(len(node_list[n])):
+                node_d[i][n].append([])
+                for t in range(timesteps):
+                    node_d[i][n][j].append(2*(monte.sim_data[t][node_list[n][j]])-1)
                 
         for y in range(len(monte.sim_data)):
             sum_t = 0 # Sum of relevant nodes at one timestep
@@ -106,7 +122,29 @@ def simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials)
                 for x in range(monte.network.generations+1): ## # double-check line below
                     worksheet2.write(x+1,y+1,monte.density(x,monte.sim_data[y]))
                 worksheet2.write(monte.network.generations+1,y+1,density_list[i][y]) ## #
-        
+
+    corr_t = {}
+    for n in range(len(node_list)):
+        corr_t[n] = [0]*timesteps
+        for t in range(timesteps):
+            sum_prod = 0
+            n1 = 0
+            n2 = 0
+            for i in range(trials):
+                sum_prod += (node_d[i][n][0][t])*(node_d[i][n][1][t])
+                n1 += node_d[i][n][0][t]
+                n2 += node_d[i][n][1][t]
+            corr_t[n][t] = (sum_prod/trials)-(n1/trials)*(n2/trials)
+
+    for n in range(len(node_list)):
+        corr_sheet = workbook.add_worksheet("Nodes %d+%d" %(node_list[n][0],node_list[n][1]))
+        corr_sheet.write(0,0,"Timestep")
+        corr_sheet.write(1,0,"Correlation")
+        for t in range(timesteps):
+            corr_sheet.write(0,t+1,t)
+            corr_sheet.write(1,t+1,corr_t[n][t])
+
+
     ### FOR RECORDING OVERALL DATA ###
     overall.write(0,0,"Generation") # For steady-state analysis
     for x in range(generations):
@@ -273,3 +311,4 @@ if __name__ == "__main__":
 ## Things to look at/fix:
 ## Clean up formatting
 ## Make this able to call the lattice class
+## Different initial states

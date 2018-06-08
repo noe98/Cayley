@@ -71,11 +71,11 @@ def main():
         monte.zeroDictionary()
     for x in range(len(monte.network)):
         if method == 'NN':
-            monte.simulateNN() #careful with redefine
+            monte.simulateNN()
         elif method == 'TL':
             monte.simulateTL(x)
         elif method == 'EI':
-            monte.simulateEI()  #hasn't been defined
+            monte.simulateEI()
     monte.sendExcel(full_filename)
     cayley = cg.CayleyGraphics(generations, links)
     cayley.drawCayley()
