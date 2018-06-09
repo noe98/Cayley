@@ -16,23 +16,6 @@ import xlsxwriter as xl
 import time
 from math import sqrt
 
-<<<<<<< HEAD
-=======
-total_nodes = [[1,None,None,None,None], #total_nodes[gens][links]
-               [None,2,3,4,5,6],
-               [None,None,5,10,17,26],
-               [None,None,7,22,53,106],
-               [None,None,9,46,161,426],
-               [None,None,11,94,485,1706]]
-
-alpha_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
-beta_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
-gamma_list = [0, 0.05, 0.1, 0.15, 0.2]
-mu_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
-r1_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
-r2_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
-
->>>>>>> d51b2cfce87d3d1376172edc3798886cd0c87b85
 ## # <-- indicates adjusted generations (account for last gen fluctuations)
 
 def simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials):
