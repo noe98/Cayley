@@ -16,24 +16,6 @@ import xlsxwriter as xl
 import time
 from math import sqrt
 
-total_nodes = [[1,None,None,None,None], #total_nodes[gens][links]
-               [None,2,3,4,5],
-               [None,None,5,10,17],
-               [None,None,7,22,53],
-               [None,None,9,46,161],
-               [None,None,11,94,485]]
-
-alpha_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
-beta_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
-gamma_list = [0, 0.05, 0.1, 0.15, 0.2]
-mu_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
-r1_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
-r2_list = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
-
-timesteps = 50 #change this if you want
-node_list = [[0,1],[0,4],[1,6]] #change this if you want
-
-
 ## # <-- indicates adjusted generations (account for last gen fluctuations)
 
 def simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials):
@@ -41,6 +23,10 @@ def simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials)
     generations = generations + 1 ## #
     network = cy.CayleyTree(generations, links)
     monte = cy.MonteCarlo(network, alpha, beta, gamma, mu, r1, r2)
+    run_time = time.time()
+    from change_me import timesteps
+    from change_me import node_list
+    from change_me import initial_state
 
     a_tag = "%.2f" % alpha
     b_tag = "%.2f" % beta
@@ -72,7 +58,9 @@ def simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials)
        
     for i in range(trials):
         monte.sim_data = []
-        monte.emptyDictionary()
+        if initial_state == "empty": monte.emptyDictionary()
+        elif initial_state == "random": monte.randomDictionary()
+        elif initial_state == "zero": monte.zeroDictionary()
         for j in range(timesteps+1):
             if method == 'NN':
                 monte.simulateNN()
@@ -122,6 +110,13 @@ def simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials)
                 for x in range(monte.network.generations+1): ## # double-check line below
                     worksheet2.write(x+1,y+1,monte.density(x,monte.sim_data[y]))
                 worksheet2.write(monte.network.generations+1,y+1,density_list[i][y]) ## #
+
+        if (trials >= 100) and ((10*i)%trials == 0):
+            try:
+                ti = (time.time()-run_time)
+                print("Trial: "+str(i))
+                print(str(ti)+" secs")
+            except NameError: pass
 
     corr_t = {}
     for n in range(len(node_list)):
@@ -235,39 +230,60 @@ def main():
 
 def alpha_range(generations, links, beta, gamma, trials):
     """To run tests with a range of alpha values"""
+	start_time = time.time()
+	from change_me import alpha_list
     for a in alpha_list:
         simulate('NN', generations, links, a, beta, gamma, 0, 0, 0, trials)
-
+	print("--- runtime is %s seconds ---" % (time.time() - start_time))
+		
 def beta_range(generations, links, alpha, gamma, trials):
     """To run tests with a range of beta values"""
+	start_time = time.time()
+	from change_me import beta_list
     for b in beta_list:
         simulate('NN', generations, links, alpha, b, gamma, 0, 0, 0, trials)        
-
+	print("--- runtime is %s seconds ---" % (time.time() - start_time))
+		
 def mu_range(generations, links, gamma, trials):
     """To run tests with a range of mu values"""
+	start_time = time.time()
+	from change_me import mu_list
     for m in mu_list:
         simulate('TL', generations, links, 0, 0, gamma, m, 0, 0, trials)
-
+	print("--- runtime is %s seconds ---" % (time.time() - start_time))
+		
 def r1_range(generations, links, r2, gamma, trials):
     """To run tests with a range of r1 values"""
+	start_time = time.time()
+	from change_me import r1_list
     for rt1 in r1_list:
         simulate('EI', generations, links, 0, 0, gamma, 0, rt1, r2, trials)
-
+	print("--- runtime is %s seconds ---" % (time.time() - start_time))
+		
 def r2_range(generations, links, r1, gamma, trials):
     """To run tests with a range of r2 values"""
+	start_time = time.time()
+	from change_me import r2_list
     for rt2 in r2_list:
         simulate('EI', generations, links, 0, 0, gamma, 0, r1, rt2, trials)
-
+	print("--- runtime is %s seconds ---" % (time.time() - start_time))
+		
 def full(method, generations, links, trials):
     """You'll have data coming out of your ears"""
     start_time = time.time()
     if method == 'NN':
+		from change_me import alpha_list
+		from change_me import beta_list
+		from change_me import gamma_list
         mu = r1 = r2 = 0
         for a in alpha_list:
             for b in beta_list:
                 for g in gamma_list:
                     simulate('NN', generations, links, a, b, g, mu, r1, r2, trials)
     elif method == 'EI':
+		from change_me import r1_list
+		from change_me import r2_list
+		from change_me import gamma_list
         alpha = beta = mu = 0
         for rt1 in r1_list:
             for rt2 in r2_list:
@@ -275,6 +291,8 @@ def full(method, generations, links, trials):
                     if rt2 >= rt1:
                         simulate('EI',generations, links, alpha, beta, g, rt1, rt2, trials)
     elif method == 'TL':
+		from change_me import mu_list
+		from change_me import gamma_list
         alpha = beta = r1 = r2 = 0
         for m in mu_list:
             for g in gamma_list:
@@ -285,17 +303,22 @@ def no_evaporation(method, generations, links, trials):
     """You'll have slightly unrealistic data coming out of your ears"""
     start_time = time.time()
     if method == 'NN':
+		from change_me import alpha_list
+		from change_me import beta_list
         mu = r1 = r2 = 0
         for a in alpha_list:
             for b in beta_list:
                 simulate('NN', generations, links, a, b, 0, mu, r1, r2, trials)
     elif method == 'EI':
+		from change_me import r1_list
+		from change_me import r2_list
         alpha = beta = mu = 0
         for rt1 in r1_list:
             for rt2 in r2_list:
                 if rt2 >= rt1:
                     simulate('EI',generations, links, alpha, beta, 0, mu, rt1, rt2, trials)
     elif method == 'TL':
+		from change_me import mu_list
         alpha = beta = r1 = r2 = 0
         for m in mu_list:
             simulate('TL', generations, links, alpha, beta, 0, m, r1, r2, trials)
