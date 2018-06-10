@@ -201,13 +201,18 @@ def simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials)
     over_chart.set_title({'name':'Density'})
     over_chart.set_x_axis({'name':'Timesteps'})
     over_chart.set_y_axis({'name':'Density'})
-    over_chart.add_series({'values':chartrange})
+    over_chart.add_series({'values':('=Over_Time!$B$2:$'+endcol+'$2'),
+                           'name':'=Over_Time!$A$2'})
+    over_chart.add_series({'values':('=Over_Time!$B$3:$'+endcol+'$3'),
+                           'name':'=Over_Time!$A$3'})
+    over_chart.add_series({'values':('=Over_Time!$B$4:$'+endcol+'$4'),
+                           'name':'=Over_Time!$A$4'})
     if trials <= 10:
         for t in range(trials):
             overtime.write(t+3,0,"Trial "+str(t+1))
             for k in range(timesteps+1):
                 overtime.write(t+3,k+1,density_list[t][k])
-    else: overtime.write(3,0,"Trials: "+str(trials))
+    else: overtime.write(6,0,"Trials: "+str(trials))
     for k in range(timesteps+1):
         t_sum = 0
         overtime.write(0,k+1,k)
