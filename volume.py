@@ -27,6 +27,8 @@ def simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials)
     from change_me import timesteps
     from change_me import node_list
     from change_me import initial_state
+    from change_me import total_nodes
+    endcol = xl.utility.xl_col_to_name(timesteps+1)
 
     a_tag = "%.2f" % alpha
     b_tag = "%.2f" % beta
@@ -47,7 +49,7 @@ def simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials)
     state_collect = {} #[trial] stores final state dictionaries
     dens_collect = {} #[trial][generation] stores generational densities
     node_d = {} #[trial#][pair index][node index][timestep] stores node values
-    overtime = workbook.add_worksheet("Over Time")
+    overtime = workbook.add_worksheet("Over_Time")
     overall = workbook.add_worksheet("Overall")
 
     for k in range(trials):
@@ -78,7 +80,7 @@ def simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials)
             node_d[i].append([])
             for j in range(len(node_list[n])):
                 node_d[i][n].append([])
-                for t in range(timesteps):
+                for t in range(timesteps+1):
                     node_d[i][n][j].append(2*(monte.sim_data[t][node_list[n][j]])-1)
                 
         for y in range(len(monte.sim_data)):
@@ -118,10 +120,10 @@ def simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials)
                 print(str(ti)+" secs")
             except NameError: pass
 
-    corr_t = {}
+    corr_t = {} # For calculating correlations
     for n in range(len(node_list)):
-        corr_t[n] = [0]*timesteps
-        for t in range(timesteps):
+        corr_t[n] = [0]*(timesteps+1)
+        for t in range(timesteps+1):
             sum_prod = 0
             n1 = 0
             n2 = 0
@@ -131,14 +133,22 @@ def simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials)
                 n2 += node_d[i][n][1][t]
             corr_t[n][t] = (sum_prod/trials)-(n1/trials)*(n2/trials)
 
-    for n in range(len(node_list)):
-        corr_sheet = workbook.add_worksheet("Nodes %d+%d" %(node_list[n][0],node_list[n][1]))
+    for n in range(len(node_list)): # For recording correlations
+        sheetname = ("Nodes_%d+%d" %(node_list[n][0],node_list[n][1]))
+        chartrange = '='+sheetname+'!$B$2:$'+endcol+'$2'
+        timerange = '='+sheetname+'!$B$2:$'+endcol+'$2'
+        corr_sheet = workbook.add_worksheet(sheetname)
         corr_sheet.write(0,0,"Timestep")
         corr_sheet.write(1,0,"Correlation")
-        for t in range(timesteps):
+        corr_chart = workbook.add_chart({'type':'line'})
+        corr_sheet.insert_chart('I8', corr_chart)
+        corr_chart.set_title({'name':'Correlation'})
+        corr_chart.set_x_axis({'name':'Timesteps'})
+        corr_chart.set_y_axis({'name':'Correlation'})
+        corr_chart.add_series({'values':chartrange})
+        for t in range(timesteps+1):
             corr_sheet.write(0,t+1,t)
             corr_sheet.write(1,t+1,corr_t[n][t])
-
 
     ### FOR RECORDING OVERALL DATA ###
     overall.write(0,0,"Generation") # For steady-state analysis
@@ -185,6 +195,13 @@ def simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials)
     # Average density over time
     overtime.write(0,0,"Timestep")
     overtime.write(1,0,"Average")
+    chartrange = '=Over_Time!$B$2:$'+endcol+'$2'
+    over_chart = workbook.add_chart({'type':'line'})
+    overtime.insert_chart('I8',over_chart)
+    over_chart.set_title({'name':'Density'})
+    over_chart.set_x_axis({'name':'Timesteps'})
+    over_chart.set_y_axis({'name':'Density'})
+    over_chart.add_series({'values':chartrange})
     if trials <= 10:
         for t in range(trials):
             overtime.write(t+3,0,"Trial "+str(t+1))
@@ -230,60 +247,60 @@ def main():
 
 def alpha_range(generations, links, beta, gamma, trials):
     """To run tests with a range of alpha values"""
-	start_time = time.time()
-	from change_me import alpha_list
+    start_time = time.time()
+    from change_me import alpha_list
     for a in alpha_list:
         simulate('NN', generations, links, a, beta, gamma, 0, 0, 0, trials)
-	print("--- runtime is %s seconds ---" % (time.time() - start_time))
+    print("--- runtime is %s seconds ---" % (time.time() - start_time))
 		
 def beta_range(generations, links, alpha, gamma, trials):
     """To run tests with a range of beta values"""
-	start_time = time.time()
-	from change_me import beta_list
+    start_time = time.time()
+    from change_me import beta_list
     for b in beta_list:
         simulate('NN', generations, links, alpha, b, gamma, 0, 0, 0, trials)        
-	print("--- runtime is %s seconds ---" % (time.time() - start_time))
+    print("--- runtime is %s seconds ---" % (time.time() - start_time))
 		
 def mu_range(generations, links, gamma, trials):
     """To run tests with a range of mu values"""
-	start_time = time.time()
-	from change_me import mu_list
+    start_time = time.time()
+    from change_me import mu_list
     for m in mu_list:
         simulate('TL', generations, links, 0, 0, gamma, m, 0, 0, trials)
-	print("--- runtime is %s seconds ---" % (time.time() - start_time))
+    print("--- runtime is %s seconds ---" % (time.time() - start_time))
 		
 def r1_range(generations, links, r2, gamma, trials):
     """To run tests with a range of r1 values"""
-	start_time = time.time()
-	from change_me import r1_list
+    start_time = time.time()
+    from change_me import r1_list
     for rt1 in r1_list:
         simulate('EI', generations, links, 0, 0, gamma, 0, rt1, r2, trials)
-	print("--- runtime is %s seconds ---" % (time.time() - start_time))
+    print("--- runtime is %s seconds ---" % (time.time() - start_time))
 		
 def r2_range(generations, links, r1, gamma, trials):
     """To run tests with a range of r2 values"""
-	start_time = time.time()
-	from change_me import r2_list
+    start_time = time.time()
+    from change_me import r2_list
     for rt2 in r2_list:
         simulate('EI', generations, links, 0, 0, gamma, 0, r1, rt2, trials)
-	print("--- runtime is %s seconds ---" % (time.time() - start_time))
+    print("--- runtime is %s seconds ---" % (time.time() - start_time))
 		
 def full(method, generations, links, trials):
     """You'll have data coming out of your ears"""
     start_time = time.time()
     if method == 'NN':
-		from change_me import alpha_list
-		from change_me import beta_list
-		from change_me import gamma_list
+        from change_me import alpha_list
+        from change_me import beta_list
+        from change_me import gamma_list
         mu = r1 = r2 = 0
         for a in alpha_list:
             for b in beta_list:
                 for g in gamma_list:
                     simulate('NN', generations, links, a, b, g, mu, r1, r2, trials)
     elif method == 'EI':
-		from change_me import r1_list
-		from change_me import r2_list
-		from change_me import gamma_list
+        from change_me import r1_list
+        from change_me import r2_list
+        from change_me import gamma_list
         alpha = beta = mu = 0
         for rt1 in r1_list:
             for rt2 in r2_list:
@@ -291,8 +308,8 @@ def full(method, generations, links, trials):
                     if rt2 >= rt1:
                         simulate('EI',generations, links, alpha, beta, g, rt1, rt2, trials)
     elif method == 'TL':
-		from change_me import mu_list
-		from change_me import gamma_list
+        from change_me import mu_list
+        from change_me import gamma_list
         alpha = beta = r1 = r2 = 0
         for m in mu_list:
             for g in gamma_list:
@@ -303,22 +320,22 @@ def no_evaporation(method, generations, links, trials):
     """You'll have slightly unrealistic data coming out of your ears"""
     start_time = time.time()
     if method == 'NN':
-		from change_me import alpha_list
-		from change_me import beta_list
+        from change_me import alpha_list
+        from change_me import beta_list
         mu = r1 = r2 = 0
         for a in alpha_list:
             for b in beta_list:
                 simulate('NN', generations, links, a, b, 0, mu, r1, r2, trials)
     elif method == 'EI':
-		from change_me import r1_list
-		from change_me import r2_list
+        from change_me import r1_list
+        from change_me import r2_list
         alpha = beta = mu = 0
         for rt1 in r1_list:
             for rt2 in r2_list:
                 if rt2 >= rt1:
                     simulate('EI',generations, links, alpha, beta, 0, mu, rt1, rt2, trials)
     elif method == 'TL':
-		from change_me import mu_list
+        from change_me import mu_list
         alpha = beta = r1 = r2 = 0
         for m in mu_list:
             simulate('TL', generations, links, alpha, beta, 0, m, r1, r2, trials)
@@ -334,4 +351,4 @@ if __name__ == "__main__":
 ## Things to look at/fix:
 ## Clean up formatting
 ## Make this able to call the lattice class
-## Different initial states
+## Make sure last gen is clean
