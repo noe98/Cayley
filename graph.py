@@ -28,7 +28,7 @@ class Graph(AbstractNetwork):
 
     def nodeNumber(self):
         """Returns the total number of nodes in the Lattice."""
-        return len(self.link_d)
+        return len(self.graph)
 
     def getType(self):
         """Quick fix for MonteCarlo."""
