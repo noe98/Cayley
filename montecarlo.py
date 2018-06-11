@@ -16,6 +16,7 @@ import random
 import xlsxwriter #http://xlsxwriter.readthedocs.io/tutorial01.html 
 from Cayley.cayleytree import *
 from Cayley.lattice import *
+import numpy as np
 
 class MonteCarlo(object):
     
@@ -169,12 +170,9 @@ class MonteCarlo(object):
         else:
             raise ValueError("Must clear data before setting initial state.")
 
-    def temperature(self,nodes):
+    def temperature(self,nodes,temp):
         """Adds a temperature to a group of nodes."""
-        if len(self.__sim_data) == 0:
-            self.__network.addMultipleNodes(nodes,temperature=0)
-        else:
-            raise ValueError("Must clear data before setting initial state.")
+        self.__network.addMultipleNodes(nodes,temperature=temp)
                 
     #Analysis Methods
     def getZeros(self,timestep):
@@ -300,7 +298,7 @@ class MonteCarlo(object):
         """Takes a generation and a state dictionary and returns the density
            of the generation."""
         try:
-            nodes = self.__network.nodeFinder(gen)
+            nodes = self.__network.nodesPerGen(gen)
             density = 0
             for node in nodes:
                 density += state_d.get(node)
@@ -426,6 +424,33 @@ class MonteCarlo(object):
             probability = self.gamma*list_cache[-1][x] + \
                                     (1 - list_cache[-1][x])*(1-dens)*self.mu
             #print("probability: " +str(probability))
+            if list_cache[-1][x] == 0 and \
+               random.uniform(0, 1) <= probability:
+                cache[x] = 1
+            elif list_cache[-1][x] == 1 and \
+                 random.uniform(0, 1) <= probability:
+                cache[x] = 0 
+            else:
+                cache[x] = list_cache[-1][x]
+        #print("cache: ",cache)
+        list_cache.append(cache)
+        self.__sim_data = list_cache
+        return self.__sim_data
+
+    def simulateTemp(self, k = 1, J = 1):
+        """Simulates the Monte Carlo simulation on the Cayley Tree for one
+           time step and stores that data. Uses temperature of nodes in
+           calculation of probabilty."""
+        if len(self.__sim_data) == 0:
+            raise ValueError("Must set up initial state of simulation")
+        list_cache = self.__sim_data
+        cache = dict()
+        temps = self.__network.getNodeFeature('temperature')
+        for x in self.__network:
+            beta = (1/k)*temps[x]
+            summ = self.neighborSum(x,list_cache[-1])
+            #print("summ: ", summ)
+            probability = 0.5*(1-list_cache[-1][x]*np.tanh(beta*J*summ))
             if list_cache[-1][x] == 0 and \
                random.uniform(0, 1) <= probability:
                 cache[x] = 1

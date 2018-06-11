@@ -92,7 +92,7 @@ class CayleyTree(AbstractNetwork):
             if node < 0:
                 return count_gen
 
-    def nodeFinder(self,gen):
+    def nodesPerGen(self,gen):
         """Takes a generation and returns a list with the nodes in
             the generation."""
         b = self.nodeGeneration()
