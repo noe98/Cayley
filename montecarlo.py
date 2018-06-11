@@ -63,7 +63,7 @@ class MonteCarlo(object):
     #Initial State Methods
     def emptyDictionary(self): #startEmpty
         """Creates a dictionary where all nodes have an initial state of zero.
-        This will append a dictionary to th sim_data instance variable.
+        This will append a dictionary to the sim_data instance variable.
 
         Returns
         -------
