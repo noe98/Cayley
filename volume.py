@@ -3,7 +3,6 @@
 Authors: Justin Pusztay, Sho Gibbs, Will Hanstedt
 Filename: volume.py
 Project: Research for Irina Mazilu, Ph.D.
-
 Adapted from cayleymain.py module by Justin Pusztay et al.
 
 Runs Cayley tree simulations in bulk according to the methods laid out in
@@ -49,18 +48,22 @@ def simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials)
     r1_tag = "%.2f" % r1
     r2_tag = "%.2f" % r2
     if method == 'NN':
-        name = ("NN%dGen_%dLin_%sα_%sβ_%sγ.xlsx" % (generations-1, links, a_tag, b_tag, g_tag))
+        name = ("NN%dGen_%dLin_%sα_%sβ_%sγ.xlsx" % (generations-1, links,
+                                                    a_tag, b_tag, g_tag))
     elif method == 'TL':
-        name = ("TL%dGen_%dLin_%sμ_%sγ.xlsx" % (generations-1, links, m_tag, g_tag))
+        name = ("TL%dGen_%dLin_%sμ_%sγ.xlsx" % (generations-1, links,
+                                                m_tag, g_tag))
     elif method == 'EI':
-        name = ("EI%dGen_%dLin_%sr1_%sr2_%sγ.xlsx" % (generations-1, links, r1_tag, r2_tag, g_tag))
+        name = ("EI%dGen_%dLin_%sr1_%sr2_%sγ.xlsx" % (generations-1, links,
+                                                      r1_tag, r2_tag, g_tag))
     else: raise ValueError("Method not recognized")
     
     workbook = xl.Workbook(name)
-    density_list = {} #[trial][timestep] stores overall densities
-    state_collect = {} #[trial] stores final state dictionaries
-    dens_collect = {} #[trial][generation] stores generational densities
-    node_d = {} #[trial#][pair index][node index][timestep] stores node values
+    #JKP: This all can be incorporated with new node feature ability
+    density_list = dict() #[trial][timestep] stores overall densities
+    state_collect = dict() #[trial] stores final state dictionaries
+    dens_collect = dict() #[trial][generation] stores generational densities
+    node_d = dict() #[trial#][pair index][node index][timestep] stores node values
     overtime = workbook.add_worksheet("Over Time")
     overall = workbook.add_worksheet("Overall")
 
@@ -71,7 +74,7 @@ def simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials)
         dens_collect[k] = [0]*(generations)
        
     for i in range(trials):
-        monte.sim_data = []
+        monte.clear()
         monte.emptyDictionary()
         for j in range(timesteps+1):
             if method == 'NN':
@@ -82,21 +85,25 @@ def simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials)
                 monte.simulateTL(j)
 
         ### FOR RECORDING DATA ###
-        state_collect[i] = monte.sim_data[(len(monte.sim_data)-1)]
+        #state_collect[i] = monte.sim_data[(len(monte.sim_data)-1)]
+        state_collect[i] = monte.simData(monte.getTimesteps()-1) #JKP updated
+        #JKP: Follows new encapsulation and defensive programming
 
-        node_d[i] = []
-
+        node_d[i] = list()
         for n in range(len(node_list)):
             node_d[i].append([])
             for j in range(len(node_list[n])):
                 node_d[i][n].append([])
                 for t in range(timesteps):
-                    node_d[i][n][j].append(2*(monte.sim_data[t][node_list[n][j]])-1)
-                
-        for y in range(len(monte.sim_data)):
+                    #node_d[i][n][j].append(2*(monte.sim_data[t][node_list[n][j]])-1)
+                    node_d[i][n][j].append(2*(monte.simData(t)[node_list[n][j]])-1)
+                    #JKP: Follows new updates and defensive programming
+        #for y in range(len(monte.sim_data)):
+        for y in range(monte.getTimesteps()): #JKP: Follows new updates
             sum_t = 0 # Sum of relevant nodes at one timestep
             for x in range(total_nodes[generations-1][links]): ## # gives adjusted, can't use len(monte.network)
-                sum_t += monte.sim_data[y][x]
+                #sum_t += monte.sim_data[y][x]
+                sum_t += monte.simData(y)[x] #JKP: Follows new updates
             dens_t = sum_t/total_nodes[generations-1][links] ## # Density at one timestep
             density_list[i][y] = dens_t
 
@@ -105,25 +112,32 @@ def simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials)
             worksheet.write(0,0,"Timestep")
             for x in range(total_nodes[generations-1][links]):## #
                 worksheet.write(x+1,0,"Node "+str(x))
-            for y in range(len(monte.sim_data)):
+            #for y in range(len(monte.sim_data)):
+            for y in range(monte.getTimesteps()): #JKP: Follows new updates
                 worksheet.write(0,y+1,str(y))
-            for y in range(len(monte.sim_data)):
+            #for y in range(len(monte.sim_data)):
+            for y in range(monte.getTimesteps()): #JKP: Follows new updates
                 for x in range(total_nodes[generations-1][links]):
-                    worksheet.write(x+1,y+1,monte.sim_data[y][x])
+                    #worksheet.write(x+1,y+1,monte.sim_data[y][x])
+                    worksheet.write(x+1,y+1,monte.simData(y)[x]) #JKP: Follows new updates
 
             worksheet2 = workbook.add_worksheet("Density trial %d" % (i+1))
             worksheet2.write(0,0,"Timestep")
-            worksheet2.write(monte.network.generations+1,0,"Density") ## #       
-            for x in range(monte.network.generations): ## #
+            #worksheet2.write(monte.network.generations+1,0,"Density") ## #
+            worksheet2.write(network.generations+1,0,"Density") ## #   #JKP: update
+            #for x in range(monte.network.generations): ## #
+            for x in range(network.generations): ## #  #JKP: follows update
                 worksheet2.write(x+1,0,"Gen. "+str(x))
             for y in range(timesteps+1):
                 worksheet2.write(0,y+1,str(y))
-            for y in range(len(monte.sim_data)):
-                for x in range(monte.network.generations+1): ## # double-check line below
-                    worksheet2.write(x+1,y+1,monte.density(x,monte.sim_data[y]))
-                worksheet2.write(monte.network.generations+1,y+1,density_list[i][y]) ## #
-
-    corr_t = {}
+            #for y in range(len(monte.sim_data)):
+            for y in range(monte.getTimesteps()): #JKP: Follows new updates
+                #for x in range(monte.network.generations+1): ## # double-check line below
+                for x in range(network.generations+1): #JKP: Follows new updates
+                    worksheet2.write(x+1,y+1,monte.density(x,monte.simData(y)))
+                #worksheet2.write(monte.network.generations+1,y+1,density_list[i][y]) ## #
+                worksheet2.write(network.generations+1,y+1,density_list[i][y]) ## #
+    corr_t = dict()
     for n in range(len(node_list)):
         corr_t[n] = [0]*timesteps
         for t in range(timesteps):
@@ -137,7 +151,8 @@ def simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials)
             corr_t[n][t] = (sum_prod/trials)-(n1/trials)*(n2/trials)
 
     for n in range(len(node_list)):
-        corr_sheet = workbook.add_worksheet("Nodes %d+%d" %(node_list[n][0],node_list[n][1]))
+        corr_sheet = workbook.add_worksheet("Nodes %d+%d" %(node_list[n][0],
+                                                            node_list[n][1]))
         corr_sheet.write(0,0,"Timestep")
         corr_sheet.write(1,0,"Correlation")
         for t in range(timesteps):
@@ -204,7 +219,7 @@ def simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials)
         t_av = t_sum/trials
         overtime.write(1,k+1,t_av)
     
-    workbook.close
+    workbook.close #JKP: Are you missiong a paranthesis?
         
 def main():
     print("Enter 'NN', 'TL', 'EI' for nearest neighbors, total lattice " + \
@@ -273,7 +288,8 @@ def full(method, generations, links, trials):
             for rt2 in r2_list:
                 for g in gamma_list:
                     if rt2 >= rt1:
-                        simulate('EI',generations, links, alpha, beta, g, rt1, rt2, trials)
+                        simulate('EI',generations, links, alpha, beta, g,
+                                 rt1, rt2, trials)
     elif method == 'TL':
         alpha = beta = r1 = r2 = 0
         for m in mu_list:
