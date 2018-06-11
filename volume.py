@@ -3,7 +3,9 @@
 Authors: Justin Pusztay, Sho Gibbs, Will Hanstedt
 Filename: volume.py
 Project: Research for Irina Mazilu, Ph.D.
+
 Adapted from cayleymain.py module by Justin Pusztay et al.
+
 Runs Cayley tree simulations in bulk according to the methods laid out in
 montecarlo.py.
 """
