@@ -23,8 +23,8 @@ class MonteCarlo(object):
                  alpha = .5, beta = .8, gamma = 0.0, mu = 0.3,
                  r1 = 0.3, r2 = 0.5):
         """Runs the Monte Carlo simulation the desired number of times."""
-        self.network = network
-        self.sim_data = list()
+        self.__network = network
+        self.__sim_data = list()
         self.alpha = alpha
         self.beta = beta
         self.gamma = gamma
@@ -56,12 +56,9 @@ class MonteCarlo(object):
         """Returns r2 value"""
         return self.r2
 
-    def getSimData(self):
-        return self.sim_data
-
-    def getTimesteps(self):
+    def getTimesteps(self): #needs to be looked at in 0 case
         """Returns the number of timesteps."""
-        return len(self.sim_data) - 1
+        return len(self.__sim_data)
 
     #Initial State Methods
     def emptyDictionary(self): #startEmpty
@@ -70,12 +67,12 @@ class MonteCarlo(object):
 
         Returns
         -------
-        self.sim_data with a new dictionary with all the nodes with an initial
+        self.__sim_data with a new dictionary with all the nodes with an initial
         empty state.
 
         Raises
         ------
-        ValueError: If size of self.sim_data is not 0
+        ValueError: If size of self.__sim_data is not 0
 
         Notes
         -----
@@ -90,11 +87,9 @@ class MonteCarlo(object):
         >>> mc.emptyDictionary()
         {0:0,1:0,2:0,3:0}
         """
-        if len(self.sim_data) == 0:
-            self.sim_data.append(dict())
-            for x in self.network:
-                self.sim_data[0][x] = 0
-            return self.sim_data
+        if len(self.__sim_data) == 0:
+            self.__network.addMultipleNodes(self.__network,state=0)
+            self.__sim_data.append(self.__network.getNodeFeature('state'))
         else:
             raise ValueError("Must clear data before setting initial state.")
 
@@ -104,12 +99,12 @@ class MonteCarlo(object):
 
         Returns
         -------
-        self.sim_data with a new dictionary with all the nodes with an initial
+        self.__sim_data with a new dictionary with all the nodes with an initial
         random state.
 
         Raises
         ------
-        ValueError: If size of self.sim_data is not 0
+        ValueError: If size of self.__sim_data is not 0
 
         Notes
         -----
@@ -124,15 +119,11 @@ class MonteCarlo(object):
         >>> mc.randomDictionary()
         {0:1,1:0,2:1,3:0}
         """
-        if len(self.sim_data) == 0:
-            self.sim_data.append(dict())
-            random_num = random.randint(0,self.network.nodeNumber())
-            for x in self.network:
-                if random.randint(0,self.network.nodeNumber()) <= random_num:
-                     self.sim_data[0][x] = 0
-                else:
-                     self.sim_data[0][x] = 1
-            return  self.sim_data
+        if len(self.__sim_data) == 0:
+            for node in self.__network:
+                self.__network.add(node,state = random.randint(0,1))
+            self.__sim_data.append(self.__network.getNodeFeature('state'))
+            return  self.__sim_data
         else:
             raise ValueError("Must clear data before setting initial state.")
 
@@ -142,12 +133,12 @@ class MonteCarlo(object):
 
         Returns
         -------
-        self.sim_data with a new dictionary with thee central node with
+        self.__sim_data with a new dictionary with thee central node with
         an initial filled state and all other nodes with an empty state.
 
         Raises
         ------
-        ValueError: If size of self.sim_data is not 0.
+        ValueError: If size of self.__sim_data is not 0.
         AttributeError: If network is not a Cayley Tree.
 
         Notes
@@ -164,15 +155,10 @@ class MonteCarlo(object):
         >>> mc.emptyDictionary()
         {0:1,1:0,2:0,3:0,4:0}
         """
-        if len(self.sim_data) == 0:
-            try:
-                self.sim_data.append(dict())
-                self.sim_data[0][self.network.genFinder(0)] = 1
-                for x in self.network:
-                     self.sim_data[0][x] = 0
-                return self.sim_data
-            except AttributeError:
-                return "Inappropriate network type"
+        if len(self.__sim_data) == 0:
+            self.__network.addMultipleNodes(self.__network,state=0)
+            self.__network.add(0,state = 1)
+            self.__sim_data.append(self.__network.getNodeFeature('state'))
         else:
             raise ValueError("Must clear data before setting initial state.")
                 
@@ -211,7 +197,7 @@ class MonteCarlo(object):
         >>> mc.getZeros(0)
         1
         """
-        return len(self.sim_data[timestep]) - self.getOnes(timestep)
+        return len(self.__sim_data[timestep]) - self.getOnes(timestep)
 
     def getOnes(self,timestep):
         """Finds the number of nodes with in the filled state at any given
@@ -247,7 +233,7 @@ class MonteCarlo(object):
         >>> mc.getOnes(0)
         3
         """
-        return sum(self.sim_data[timestep].values())
+        return sum(self.__sim_data[timestep].values())
 
     def neighborSum(self,node,state_d):
         """Takes the node number and caculates the sum of the nearest nieghbors.
@@ -290,7 +276,7 @@ class MonteCarlo(object):
         2
        """
         return sum([state_d.get(x)
-                    for x in self.network.nearestNeighborFinder(node)])
+                    for x in self.__network.neighborFinder(node)])
     
     def edgeSum(self,neighbor,timestep):
         """Gets the state of a node on an edge."""
@@ -300,7 +286,7 @@ class MonteCarlo(object):
         """Takes a generation and a state dictionary and returns the density
            of the generation."""
         try:
-            nodes = self.network.nodeFinder(gen)
+            nodes = self.__network.nodeFinder(gen)
             density = 0
             for node in nodes:
                 density += state_d.get(node)
@@ -323,7 +309,7 @@ class MonteCarlo(object):
 
         Returns
         -------
-        self.sim_data: a list containing the dictionaries of all the data
+        self.__sim_data: a list containing the dictionaries of all the data
                          for each node generated by previous timesteps.
         Notes
         -----
@@ -348,11 +334,11 @@ class MonteCarlo(object):
                  mc.simulateNN()
         """
 
-        if len(self.sim_data) == 0:
+        if len(self.__sim_data) == 0:
             raise ValueError("Must set up initial state of simulation")
-        list_cache = self.sim_data
+        list_cache = self.__sim_data
         cache = dict()
-        for x in self.network:
+        for x in self.__network:
             summ = self.neighborSum(x,list_cache[-1])
             #print("summ: ", summ)
             probability = self.gamma*list_cache[-1][x] + \
@@ -368,18 +354,18 @@ class MonteCarlo(object):
                 cache[x] = list_cache[-1][x]
         #print("cache: ",cache)
         list_cache.append(cache)
-        self.sim_data = list_cache
-        return self.sim_data
+        self.__sim_data = list_cache
+        return self.__sim_data
 
     def simulateEI(self):
         """Runs a timestep of a MonteCarlo by picking the edge and then a random
         node on the edge in order to use a probability function in oder to see a
         change of state."""
-        if len(self.sim_data) == 0:
+        if len(self.__sim_data) == 0:
             raise ValueError("Must set up initial state of simulation")
-        list_cache = self.sim_data
+        list_cache = self.__sim_data
         cache = dict()
-        for x in self.network.linksAsTuples():
+        for x in self.__network.linksAsTuples():
             node_picked = random.randint(0,1)
             summ = self.edgeSum(x[1-node_picked],list_cache[-1])
             #print("summ: ", summ)
@@ -404,25 +390,25 @@ class MonteCarlo(object):
                     cache[x[1-node_picked]] = list_cache[-1][x[1-node_picked]]
         #print("cache: ",cache)
         list_cache.append(cache)
-        self.sim_data = list_cache
-        return self.sim_data
+        self.__sim_data = list_cache
+        return self.__sim_data
     
     def simulateTL(self,timestep): #Only works for first timestep
         """Simulates the Monte Carlo simulation on the Cayley Tree for one
            time step and stores that data."""
         #print("Timestep: " + str(timestep))
-        #no_nodes = (self.network.links*(self.network.links-1)**(self.network.generations-1))
-        if len(self.sim_data) == 0:
+        #no_nodes = (self.__network.links*(self.__network.links-1)**(self.__network.generations-1))
+        if len(self.__sim_data) == 0:
             raise ValueError("Must set up initial state of simulation")
-        list_cache = self.sim_data
+        list_cache = self.__sim_data
         cache = {}
-        nodes = len(self.network)
+        nodes = len(self.__network)
         if timestep == 0:
             dens = 0 #density function
         else:
             dens = self.getOnes(timestep)/nodes ### make sure this calls correct timestep
         #print("dens: " +str(dens))
-        for x in self.network:
+        for x in self.__network:
             probability = self.gamma*list_cache[-1][x] + \
                                     (1 - list_cache[-1][x])*(1-dens)*self.mu
             #print("probability: " +str(probability))
@@ -436,17 +422,17 @@ class MonteCarlo(object):
                 cache[x] = list_cache[-1][x]
         #print("cache: ",cache)
         list_cache.append(cache)
-        self.sim_data = list_cache
-        return self.sim_data
+        self.__sim_data = list_cache
+        return self.__sim_data
 
     def clear(self):
         """Clears the data from the tree."""
-        self.sim_data = list()
+        self.__sim_data = list()
 
     #Data Export Methods
     def simData(self,timestep):
         """Returns the sim data at a certain timestep."""
-        return self.sim_data[timestep]
+        return self.__sim_data[timestep]
     
     def sendExcel(self,filename = "monteCarloData.xlsx"):
         """A file that sends the data ran from the most recent
@@ -456,28 +442,28 @@ class MonteCarlo(object):
         #If File exists, load file. If sheet 1 is occupied, create a second
         #sheet. Rename / use input for naming sheet.
         
-        if self.sim_data == list():
+        if self.__sim_data == list():
             raise ValueError("No data to send to excel. Must run simulation")
         workbook = xlsxwriter.Workbook(filename)
         worksheet = workbook.add_worksheet("Monte Carlo Data")
         worksheet.write(0,0,"Timestep")
-        for x in range(len(self.sim_data[0])):
-            worksheet.write(x+1,0,"Node "+ str(self.network.keys[x]))
-        for y in range(len(self.sim_data[0])):
+        for x in range(len(self.__sim_data[0])):
+            worksheet.write(x+1,0,"Node "+ str(self.__network.keys[x]))
+        for y in range(len(self.__sim_data[0])):
             worksheet.write(0,y+1,str(y))
-        for y in range(len(self.sim_data)):
-            for x in range(self.network.nodeNumber()):
-                worksheet.write(x+1,y+1,self.sim_data[y][self.network.keys[x]])
-        if self.network.getType() == "CayleyTree":
+        for y in range(len(self.__sim_data)):
+            for x in range(self.__network.nodeNumber()):
+                worksheet.write(x+1,y+1,self.__sim_data[y][self.__network.keys[x]])
+        if self.__network.getType() == "CayleyTree":
             worksheet2 = workbook.add_worksheet("Density")
             worksheet2.write(0,0,"Timestep")
-            for x in range(self.network.generations+1):
+            for x in range(self.__network.generations+1):
                 worksheet2.write(x+1,0,"Gen. "+str(x))
-            for y in range(len(self.sim_data[0])):
+            for y in range(len(self.__sim_data[0])):
                 worksheet2.write(0,y+1,str(y))
-            for y in range(len(self.sim_data)):
-                for x in range(self.network.generations+1):
-                    worksheet2.write(x+1,y+1,self.density(x,self.sim_data[y]))
+            for y in range(len(self.__sim_data)):
+                for x in range(self.__network.generations+1):
+                    worksheet2.write(x+1,y+1,self.density(x,self.__sim_data[y]))
             workbook.close()
         else:
             workbook.close()
