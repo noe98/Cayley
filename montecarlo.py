@@ -161,6 +161,20 @@ class MonteCarlo(object):
             self.__sim_data.append(self.__network.getNodeFeature('state'))
         else:
             raise ValueError("Must clear data before setting initial state.")
+
+    def magnetization(self,nodes):
+        """Adds magnetization to a certain group of nodes."""
+        if len(self.__sim_data) == 0:
+            self.__network.addMultipleNodes(nodes,magnetization=0)
+        else:
+            raise ValueError("Must clear data before setting initial state.")
+
+    def temperature(self,nodes):
+        """Adds a temperature to a group of nodes."""
+        if len(self.__sim_data) == 0:
+            self.__network.addMultipleNodes(nodes,temperature=0)
+        else:
+            raise ValueError("Must clear data before setting initial state.")
                 
     #Analysis Methods
     def getZeros(self,timestep):
