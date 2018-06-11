@@ -69,7 +69,7 @@ def main():
         monte.randomDictionary()
     else:
         monte.zeroDictionary()
-    for x in range(len(monte.network)):
+    for x in range(len(network)):
         if method == 'NN':
             monte.simulateNN()
         elif method == 'TL':
