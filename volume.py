@@ -149,7 +149,7 @@ def simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials)
         corr_chart.set_title({'name':'Correlation'})
         corr_chart.set_x_axis({'name':'Timesteps'})
         corr_chart.set_y_axis({'name':'Correlation'})
-        corr_chart.add_series({'values':chartrange
+        corr_chart.add_series({'values':chartrange,
                                'name':'Correlation'})
         for t in range(timesteps+1):
             corr_sheet.write(0,t+1,t)
