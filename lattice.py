@@ -4,9 +4,9 @@ Filename: lattice.py
 Project: Research for Irina Mazilu, Ph.D.
 
 This file contains the Lattice class. This class creates a Cayley Tree
-object, by setting up the s and links between s. It also has methods
-which allow for some basic analysis of the class such as number of s and
-s per floor. 	
+object, by setting up the nodes and links between nodes. It also has methods
+which allow for some basic analysis of the object such as number of nodes and
+nodes per floor. 	
 """
 
 __author__ = "\n".join(['Justin Pusztay (pusztayj20@mail.wlu.edu)'])
@@ -17,7 +17,7 @@ from Cayley.abstractnetwork import *
 
 class Lattice(AbstractNetwork):
     """Creates the Lattice object. The class needs integer values for the
-    length, width, and height based on the number of s. It defaults to a
+    length, width, and height based on the number of nodes. It defaults to a
     2-demensional lattice."""
 
     def __init__(self,length,width,height = 1,names = None):
@@ -49,7 +49,7 @@ class Lattice(AbstractNetwork):
             raise ValueError("Inappropriate entries lattice cannot \
                              exist")
     def nodeNumber(self):
-        """Returns the total number of s in the Lattice."""
+        """Returns the total number of nodes in the Lattice."""
         if self.z <= 0:
             return self.x*self.y
         elif self.z == 1:
@@ -61,12 +61,15 @@ class Lattice(AbstractNetwork):
         return "Lattice"
 
     def floorArea(self):
-        """Returns the number of s in a cross section of the z-plane."""
+        """Returns the number of nodes in a cross section of the z-plane."""
         return self.x*self.y
 
     def autoCreate(self):
-        """Creates the links present in a lattice. Has a dictionary with the
-         number as the key and a list of neighbors as the value."""
+        """Creates the links present in a lattice. If the object was created
+        with a given set of names that go in the order that the lattice is
+        numberd, then the nodes will be properly linked as intended.
+
+        If no names are given, it just uses a number as a name."""
         try:
             for x in self.__names:
                 self.add(x)
