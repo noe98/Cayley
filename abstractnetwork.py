@@ -37,6 +37,10 @@ class AbstractNetwork(object):
     def __str__(self):
         return str(self.graph)
 
+    def getNodes(self):
+        """Returns the list of nodes in the network."""
+        return self.nodes
+
     def degree(self,node):
         """Returns the degree of a node."""
         return len(self.graph[node]["neighbors"])
@@ -135,3 +139,11 @@ class AbstractNetwork(object):
                                             self.graph[x]["neighbors"]))))
             tuples = tuples + edges
         return tuples
+
+    def completeGraph(self):
+        """Takes any network and makes it a complete graph."""
+        nodes = self.getNodes()
+        for item in nodes:
+            copy = nodes[:]
+            copy.remove(item)
+            self.multipleLinkCreator(item,copy)
