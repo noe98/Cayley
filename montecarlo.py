@@ -452,9 +452,11 @@ class MonteCarlo(object):
             if list_cache[-1][x] == 0 and \
                random.uniform(0, 1) <= probability:
                 cache[x] = 1
+                dens += 1/nodes
             elif list_cache[-1][x] == 1 and \
                  random.uniform(0, 1) <= probability:
-                cache[x] = 0 
+                cache[x] = 0
+                dens -= 1/nodes
             else:
                 cache[x] = list_cache[-1][x]
         #print("cache: ",cache)
