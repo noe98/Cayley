@@ -23,16 +23,7 @@ def main():
     filename = str(input("Filename: "))
     full_filename = filename + ".xlsx"
 
-    print("Press 1 for starting all nodes empty. \n" +
-          "Press 2 for starting random percentage of nodes filled. \n" +
-          "Press 3 for only having the 0 node filled.")
-    num_select = int(input("Starting state: "))
-    if num_select == 1:
-        monte.emptyDictionary() #can change to other inital states
-    elif num_select == 2:
-        monte.randomDictionary()
-    else:
-        monte.zeroDictionary()
+    monte.randomSpins()
     for i in range (generations+1):
         temp = float(input("Temperature of generation %s: " %(i)))
         network.addMultipleNodes(network.nodesPerGen(i),temperature=temp)
