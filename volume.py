@@ -51,8 +51,8 @@ def simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials,
     elif method == 'TM':
         tag_list = ()
         for s in range(generations+2):
-            tag_list += (temp_d[s],)
-        tags = ("%d_"*(generations+1)+"%d") %tag_list
+            tag_list += ("%.1f"%temp_d[s],)
+        tags = ("%s_"*(generations+1)+"%s") %tag_list
         name = ("TM%dGen_%dLin_"%(generations-1,links)+tags+".xlsx")
     else: raise ValueError("Method not recognized")
 
@@ -248,7 +248,7 @@ def simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials,
             overtime.write(6,2,"J: "+str(J))
             overtime.write(8,0,"Temperatures")
             for i in range(generations+1):
-                overtime.write(i+9,0,"Generation: "+str(i))
+                overtime.write(i+9,0,"Gen: "+str(i))
                 overtime.write(i+9,1,str(temp_d[i]))
     for m in range(timesteps+1):
         t_sum = 0
@@ -287,7 +287,7 @@ def main():
         k = J = 1
     elif method == 'TM':
         print("Retrieving temperatures from change_me.py...")
-        choose = input("Change k & J values from 1? [Y/N]").upper()
+        choose = input("Change k & J values from 1? [Y/N] ").upper()
         if choose == 'Y':
             k = float(input("k value: "))
             J = float(input("J value: "))
