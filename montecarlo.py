@@ -163,6 +163,14 @@ class MonteCarlo(object):
         else:
             raise ValueError("Must clear data before setting initial state.")
 
+    def startFull(self):
+        """Sets the inital state of all nodes to full."""
+        if len(self.__sim_data) == 0:
+            self.__network.addMultipleNodes(self.__network,state=1)
+            self.__sim_data.append(self.__network.getNodeFeature('state'))
+        else:
+            raise ValueError("Must clear data before setting initial state."
+
     def magnetization(self,nodes):
         """Adds magnetization to a certain group of nodes."""
         if len(self.__sim_data) == 0:

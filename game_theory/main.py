@@ -1,5 +1,6 @@
 import Cayley as cy
 from makegame import *
+import gambit
 
 def main():
     issue = float(input("What is the issue rating? "))
