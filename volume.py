@@ -14,6 +14,11 @@ import Cayley.graphics as cg
 import xlsxwriter as xl
 import time
 from math import sqrt
+from change_me import timesteps
+from change_me import node_list
+from change_me import initial_state
+from change_me import total_nodes
+from change_me import temp_d
 
 ## # <-- indicates adjusted generations (account for last gen fluctuations)
 
@@ -23,11 +28,6 @@ def simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials,
     network = cy.CayleyTree(generations, links)
     monte = cy.MonteCarlo(network, alpha, beta, gamma, mu, r1, r2)
     run_time = time.time()
-    from change_me import timesteps
-    from change_me import node_list
-    from change_me import initial_state
-    from change_me import total_nodes
-    from change_me import temp_d ### HERE? ###
     endcol = xl.utility.xl_col_to_name(timesteps+1)
 
     a_tag = "%.2f" % alpha
@@ -278,30 +278,30 @@ def main():
         beta = float(input("Beta value: "))
         gamma = float(input("Value for gamma: "))
         mu = r1 = r2 = 0
-        k = J = 1
+        k_c = J_c = 1
     elif method == 'TL':
         mu = float(input("Mu value: "))
         gamma = float(input("Value for gamma: "))
         alpha = beta = r1 = r2 = 0
-        k = J = 1
+        k_c = J_c = 1
     elif method == 'EI':
         print("R1 should be less than R2 for electrostatic models.")
         r1 = float(input("R1 value: "))
         r2 = float(input("R2 value: "))
         gamma = float(input("Value for gamma: "))
         alpha = beta = mu = 0
-        k = J = 1
+        k_c = J_c = 1
     elif method == 'TM':
         print("Retrieving temperatures from change_me.py...")
         choose = input("Change k & J values from 1? [Y/N] ").upper()
         if choose == 'Y':
-            k = float(input("k value: "))
-            J = float(input("J value: "))
-        else: k = J = 1
+            k_c = float(input("k value: "))
+            J_c = float(input("J value: "))
+        else: k_c = J_c = 1
         alpha = beta = gamma = mu = r1 = r2 = 0
     else: raise ValueError("Method not recognized")
     start_time = time.time()
-    simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials,k,J)
+    simulate(method, generations, links, alpha, beta, gamma, mu, r1,r2,trials,k_c,j_c)
     print("--- %s seconds ---" % (time.time() - start_time))
 
 def alpha_range(generations, links, beta, gamma, trials):
