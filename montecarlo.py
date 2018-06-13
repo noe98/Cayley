@@ -420,19 +420,18 @@ class MonteCarlo(object):
         else:
             dens = self.getOnes(timestep)/nodes ### make sure this calls correct timestep
         #print("dens: " +str(dens))
-        w = dens
         for x in self.__network:
             probability = self.gamma*list_cache[-1][x] + \
-                                    (1 - list_cache[-1][x])*(1-w)*self.mu
+                                    (1 - list_cache[-1][x])*(1-dens)*self.mu
             #print("probability: " +str(probability))
             if list_cache[-1][x] == 0 and \
                random.uniform(0, 1) <= probability:
                 cache[x] = 1
-                w += 1/nodes
+                dens += 1/nodes
             elif list_cache[-1][x] == 1 and \
                  random.uniform(0, 1) <= probability:
                 cache[x] = 0
-                w-= 1/nodes
+                dens -= 1/nodes
             else:
                 cache[x] = list_cache[-1][x]
         #print("cache: ",cache)
