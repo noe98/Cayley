@@ -21,12 +21,13 @@ class CayleyTree(AbstractNetwork):
     """Creates the Cayley Tree object. The class needs integer values
        for number of generations and links."""
     
-    def __init__(self,generations,links): #constructor method with parameters
+    def __init__(self,generations,links,names = None): 
         """Creates a Cayley Tree with desired number of generations and
            links."""
         self.generations = generations #instance variables
         self.links = links
         self.keys = list(range(self.nodeNumber()))
+        self.__names = names
         AbstractNetwork.__init__(self)
         self.autoCreate()
         
@@ -73,13 +74,20 @@ class CayleyTree(AbstractNetwork):
            its neighbors as the value. This method will be used in MonteCarlo
            class, since this dictionary will reduce the runtime of its simulate
            method."""
-        self.addMultipleNodes(range(len(self)))
-        self.multipleLinkCreator(0,range(1,self.nodeGeneration()[1]+1))
+        try:
+            for x in self.__names:
+                self.add(x)
+        except TypeError:
+            for x in range(self.nodeNumber()):
+                self.add(x)
+        self.multipleLinkCreator(self.nodes[0],{self.nodes[x] for x in
+                                    range(1,self.nodeGeneration()[1]+1)})
         node_count = self.nodeGeneration()[1]
         for node in range(1,self.nodeNumber()):
             if node_count + 1 != self.nodeNumber():
-                self.multipleLinkCreator(node,
-                                {node_count+x for x in range(1,self.links)})
+                self.multipleLinkCreator(self.nodes[node],
+                                {self.nodes[node_count+x] for x in
+                                 range(1,self.links)})
                 node_count += self.links-1
         
     def genFinder(self,node):
