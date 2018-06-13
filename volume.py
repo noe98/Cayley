@@ -267,7 +267,7 @@ def simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials,
     workbook.close()
 
 def main():
-    print("Enter 'NN', 'TL', 'EI', 'TM' for nearest neighbors, total " +
+    print("Enter 'NN', 'TL', 'EI', or 'TM' for nearest neighbors, total " +
           "lattice density, empty interval, or temperature methods.")
     method = input("Method: ").upper()
     generations = int(input("Number of generations: "))
@@ -301,7 +301,7 @@ def main():
         alpha = beta = gamma = mu = r1 = r2 = 0
     else: raise ValueError("Method not recognized")
     start_time = time.time()
-    simulate(method, generations, links, alpha, beta, gamma, mu, r1,r2,trials,k_c,j_c)
+    simulate(method, generations, links, alpha, beta, gamma, mu, r1,r2,trials,k_c,J_c)
     print("--- %s seconds ---" % (time.time() - start_time))
 
 def alpha_range(generations, links, beta, gamma, trials):
