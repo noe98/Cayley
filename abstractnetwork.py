@@ -16,28 +16,28 @@ class AbstractNetwork(object):
 
     def __init__(self):
         """Sets up the link dictionary and the mod count."""
+        self.nodes = list()
         self.graph = dict()
         self._modCount = 0
         
     def __iter__(self):
         """Allows iteration over self."""
-        #self._nodes = [x[0] for x in self.graph.items()]
         temp = self._modCount
         cursor = 0
-        while cursor < len(self):
-            yield self.keys[cursor]
+        while cursor < len(self.nodes):
+            yield self.nodes[cursor]
             if temp != self._modCount:
                 raise AttributeError("Illegal modification of the backing store.")   
             cursor += 1
 
     def __len__(self):
         """Returns the number of nodes in the network."""
-        return self.nodeNumber()
-
+        return len(self.nodes)
+    
     def __str__(self):
         return str(self.graph)
 
-    def __degree(self,node):
+    def degree(self,node):
         """Returns the degree of a node."""
         return len(self.graph[node]["neighbors"])
 
@@ -49,6 +49,7 @@ class AbstractNetwork(object):
             self.keys.append(node)
             self.graph[node] = kwargs
             self.graph[node]["neighbors"] = set()
+            self.nodes.append(node)
         else: #if node is already in graph, handles updating features.
             for key in kwargs.items():
                 try:
