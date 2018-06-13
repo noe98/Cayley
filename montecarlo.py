@@ -128,15 +128,6 @@ class MonteCarlo(object):
         else:
             raise ValueError("Must clear data before setting initial state.")
 
-    def randomSpins(self):
-        if len(self.__sim_data) == 0:
-            for node in self.__network:
-                self.__network.add(node,state = (2*(random.randint(0,1)-1))
-            self.__sim_data.append(self.__network.getNodeFeature('state'))
-            return  self.__sim_data
-        else:
-            raise ValueError("Must clear data before setting initial state.")
-
     def zeroDictionary(self):
         """Assigns an initial filled state, a value of 1, to a
          central node.
