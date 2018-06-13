@@ -20,11 +20,12 @@ class Lattice(AbstractNetwork):
     length, width, and height based on the number of nodes. It defaults to a
     2-demensional lattice."""
 
-    def __init__(self,length,width,height = 1):
+    def __init__(self,length,width,height = 1,names = None):
         """Sets up the demenstions of the lattice."""
         self.x = length
         self.y = width
         self.z = height-1
+        self.__names = names
         self.latticeProtect()
         self.keys = list(range(self.nodeNumber()))
         AbstractNetwork.__init__(self)
@@ -66,28 +67,32 @@ class Lattice(AbstractNetwork):
     def autoCreate(self):
         """Creates the links present in a lattice. Has a dictionary with the
         node number as the key and a list of neighbors as the value."""
-        for x in range(len(self)):
-            self.add(x)
-        row_count = 0
-        floor_count = 0
-        for node in self:
-            column_count = node % self.x
-            if column_count % self.x != self.x -1: #checks if at x-max
-                self.linkCreator(node,node+1)
-            if column_count % self.x != 0: #checks if at x-min
-               self.linkCreator(node,node-1)
-               
-            if row_count % self.y != self.y-1: #checks if at y-max
-                self.linkCreator(node,node+self.x)
-            if row_count % self.y != 0: #checks if at y-min
-                self.linkCreator(node,node-self.x)
-            if node % self.x == self.x - 1:
-                row_count += 1
-    
-            if floor_count != self.z: #checks if at z-max
-                self.linkCreator(node,node+self.floorArea())
-            if floor_count != 0: #checks if at z-min
-                self.linkCreator(node,node-self.floorArea())
-            if node % self.floorArea() == self.floorArea() - 1:
-                floor_count += 1
+        try:
+            for x in self.__names:
+                self.add(x)
+        except TypeError:
+            for x in self:
+                self.add(x)
+            row_count = 0
+            floor_count = 0
+            for node in self:
+                column_count = node % self.x
+                if column_count % self.x != self.x -1: #checks if at x-max
+                    self.linkCreator(node,node+1)
+                if column_count % self.x != 0: #checks if at x-min
+                   self.linkCreator(node,node-1)
+                   
+                if row_count % self.y != self.y-1: #checks if at y-max
+                    self.linkCreator(node,node+self.x)
+                if row_count % self.y != 0: #checks if at y-min
+                    self.linkCreator(node,node-self.x)
+                if node % self.x == self.x - 1:
+                    row_count += 1
+        
+                if floor_count != self.z: #checks if at z-max
+                    self.linkCreator(node,node+self.floorArea())
+                if floor_count != 0: #checks if at z-min
+                    self.linkCreator(node,node-self.floorArea())
+                if node % self.floorArea() == self.floorArea() - 1:
+                    floor_count += 1
  
