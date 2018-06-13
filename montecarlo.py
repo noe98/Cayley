@@ -13,13 +13,13 @@ __author__ = "\n".join(['Justin Pusztay (pusztayj20@mail.wlu.edu)',
 __all__ = ['MonteCarlo']
 
 import random
-import xlsxwriter #http://xlsxwriter.readthedocs.io/tutorial01.html 
+import xlsxwriter #http://xlsxwriter.readthedocs.io/tutorial01.html
 from Cayley.cayleytree import *
 from Cayley.lattice import *
 import numpy as np
 
 class MonteCarlo(object):
-    
+
     def __init__(self, network,
                  alpha = .5, beta = .8, gamma = 0.0, mu = 0.3,
                  r1 = 0.3, r2 = 0.5):
@@ -32,7 +32,7 @@ class MonteCarlo(object):
         self.mu = mu
         self.r1 = r1
         self.r2 = r2
-        
+
     def getAlpha(self):
         """Returns alpha value."""
         return self.alpha
@@ -40,7 +40,7 @@ class MonteCarlo(object):
     def getBeta(self):
         """Returns beta value."""
         return self.beta
-    
+
     def getGamma(self):
         """Returns gamma value."""
         return self.gamma
@@ -48,7 +48,7 @@ class MonteCarlo(object):
     def getMu(self):
         """Returns mu value"""
         return self.mu
-        
+
     def getR1(self):
         """Returns r1 value"""
         return self.r1
@@ -79,7 +79,7 @@ class MonteCarlo(object):
         -----
         -> This is an intial state method, meaning that it can only be used
            when there is no data in sim_data, meaning the list has a lenght
-           of zero. 
+           of zero.
 
         Examples
         --------
@@ -111,7 +111,7 @@ class MonteCarlo(object):
         -----
         -> This is an intial state method, meaning that it can only be used
            when there is no data in sim_data, meaning the list has a lenght
-           of zero. 
+           of zero.
 
         Examples
         --------
@@ -123,6 +123,15 @@ class MonteCarlo(object):
         if len(self.__sim_data) == 0:
             for node in self.__network:
                 self.__network.add(node,state = random.randint(0,1))
+            self.__sim_data.append(self.__network.getNodeFeature('state'))
+            return  self.__sim_data
+        else:
+            raise ValueError("Must clear data before setting initial state.")
+
+    def randomSpins(self):
+        if len(self.__sim_data) == 0:
+            for node in self.__network:
+                self.__network.add(node,state = (2*(random.randint(0,1)-1))
             self.__sim_data.append(self.__network.getNodeFeature('state'))
             return  self.__sim_data
         else:
@@ -173,7 +182,7 @@ class MonteCarlo(object):
     def temperature(self,nodes,temp):
         """Adds a temperature to a group of nodes."""
         self.__network.addMultipleNodes(nodes,temperature=temp)
-                
+
     #Analysis Methods
     def getZeros(self,timestep):
         """Finds the number of nodes with in the empty state at any given
@@ -289,7 +298,7 @@ class MonteCarlo(object):
        """
         return sum([state_d.get(x)
                     for x in self.__network.neighborFinder(node)])
-    
+
     def edgeSum(self,neighbor,timestep):
         """Gets the state of a node on an edge."""
         return timestep.get(neighbor)
@@ -306,7 +315,7 @@ class MonteCarlo(object):
         except AttributeError:
             return "Inappropriate network type"
 
-    #Monte Carlo Algorithm methods 
+    #Monte Carlo Algorithm methods
     def simulateNN(self):
         """A monte carlo method that runs a timestep of a simulation
         by visiting each node.
@@ -331,7 +340,7 @@ class MonteCarlo(object):
         -> The process of running a monte carlo iterating through each node
            is that the probability of a node changing state is dependent on
            its nearest neighbors.
-           
+
         Examples
         --------
         >>> import Cayley as cy
@@ -361,7 +370,7 @@ class MonteCarlo(object):
                 cache[x] = 1
             elif list_cache[-1][x] == 1 and \
                  random.uniform(0, 1) <= probability:
-                cache[x] = 0 
+                cache[x] = 0
             else:
                 cache[x] = list_cache[-1][x]
         #print("cache: ",cache)
@@ -385,14 +394,14 @@ class MonteCarlo(object):
                                 (1 - list_cache[-1][x[node_picked]])*\
                                 (self.r1*summ + self.r2*(1 - summ))
             if list_cache[-1][x[node_picked]] == 0 and \
-               random.uniform(0, 1) <= probability: 
+               random.uniform(0, 1) <= probability:
                 cache[x[node_picked]] = 1
                 #check to see if state of neighbor has changed before setting
                 #to original
                 if x[1-node_picked] not in cache:
                     cache[x[1-node_picked]] = list_cache[-1][x[1-node_picked]]
             elif list_cache[-1][x[node_picked]] == 1 and \
-                 random.uniform(0, 1) <= probability:                  
+                 random.uniform(0, 1) <= probability:
                 cache[x[node_picked]] = 0
                 if x[1-node_picked] not in cache:
                     cache[x[1-node_picked]] = list_cache[-1][x[1-node_picked]]
@@ -404,7 +413,7 @@ class MonteCarlo(object):
         list_cache.append(cache)
         self.__sim_data = list_cache
         return self.__sim_data
-    
+
     def simulateTL(self,timestep): #Only works for first timestep
         """Simulates the Monte Carlo simulation on the Cayley Tree for one
            time step and stores that data."""
@@ -429,7 +438,7 @@ class MonteCarlo(object):
                 cache[x] = 1
             elif list_cache[-1][x] == 1 and \
                  random.uniform(0, 1) <= probability:
-                cache[x] = 0 
+                cache[x] = 0
             else:
                 cache[x] = list_cache[-1][x]
         #print("cache: ",cache)
@@ -437,7 +446,7 @@ class MonteCarlo(object):
         self.__sim_data = list_cache
         return self.__sim_data
 
-    def simulateTemp(self, k = 1, J = 1):
+    def simulateTemp(self, k = 1, J = 1): #J needs to be renamed.
         """Simulates the Monte Carlo simulation on the Cayley Tree for one
            time step and stores that data. Uses temperature of nodes in
            calculation of probabilty."""
@@ -451,12 +460,12 @@ class MonteCarlo(object):
             summ = self.neighborSum(x,list_cache[-1])
             #print("summ: ", summ)
             probability = 0.5*(1-list_cache[-1][x]*np.tanh(beta*J*summ))
-            if list_cache[-1][x] == 0 and \
+            if list_cache[-1][x] == -1 and \
                random.uniform(0, 1) <= probability:
                 cache[x] = 1
             elif list_cache[-1][x] == 1 and \
                  random.uniform(0, 1) <= probability:
-                cache[x] = 0 
+                cache[x] = -1
             else:
                 cache[x] = list_cache[-1][x]
         #print("cache: ",cache)
@@ -472,7 +481,7 @@ class MonteCarlo(object):
     def simData(self,timestep):
         """Returns the sim data at a certain timestep."""
         return self.__sim_data[timestep]
-    
+
     def sendExcel(self,filename = "monteCarloData.xlsx"):
         """A file that sends the data ran from the most recent
            MonteCarlo().simulate to an excel sheet. Must run the simulate
@@ -480,7 +489,7 @@ class MonteCarlo(object):
 
         #If File exists, load file. If sheet 1 is occupied, create a second
         #sheet. Rename / use input for naming sheet.
-        
+
         if self.__sim_data == list():
             raise ValueError("No data to send to excel. Must run simulation")
         workbook = xlsxwriter.Workbook(filename)

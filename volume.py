@@ -74,9 +74,11 @@ def simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials,
 
     for i in range(trials):
         monte.clear()
-        if initial_state == "empty": monte.emptyDictionary()
-        elif initial_state == "random": monte.randomDictionary()
-        elif initial_state == "zero": monte.zeroDictionary()
+        if method == 'TM': monte.randomSpins()
+        else:
+            if initial_state == "empty": monte.emptyDictionary()
+            elif initial_state == "random": monte.randomDictionary()
+            elif initial_state == "zero": monte.zeroDictionary()
 
         if method == 'TM':
             for d in range (generations+1):
@@ -102,7 +104,10 @@ def simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials,
             for f in range(len(node_list[n])):
                 node_d[i][n].append([])
                 for t in range(timesteps+1):
-                    node_d[i][n][f].append(2*(monte.simData(t)[node_list[n][f]])-1)
+                    if method == 'TM':
+                        node_d[i][n][f].append((monte.simData(t)[node_list[n][f]]))
+                    else:
+                        node_d[i][n][f].append(2*(monte.simData(t)[node_list[n][f]])-1)
 
         for y in range(monte.getTimesteps()): #JKP: Follows new updates
             sum_t = 0 # Sum of relevant nodes at one timestep
