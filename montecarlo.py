@@ -462,7 +462,7 @@ class MonteCarlo(object):
         self.__sim_data = list_cache
         return self.__sim_data
 
-    def simulateTemp(self, k = 1, J = 1):
+    def simulateTemp(self, k = 1, J = 1): #J needs to be renamed.
         """Simulates the Monte Carlo simulation on the Cayley Tree for one
            time step and stores that data. Uses temperature of nodes in
            calculation of probabilty."""
@@ -481,7 +481,7 @@ class MonteCarlo(object):
                 cache[x] = 1
             elif list_cache[-1][x] == 1 and \
                  random.uniform(0, 1) <= probability:
-                cache[x] = 0 
+                cache[x] = -1 
             else:
                 cache[x] = list_cache[-1][x]
         #print("cache: ",cache)
