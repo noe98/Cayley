@@ -55,6 +55,7 @@ def simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials,
         tags = ("%s_"*(generations+1)+"%s") %tag_list
         name = ("TM%dGen_%dLin_"%(generations-1,links)+tags+".xlsx")
     else: raise ValueError("Method not recognized")
+    print("\n#### RUNNING SIMULATION %s ####\n"%(name))
 
     workbook = xl.Workbook(name)
     #JKP: This all can be incorporated with new node feature ability
