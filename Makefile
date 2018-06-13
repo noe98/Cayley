@@ -2,4 +2,4 @@
 
 
 clean:
-	-rm -rf *.xls
+	-rm -rf *.csv *.xls
