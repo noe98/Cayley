@@ -187,7 +187,7 @@ class MonteCarlo(object):
             self.__sim_data.append(self.__network.getNodeFeature('state'))
         else:
             raise ValueError("Must clear data before setting initial state.")
-        
+
     def magnetization(self,nodes):
         """Adds magnetization to a certain group of nodes."""
         if len(self.__sim_data) == 0:
@@ -314,6 +314,11 @@ class MonteCarlo(object):
        """
         return sum([state_d.get(x)
                     for x in self.__network.neighborFinder(node)])
+    
+    def neighborUnsum(self,node,state_d):
+        """Returns sum(1-n) for nearest neighbors."""
+        return sum([(1-state_d.get(x))
+                       for x in self.__network.neighborFinder(node)])
 
     def edgeSum(self,neighbor,timestep):
         """Gets the state of a node on an edge."""
@@ -456,7 +461,6 @@ class MonteCarlo(object):
             elif list_cache[-1][x] == 1 and \
                  random.uniform(0, 1) <= probability:
                 cache[x] = 0
-
                 dens -= 1/nodes
             else:
                 cache[x] = list_cache[-1][x]
@@ -484,10 +488,35 @@ class MonteCarlo(object):
                 cache[x] = 1
             elif list_cache[-1][x] == 1 and \
                  random.uniform(0, 1) <= probability:
-                cache[x] = -1 
+                cache[x] = -1
             else:
                 cache[x] = list_cache[-1][x]
         #print("cache: ",cache)
+        list_cache.append(cache)
+        self.__sim_data = list_cache
+        return self.__sim_data
+
+    def simulateVote(self): ### Set up senate object with neighbors, alpha, beta, gamma, phi,
+        if len(self.__sim_data) == 0:  ### neighborSum function
+            raise ValueError("Must set up initial state of simulation")
+        list_cache = self.__sim_data
+        cache = dict()
+        for x in self.__network:
+            beta = self.__network.graph[x]['beta'] ### DEFINE BETA AND PHI ###
+            phi = self.__network.graph[x]['phi']
+            summ = self.neighborSum(x,list_cache[-1])
+            unsumm = self.neighborUnsum(x,list_cache[-1])
+            probability = self.gamma*list_cache[-1][x]*(phi**unsumm) + \
+                                    (1 - list_cache[-1][x])*\
+                                    self.alpha*(beta**(summ)) ###
+            if list_cache[-1][x] == 0 and \
+               random.uniform(0, 1) <= probability:
+                cache[x] = 1
+            elif list_cache[-1][x] == 1 and \
+                 random.uniform(0, 1) <= probability:
+                cache[x] = 0
+            else:
+                cache[x] = list_cache[-1][x]
         list_cache.append(cache)
         self.__sim_data = list_cache
         return self.__sim_data
@@ -514,13 +543,23 @@ class MonteCarlo(object):
         workbook = xlsxwriter.Workbook(filename)
         worksheet = workbook.add_worksheet("Monte Carlo Data")
         worksheet.write(0,0,"Timestep")
-        for x in range(len(self.__sim_data[0])):
-            worksheet.write(x+1,0,"Node "+ str(self.__network.keys[x]))
+        try:
+            for x in self.__network:
+                x+1
+                worksheet.write(x+1,0,"Node "+ str(self.__network.keys[x]))
+        except TypeError:
+            for x in self.__network:
+                worksheet.write(int(self.__network.graph[x]['rank']),0,x)
         for y in range(len(self.__sim_data[0])):
             worksheet.write(0,y+1,str(y))
         for y in range(len(self.__sim_data)):
-            for x in range(self.__network.nodeNumber()):
-                worksheet.write(x+1,y+1,self.__sim_data[y][self.__network.keys[x]])
+            try:
+                for x in range(self.__network.nodeNumber()):
+                    worksheet.write(x+1,y+1,self.__sim_data[y][self.__network.keys[x]])
+            except KeyError:
+                for x in self.__network:
+                    worksheet.write(int(self.__network.graph[x]['rank']),\
+                                    y+1,self.__sim_data[y][x])
         if self.__network.getType() == "CayleyTree":
             worksheet2 = workbook.add_worksheet("Density")
             worksheet2.write(0,0,"Timestep")
@@ -531,6 +570,10 @@ class MonteCarlo(object):
             for y in range(len(self.__sim_data)):
                 for x in range(self.__network.generations+1):
                     worksheet2.write(x+1,y+1,self.density(x,self.__sim_data[y]))
-            workbook.close()
-        else:
-            workbook.close()
+        worksheet3 = workbook.add_worksheet("Total Density")
+        worksheet3.write(0,0,'Timestep')
+        worksheet3.write(1,0,"Density")
+        for i in range(len(self.__sim_data)):
+            worksheet3.write(0,i+1,i)
+            worksheet3.write(1,i+1,self.getOnes(i)/len(self.__network))
+        workbook.close()
