@@ -83,6 +83,7 @@ class AbstractNetwork(object):
                 self.add(node,a = data)
 
     def getNodeFeature(self,name):
+        """Returns a dictionary with nodes with feature in question."""
         return {n: self.graph[n][name] for n in self if name in self.graph[n]}
 
     def remove(self,node):
