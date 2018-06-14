@@ -514,7 +514,7 @@ class MonteCarlo(object):
             unsumm = self.neighborUnsum(x,list_cache[-1])
             probability = self.gamma*list_cache[-1][x]*(phi**unsumm) + \
                                     (1 - list_cache[-1][x])*\
-                                    self.alpha*(beta**(summ)) ###
+                                    self.alpha*(beta**(summ)) 
             if list_cache[-1][x] == 0 and \
                random.uniform(0, 1) <= probability:
                 cache[x] = 1

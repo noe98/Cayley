@@ -19,10 +19,13 @@ def main():
     full_filename = filename + ".xlsx"
     polarity = abs(issue-0.5)
     network.center = 0.5 ### CHANGE ###
+    #JKP: Does network.center have to be an instance variable?
     ideals(network)
     beta_phi(network)
     senate = cy.MonteCarlo(network, 1/polarity)
     senate.gamma = senate.alpha
+    #JKP
+    #do not like the line above at all. Can this be done in the siulate method?
     senate.randomDictionary() ### CHANGE###
 
     for i in range(timesteps):
@@ -31,6 +34,8 @@ def main():
     senate.sendExcel(full_filename)
 
 def senators(csv_file = 'senatedata.csv'):
+    """Returns a list of senators from the csv file. The last names are
+    listed."""
     senators = list()
     with open(csv_file) as csvfile:
         readCSV = csv.reader(csvfile, delimiter=',')
@@ -40,6 +45,8 @@ def senators(csv_file = 'senatedata.csv'):
     return senators
 
 def ideals(network,csv_file = 'senatedata.csv'):
+    """Adds the senators idealogical score as a feature to the
+    senate network."""
     with open(csv_file) as csvfile:
         readCSV = csv.reader(csvfile, delimiter=',')
         for row in readCSV:
@@ -47,9 +54,11 @@ def ideals(network,csv_file = 'senatedata.csv'):
                 network.add(row[8],ideology = float(row[3]),rank = row[0])
 
 def beta_phi(network):
-    for x in network:
-        network.add(x,beta=1/(abs(network.graph[x]['ideology']-network.center)),\
-                    phi = 1/(abs(network.graph[x]['ideology']-network.center)))
+    """Adds the beta and phi feature to the senate network."""
+    ideology_d = network.getNodeFeature('ideology')
+    for senator in network:
+        network.add(senator,beta=1/(abs(ideology_d[senator]-network.center)),\
+                    phi = 1/(abs(ideology_d[senator]-network.center)))
 
 if __name__ == '__main__':
     main()
