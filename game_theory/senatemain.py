@@ -9,6 +9,7 @@ def main():
     senate_list = senators('senatedata.csv')
     network = cy.Lattice(100,1,names = senate_list)
     network.center = 0.5 ### ALTER ###  
+    #JKP: Does network.center have to be an instance variable?
     ideals(network)
     const = float(input("Input proportionality constant for beta and phi: "))
     beta_phi(network, const)
@@ -29,6 +30,8 @@ def main():
     senate = cy.MonteCarlo(network, 1/(const*abs(polarity)))
     senate.median = 0.5 ## CHANGE ###
     senate.gamma = senate.alpha
+    #JKP
+    #do not like the line above at all. Can this be done in the siulate method?
     senate.senateDictionary(issue) ### CHANGE###
 
     for i in range(timesteps):
