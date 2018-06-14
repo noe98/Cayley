@@ -17,6 +17,7 @@ import xlsxwriter #http://xlsxwriter.readthedocs.io/tutorial01.html
 from Cayley.cayleytree import *
 from Cayley.lattice import *
 import numpy as np
+from Cayley.parser import evaluator
 
 class MonteCarlo(object):
 
@@ -337,7 +338,7 @@ class MonteCarlo(object):
             return "Inappropriate network type"
 
     #Monte Carlo Algorithm methods
-    def simulateNN(self):
+    def simulateNN(self,function = 'g*n+(1-n)*a*(b^s)'):
         """A monte carlo method that runs a timestep of a simulation
         by visiting each node.
 
@@ -383,9 +384,13 @@ class MonteCarlo(object):
         for x in self.__network:
             summ = self.neighborSum(x,list_cache[-1])
             #print("summ: ", summ)
-            probability = self.gamma*list_cache[-1][x] + \
-                                    (1 - list_cache[-1][x])*\
-                                    self.alpha*(self.beta**(summ))
+            probability = evaluator(function,a=.5,b=.8,g=0,s=summ,
+                                    n=list_cache[-1][x])
+            print("Test: ",probability)
+##            probability = self.gamma*list_cache[-1][x] + \
+##                                    (1 - list_cache[-1][x])*\
+##                                    self.alpha*(self.beta**(summ))
+##            print("Proven: ",probability)
             if list_cache[-1][x] == 0 and \
                random.uniform(0, 1) <= probability:
                 cache[x] = 1
@@ -501,9 +506,11 @@ class MonteCarlo(object):
             raise ValueError("Must set up initial state of simulation")
         list_cache = self.__sim_data
         cache = dict()
+        beta_d = self.__network.getNodeFeature('beta')
+        phi_d = self.__network.getNodeFeature('phi')
         for x in self.__network:
-            beta = self.__network.graph[x]['beta'] ### DEFINE BETA AND PHI ###
-            phi = self.__network.graph[x]['phi']
+            beta = beta_d[x]
+            phi = phi_d[x]
             summ = self.neighborSum(x,list_cache[-1])
             unsumm = self.neighborUnsum(x,list_cache[-1])
             probability = self.gamma*list_cache[-1][x]*(phi**unsumm) + \
@@ -534,10 +541,6 @@ class MonteCarlo(object):
         """A file that sends the data ran from the most recent
            MonteCarlo().simulate to an excel sheet. Must run the simulate
            method in order to have this method work."""
-
-        #If File exists, load file. If sheet 1 is occupied, create a second
-        #sheet. Rename / use input for naming sheet.
-
         if self.__sim_data == list():
             raise ValueError("No data to send to excel. Must run simulation")
         workbook = xlsxwriter.Workbook(filename)
@@ -545,20 +548,23 @@ class MonteCarlo(object):
         worksheet.write(0,0,"Timestep")
         try:
             for x in self.__network:
-                x+1
                 worksheet.write(x+1,0,"Node "+ str(self.__network.keys[x]))
         except TypeError:
+            rank_d = self.__network.getNodeFeature('rank')
             for x in self.__network:
-                worksheet.write(int(self.__network.graph[x]['rank']),0,x)
+                worksheet.write(int(rank_d[x]),0,x)
         for y in range(len(self.__sim_data[0])):
             worksheet.write(0,y+1,str(y))
         for y in range(len(self.__sim_data)):
             try:
-                for x in range(self.__network.nodeNumber()):
-                    worksheet.write(x+1,y+1,self.__sim_data[y][self.__network.keys[x]])
+                nodes = self.__network.getNodes()
+                for x in range(len(self.__network)):
+                    worksheet.write(x+1,y+1,self.__sim_data[y]
+                                    [nodes[x]])
             except KeyError:
+                rank_d = self.__network.getNodeFeature('rank')
                 for x in self.__network:
-                    worksheet.write(int(self.__network.graph[x]['rank']),\
+                    worksheet.write(int(rank_d[x]),\
                                     y+1,self.__sim_data[y][x])
         if self.__network.getType() == "CayleyTree":
             worksheet2 = workbook.add_worksheet("Density")
