@@ -314,6 +314,11 @@ class MonteCarlo(object):
        """
         return sum([state_d.get(x)
                     for x in self.__network.neighborFinder(node)])
+    
+    def neighborUnsum(self,node,state_d):
+        """Returns sum(1-n) for nearest neighbors."""
+        return sum([1-(state_d.get(x)
+                       for x in self.__network.neighborFinder(node))])
 
     def edgeSum(self,neighbor,timestep):
         """Gets the state of a node on an edge."""
@@ -500,7 +505,8 @@ class MonteCarlo(object):
             beta = self.__network.graph[x]['beta'] ### DEFINE BETA AND PHI ###
             phi = self.__network.graph[x]['phi']
             summ = self.neighborSum(x,list_cache[-1])
-            probability = self.gamma*list_cache[-1][x]*(phi**summ) + \
+            unsumm = self.neighborUnsum(x,list_cache[-1])
+            probability = self.gamma*list_cache[-1][x]*(phi**unsumm) + \
                                     (1 - list_cache[-1][x])*\
                                     self.alpha*(beta**(summ)) ###
             if list_cache[-1][x] == 0 and \
