@@ -317,8 +317,8 @@ class MonteCarlo(object):
     
     def neighborUnsum(self,node,state_d):
         """Returns sum(1-n) for nearest neighbors."""
-        return sum([1-(state_d.get(x)
-                       for x in self.__network.neighborFinder(node))])
+        return sum([(1-state_d.get(x))
+                       for x in self.__network.neighborFinder(node)])
 
     def edgeSum(self,neighbor,timestep):
         """Gets the state of a node on an edge."""
@@ -543,8 +543,13 @@ class MonteCarlo(object):
         workbook = xlsxwriter.Workbook(filename)
         worksheet = workbook.add_worksheet("Monte Carlo Data")
         worksheet.write(0,0,"Timestep")
-        for x in range(len(self.__sim_data[0])):
-            worksheet.write(x+1,0,"Node "+ str(self.__network.keys[x]))
+        try:
+            for x in self.__network:
+                x+1
+                worksheet.write(x+1,0,"Node "+ str(self.__network.keys[x]))
+        except TypeError:
+            for x in self.__network:
+                worksheet.write(int(self.__network.graph[x]['rank']),0,x)
         for y in range(len(self.__sim_data[0])):
             worksheet.write(0,y+1,str(y))
         for y in range(len(self.__sim_data)):
@@ -565,6 +570,10 @@ class MonteCarlo(object):
             for y in range(len(self.__sim_data)):
                 for x in range(self.__network.generations+1):
                     worksheet2.write(x+1,y+1,self.density(x,self.__sim_data[y]))
-            workbook.close()
-        else:
-            workbook.close()
+        worksheet3 = workbook.add_worksheet("Total Density")
+        worksheet3.write(0,0,'Timestep')
+        worksheet3.write(1,0,"Density")
+        for i in range(len(self.__sim_data)):
+            worksheet3.write(0,i+1,i)
+            worksheet3.write(1,i+1,self.getOnes(i)/len(self.__network))
+        workbook.close()
