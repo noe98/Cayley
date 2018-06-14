@@ -376,7 +376,6 @@ class MonteCarlo(object):
         >>> for count in range(10): #runs 10 timesteps
                  mc.simulateNN()
         """
-
         if len(self.__sim_data) == 0:
             raise ValueError("Must set up initial state of simulation")
         list_cache = self.__sim_data
@@ -386,7 +385,7 @@ class MonteCarlo(object):
             #print("summ: ", summ)
             probability = evaluator(function,a=.5,b=.8,g=0,s=summ,
                                     n=list_cache[-1][x])
-            print("Test: ",probability)
+            #print("Test: ",probability)
 ##            probability = self.gamma*list_cache[-1][x] + \
 ##                                    (1 - list_cache[-1][x])*\
 ##                                    self.alpha*(self.beta**(summ))
@@ -536,6 +535,10 @@ class MonteCarlo(object):
     def simData(self,timestep):
         """Returns the sim data at a certain timestep."""
         return self.__sim_data[timestep]
+
+    def previousState(self,node):
+        """Returns the state of the node from the previous timestep."""
+        return self.__sim_data[-1][node]
 
     def sendExcel(self,filename = "monteCarloData.xlsx"):
         """A file that sends the data ran from the most recent
