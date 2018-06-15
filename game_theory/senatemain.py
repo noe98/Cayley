@@ -28,23 +28,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-### SENATE CENTER ###
-
-## Attributes of network --
-## Nodes
-## Center
-
-## Attributes of senate --
-## alpha (from issue score)
-## gamma
-## Median
-
-## Attributes of nodes --
-## names
-## Ideaologies
-## Beta and phi
-## Neighbors
-## rank
-## state (voting)
