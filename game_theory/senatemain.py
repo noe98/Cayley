@@ -4,29 +4,37 @@ from Cayley.change_me import timesteps
 import csv
 
 def main():
-    print("Enter 'Linear' or 'Complete' for model type.")
+    print("Enter 'Linear', 'Limited', or 'Complete' for model type.")
     model = input('Model: ').lower()
     senate_list = senators('senatedata.csv')
     network = cy.Lattice(100,1,names = senate_list)
+    network.center = 0.5 ### ALTER ###  
+    #JKP: Does network.center have to be an instance variable?
+    ideals(network)
+    const = float(input("Input proportionality constant for beta and phi: "))
+    beta_phi(network, const)
 
     if model == 'complete':
         network.completeGraph()
+    if model == 'limited':
+        radius = float(input("Radius of connection: "))
+        network.limitedGraph(radius)
     
     issue = float(input("What is the issue rating? "))
     print("\n" + "Enter Excel file name \n"
           + "Example: monteCarloData")
     filename = str(input("Filename: "))
     full_filename = filename + ".xlsx"
-    polarity = abs(issue-0.5)
-    network.center = 0.5 ### CHANGE ###
-    #JKP: Does network.center have to be an instance variable?
-    ideals(network)
-    beta_phi(network)
-    senate = cy.MonteCarlo(network, 1/polarity)
+
+    polarity = issue-0.5
+    const = float(input("Input proportionality constant for alpha and gamme: "))
+    senate = cy.MonteCarlo(network, 1/(const*abs(polarity)))
+    senate.median = 0.5 ## CHANGE ###
     senate.gamma = senate.alpha
     #JKP
     #do not like the line above at all. Can this be done in the siulate method?
-    senate.randomDictionary() ### CHANGE###
+    senate.senateDictionary(issue) ### CHANGE###
+
 
     for i in range(timesteps):
         senate.simulateVote()
@@ -53,12 +61,15 @@ def ideals(network,csv_file = 'senatedata.csv'):
             if row[8] != 'name':
                 network.add(row[8],ideology = float(row[3]),rank = row[0])
 
-def beta_phi(network):
-    """Adds the beta and phi feature to the senate network."""
-    ideology_d = network.getNodeFeature('ideology')
-    for senator in network:
-        network.add(senator,beta=1/(abs(ideology_d[senator]-network.center)),\
-                    phi = 1/(abs(ideology_d[senator]-network.center)))
+def beta_phi(network, constant):
+    for x in network:
+        partisan = network.graph[x]['ideology']-network.center
+        network.add(x,beta=1/(constant*abs(partisan)),\
+                    phi = 1/(constant*abs(partisan)))
+
 
 if __name__ == '__main__':
     main()
+
+
+### SENATE CENTER ###

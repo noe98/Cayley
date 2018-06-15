@@ -189,6 +189,22 @@ class MonteCarlo(object):
         else:
             raise ValueError("Must clear data before setting initial state.")
 
+    def senateDictionary(self, issue):
+        if len(self.__sim_data) == 0:
+            polarity = issue - 0.5
+            ideals = self.__network.getNodeFeature('ideology')
+            for node in self.__network:
+                eta = ideals[node] - self.median
+                probability = (eta*polarity + 0.34)/(0.68) ### CHANGE ###
+                if random.uniform(0, 1) <= probability:
+                    vote = 1
+                else:
+                    vote = 0
+                self.__network.add(node, state = vote)
+            self.__sim_data.append(self.__network.getNodeFeature('state'))
+        else:
+            raise ValueError("Must clear data before setting initial state.")
+
     def magnetization(self,nodes):
         """Adds magnetization to a certain group of nodes."""
         if len(self.__sim_data) == 0:
@@ -380,6 +396,7 @@ class MonteCarlo(object):
         >>> for count in range(10): #runs 10 timesteps
                  mc.simulateNN()
         """
+
         if len(self.__sim_data) == 0:
             raise ValueError("Must set up initial state of simulation")
         list_cache = self.__sim_data
@@ -389,7 +406,7 @@ class MonteCarlo(object):
             #print("summ: ", summ)
             probability = evaluator(function,a=.5,b=.8,g=0,s=summ,
                                     n=list_cache[-1][x])
-            #print("Test: ",probability)
+##            print("Test: ",probability)
 ##            probability = self.gamma*list_cache[-1][x] + \
 ##                                    (1 - list_cache[-1][x])*\
 ##                                    self.alpha*(self.beta**(summ))
