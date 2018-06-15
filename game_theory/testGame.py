@@ -1,5 +1,4 @@
 import Cayley as cy
-from makegame import *
 import gambit
 
 def main():
