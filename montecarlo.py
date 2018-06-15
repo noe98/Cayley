@@ -331,6 +331,10 @@ class MonteCarlo(object):
        """
         return sum([state_d.get(x)
                     for x in self.__network.neighborFinder(node)])
+
+    def previousNeighbors(self,node):
+        return sum([self.__simData[-1].get(x)
+                    for x in self.__network.neighborFinder(node)])
     
     def neighborUnsum(self,node,state_d):
         """Returns sum(1-n) for nearest neighbors."""
@@ -531,7 +535,7 @@ class MonteCarlo(object):
             unsumm = self.neighborUnsum(x,list_cache[-1])
             probability = self.gamma*list_cache[-1][x]*(phi**unsumm) + \
                                     (1 - list_cache[-1][x])*\
-                                    self.alpha*(beta**(summ)) ###
+                                    self.alpha*(beta**(summ)) 
             if list_cache[-1][x] == 0 and \
                random.uniform(0, 1) <= probability:
                 cache[x] = 1

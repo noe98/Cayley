@@ -25,6 +25,7 @@ def main():
           + "Example: monteCarloData")
     filename = str(input("Filename: "))
     full_filename = filename + ".xlsx"
+
     polarity = issue-0.5
     const = float(input("Input proportionality constant for alpha and gamme: "))
     senate = cy.MonteCarlo(network, 1/(const*abs(polarity)))
@@ -34,12 +35,15 @@ def main():
     #do not like the line above at all. Can this be done in the siulate method?
     senate.senateDictionary(issue) ### CHANGE###
 
+
     for i in range(timesteps):
         senate.simulateVote()
 
     senate.sendExcel(full_filename)
 
 def senators(csv_file = 'senatedata.csv'):
+    """Returns a list of senators from the csv file. The last names are
+    listed."""
     senators = list()
     with open(csv_file) as csvfile:
         readCSV = csv.reader(csvfile, delimiter=',')
@@ -49,6 +53,8 @@ def senators(csv_file = 'senatedata.csv'):
     return senators
 
 def ideals(network,csv_file = 'senatedata.csv'):
+    """Adds the senators idealogical score as a feature to the
+    senate network."""
     with open(csv_file) as csvfile:
         readCSV = csv.reader(csvfile, delimiter=',')
         for row in readCSV:
@@ -60,6 +66,7 @@ def beta_phi(network, constant):
         partisan = network.graph[x]['ideology']-network.center
         network.add(x,beta=1/(constant*abs(partisan)),\
                     phi = 1/(constant*abs(partisan)))
+
 
 if __name__ == '__main__':
     main()
