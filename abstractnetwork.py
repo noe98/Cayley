@@ -33,7 +33,7 @@ class AbstractNetwork(object):
     def __len__(self):
         """Returns the number of nodes in the network."""
         return len(self.nodes)
-    
+
     def __str__(self):
         return str(self.graph)
 
@@ -148,23 +148,3 @@ class AbstractNetwork(object):
             copy = nodes[:]
             copy.remove(item)
             self.multipleLinkCreator(item,copy)
-            print(item)
-            print(copy)
-
-    def limitedGraph(self, radius = 0.07):
-        if len(self.getNodeFeature('ideology')) != len(self):
-            raise ValueError("Not all nodes have feature 'ideology.'")
-        ideals = self.getNodeFeature('ideology')
-        for item in self.getNodes():
-            margin = (ideals[item]-radius,ideals[item]+radius)
-            neighbors = list()
-            for i in self.getNodes():
-                if margin[0] <= ideals[i] <= margin[1] and i != item:
-                    neighbors.append(i)
-            for neighbor in neighbors:
-                self.linkCreator(item, neighbor)
-        neighbors = self.getNodeFeature('neighbors')
-##        for item in self.getNodes():
-##            print(item)
-##            print(neighbors[item])
-        

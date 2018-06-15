@@ -58,6 +58,10 @@ class MonteCarlo(object):
         """Returns r2 value"""
         return self.r2
 
+    def getMedian(self):
+        """Returns senate median ideology score"""
+        return self.__network.center
+
     def getTimesteps(self): #needs to be looked at in 0 case
         """Returns the number of timesteps."""
         return len(self.__sim_data)
@@ -171,7 +175,7 @@ class MonteCarlo(object):
             self.__sim_data.append(self.__network.getNodeFeature('state'))
         else:
             raise ValueError("Must clear data before setting initial state.")
-        
+
     def startDown(self):
         """Sets the inital state of all nodes to spin down."""
         if len(self.__sim_data) == 0:
@@ -194,7 +198,7 @@ class MonteCarlo(object):
             polarity = issue - 0.5
             ideals = self.__network.getNodeFeature('ideology')
             for node in self.__network:
-                eta = ideals[node] - self.median
+                eta = ideals[node] - self.getMedian()
                 probability = (eta*polarity + 0.34)/(0.68) ### CHANGE ###
                 if random.uniform(0, 1) <= probability:
                     vote = 1
@@ -335,7 +339,7 @@ class MonteCarlo(object):
     def previousNeighbors(self,node):
         return sum([self.__simData[-1].get(x)
                     for x in self.__network.neighborFinder(node)])
-    
+
     def neighborUnsum(self,node,state_d):
         """Returns sum(1-n) for nearest neighbors."""
         return sum([(1-state_d.get(x))
@@ -535,7 +539,7 @@ class MonteCarlo(object):
             unsumm = self.neighborUnsum(x,list_cache[-1])
             probability = self.gamma*list_cache[-1][x]*(phi**unsumm) + \
                                     (1 - list_cache[-1][x])*\
-                                    self.alpha*(beta**(summ)) 
+                                    self.alpha*(beta**(summ))
             if list_cache[-1][x] == 0 and \
                random.uniform(0, 1) <= probability:
                 cache[x] = 1
