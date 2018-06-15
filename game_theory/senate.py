@@ -53,14 +53,14 @@ class Senate(AbstractNetwork):
                     self.linkCreator(rank_list[i],rank_list[i-1])
         if self.model == 'limited':
             for item in self.getNodes():
-                print(item)
+                #print(item)
                 margin = (ideals[item]-self.radius, ideals[item]+self.radius)
                 neighbors = list()
                 for i in self.getNodes():
                     if margin[0] <= ideals[i] <= margin[1] and i != item:
                         neighbors.append(i)
                 self.multipleLinkCreator(item, neighbors)
-                print(neighbors)
+                #print(neighbors)
         if self.model == 'complete':
             self.completeGraph()
 
