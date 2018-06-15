@@ -139,12 +139,12 @@ def simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials,
                     worksheet2.write(x+1,y+1,monte.density(x,monte.simData(y)))
                 worksheet2.write(network.generations+1,y+1,density_list[i][y]) ## #
 
-##        if (trials >= 100) and ((10*i)%trials == 0):
-##            try:
-##                ti = (time.time()-run_time)
-##                print("Trial: "+str(i))
-##                print(str(ti)+" secs")
-##            except NameError: pass
+        if (trials >= 100) and ((10*i)%trials == 0):
+            try:
+                ti = (time.time()-run_time)
+                print("Trial: "+str(i))
+                print(str(ti)+" secs")
+            except NameError: pass
 
     corr_t = dict()
     for n in range(len(node_list)):
@@ -220,7 +220,11 @@ def simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials,
     for c in range(trials):
         tot_sum += density_list[c][timesteps]
     tot_av = tot_sum/trials
+    if method == 'TM':
+        tot_av = (tot_av+1)/2
     SD_all = sqrt((tot_av)*(1-tot_av)/(trials*total_nodes[generations-1][links]))
+    if method == 'TM':
+        SD_all *= 2
     overall.write(generations+1,1,tot_av)
     overall.write(generations+1,2,SD_all)
 
@@ -414,3 +418,5 @@ if __name__ == "__main__":
 ## Make this able to call the lattice class
 ## Make sure last gen is clean
 ## Change progress bar for multiple parameters and trial 0
+## Steady-state analysis for more timesteps?
+## Make sure I'm doing standard deviation correctly
