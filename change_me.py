@@ -31,4 +31,4 @@ temp_d = {0: 0.3,
           6: 0.3
           }
 
-senate_corr = [] #[['Franken','Sanders'],['Sanders','Merkley']]
+senate_corr = [['Franken','Sanders'],['Sanders','Merkley']]

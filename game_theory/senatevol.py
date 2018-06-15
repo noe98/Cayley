@@ -39,7 +39,7 @@ def simulate(model, const, a_const, radius, issue, trials):
 
     density_list = dict() #[trial][timestep] stores overall densities
     state_collect = dict() #[trial] stores final state dictionaries
-    node_d = dict() #[trial#][pair index][node index][timestep] stores node values
+    node_d = dict() #[trial#][pair index][name][timestep] stores node values
 
     for m in range(trials):
         density_list[m] = [0]*(timesteps+2)
@@ -54,12 +54,17 @@ def simulate(model, const, a_const, radius, issue, trials):
         state_collect[i] = senate.simData(senate.getTimesteps()-1)
 
         node_d[i] = list() ### NOT GONNA BE PRETTY ... ###
+        rank_d = network.getNodeFeature('rank')
         for n in range(len(senate_corr)):
-            node_d[i].append([])
+            node_d[i].append({})
             for f in senate_corr[n]:
-                node_d[i][n].append({})
+                node_d[i][n][f] = []
                 for t in range(timesteps+1):
-                    node_d[i][n][f][t] = 2*(monte.simData(t)[senate_corr[n][f]])-1
+##                    print(node_d)
+##                    print(node_d[i])
+##                    print(node_d[i][n])
+##                    print(node_d[i][n][f])
+                    node_d[i][n][f].append(2*(senate.simData(t)[f])-1)
 
         for y in range(senate.getTimesteps()):
             sum_t = 0 # Sum of relevant nodes at one timestep
@@ -92,16 +97,16 @@ def simulate(model, const, a_const, radius, issue, trials):
         print(str(time.time()-run_time)+" secs")
 
     corr_t = dict()
-    for n in senate_corr:
+    for n in range(len(senate_corr)):
         corr_t[n] = [0]*(timesteps+1)
         for t in range(timesteps+1):
             sum_prod = 0
             n1 = 0
             n2 = 0
             for i in range(trials):
-                sum_prod += (node_d[i][n][0][t])*(node_d[i][n][1][t])
-                n1 += node_d[i][n][0][t]
-                n2 += node_d[i][n][1][t]
+                sum_prod += (node_d[i][n][senate_corr[n][0]][t])*(node_d[i][n][senate_corr[n][1]][t])
+                n1 += node_d[i][n][senate_corr[n][0]][t]
+                n2 += node_d[i][n][senate_corr[n][1]][t]
             corr_t[n][t] = (sum_prod/trials)-(n1/trials)*(n2/trials)
 
     for n in range(len(senate_corr)): # For recording correlations
