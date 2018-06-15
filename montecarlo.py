@@ -315,6 +315,10 @@ class MonteCarlo(object):
        """
         return sum([state_d.get(x)
                     for x in self.__network.neighborFinder(node)])
+
+    def previousNeighbors(self,node):
+        return sum([self.__simData[-1].get(x)
+                    for x in self.__network.neighborFinder(node)])
     
     def neighborUnsum(self,node,state_d):
         """Returns sum(1-n) for nearest neighbors."""
