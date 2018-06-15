@@ -266,7 +266,7 @@ def simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials,
                 overtime.write(i+9,1,str(temp_d[i]))
     for m in range(timesteps+1):
         t_sum = 0
-        overtime.write(0,m+1,k)
+        overtime.write(0,m+1,m)
         for t in range(trials):
             t_sum += density_list[t][m]
         t_av = t_sum/trials

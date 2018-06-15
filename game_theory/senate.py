@@ -60,6 +60,10 @@ class Senate(AbstractNetwork):
                     if margin[0] <= ideals[i] <= margin[1] and i != item:
                         neighbors.append(i)
                 self.multipleLinkCreator(item, neighbors)
+            neigh_d = self.getNodeFeature('neighbors')
+            for item in self.getNodes():
+                if len(neigh_d[item]) == 0:
+                    raise ValueError("Radius too small for connected graph.")
                 #print(neighbors)
         if self.model == 'complete':
             self.completeGraph()
