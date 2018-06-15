@@ -17,7 +17,7 @@ name_of_data_from_csv = ['rank_from_low', 'rank_from_high',
 __author__ = "\n".join(['Justin Pusztay (pusztayj20@mail.wlu.edu)'])
 
 __all__ = ['senate','payoff_matrix1','payoff_matrix2','payoff_matrix3',
-           'payoff_matrix4','strategy']
+           'payoff_matrix4','randomStart','game']
 
 def senate(network,csv_name = 'senatedata.csv'):
     """
