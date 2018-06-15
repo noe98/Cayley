@@ -207,7 +207,11 @@ def simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials,
         for y in range(trials):
             list_gen.append(dens_collect[y][x])
         av = sum(list_gen)/(trials)
+        if method == 'TM':
+            av = (av+1)/2
         SD = sqrt((av)*(1-av)/total_nodes[generations-1][links])
+        if method == 'TM':
+            SD *= 2
         overall.write(x+1,1,str(av))
         overall.write(x+1,2,str(SD))
 
