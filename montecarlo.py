@@ -532,14 +532,15 @@ class MonteCarlo(object):
         cache = dict()
         beta_d = self.__network.getNodeFeature('beta')
         phi_d = self.__network.getNodeFeature('phi')
+        neigh_d = self.__network.getNodeFeature('neighbors')
         for x in self.__network:
             beta = beta_d[x]
             phi = phi_d[x]
             summ = self.neighborSum(x,list_cache[-1])
             unsumm = self.neighborUnsum(x,list_cache[-1])
-            probability = self.gamma*list_cache[-1][x]*(phi**unsumm) + \
+            probability = self.gamma*list_cache[-1][x]*(phi**(unsumm/len(neigh_d[x])) + \
                                     (1 - list_cache[-1][x])*\
-                                    self.alpha*(beta**(summ))
+                                    self.alpha*(beta**(summ/len(neigh_d[x])))
             if list_cache[-1][x] == 0 and \
                random.uniform(0, 1) <= probability:
                 cache[x] = 1
