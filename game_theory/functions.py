@@ -10,6 +10,7 @@ import numpy as np
 import random
 import math
 import openpyxl
+import xlsxwriter
 
 #For personal reference when using the CSV
 name_of_data_from_csv = ['rank_from_low', 'rank_from_high',
@@ -20,7 +21,7 @@ __author__ = "\n".join(['Justin Pusztay (pusztayj20@mail.wlu.edu)'])
 
 __all__ = ['senate','payoff_matrix1','payoff_matrix2','payoff_matrix3',
            'payoff_matrix4','random_strat_start','game','timestep','data_export',
-           'strat_real_imagined_setup']
+           'strat_real_imagined_setup','export_data']
 
 def senate(network,csv_name = 'senatedata.csv'):
     """
@@ -617,3 +618,56 @@ def imagined_reward_data(data,col,book,network):
     for senator in network:
         imagined_sheet.cell(row=row_count,column=col+1).value = data[senator]
         row_count+=1
+
+def export_data(name,network,data1,data2,data3):
+    workbook = xlsxwriter.Workbook(name+'.xlsx')
+    worksheet = workbook.add_worksheet("Strategy")
+    worksheet.write(0,0,"Timestep")
+    row_count = 1
+    for senator in network:
+        worksheet.write(row_count,0,senator)
+        row_count += 1
+    column_count = 1
+    for y in range(len(data1)):
+        worksheet.write(0,column_count,str(y))
+        column_count += 1
+    for y in range(len(data1)):
+        row_count2 = 1
+        for senator in network:
+            worksheet.write(row_count2,y+1,data1[y][senator])
+            row_count2 += 1
+            
+    worksheet2 = workbook.add_worksheet("Real Rewards")
+    worksheet2.write(0,0,"Timestep")
+    row_count3 = 1
+    for senator in network:
+        worksheet2.write(row_count3,0,senator)
+        row_count3 += 1
+    column_count = 1
+    for y in range(len(data2)):
+        worksheet2.write(0,column_count,str(y))
+        column_count += 1
+    for y in range(len(data2)):
+        row_count4 = 1
+        for senator in network:
+            worksheet2.write(row_count4,y+1,data2[y][senator])
+            row_count4 += 1
+    
+    worksheet3 = workbook.add_worksheet("Imagined Rewards")
+    worksheet3.write(0,0,"Timestep")
+    row_count5 = 1
+    for senator in network:
+        worksheet3.write(row_count5,0,senator)
+        row_count5 += 1
+    column_count = 1
+    for y in range(len(data3)):
+        worksheet3.write(0,column_count,str(y))
+        column_count += 1
+    for y in range(len(data3)):
+        row_count6 = 1
+        for senator in network:
+            worksheet3.write(row_count6,y+1,data3[y][senator])
+            row_count6 += 1            
+    workbook.close()
+    
+    
