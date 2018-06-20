@@ -405,7 +405,9 @@ class MonteCarlo(object):
             raise ValueError("Must set up initial state of simulation")
         list_cache = self.__sim_data
         cache = dict()
-        for x in self.__network:
+        node_l = list(self.__network.getNodes())
+        random.shuffle(node_l)
+        for x in node_l:
             summ = self.neighborSum(x,list_cache[-1])
             #print("summ: ", summ)
             probability = evaluator(function,a=.5,b=.8,g=0,s=summ,
@@ -436,7 +438,9 @@ class MonteCarlo(object):
             raise ValueError("Must set up initial state of simulation")
         list_cache = self.__sim_data
         cache = dict()
-        for x in self.__network.linksAsTuples():
+        link_l = list(self.__network.linksAsTuples())
+        random.shuffle(link_l)
+        for x in link_l:
             node_picked = random.randint(0,1)
             summ = self.edgeSum(x[1-node_picked],list_cache[-1])
             #print("summ: ", summ)
@@ -479,7 +483,9 @@ class MonteCarlo(object):
         else:
             dens = self.getOnes(timestep)/nodes ### make sure this calls correct timestep
         #print("dens: " +str(dens))
-        for x in self.__network:
+        node_l = list(self.__network.getNodes())
+        random.shuffle(node_l)
+        for x in node_l:
             probability = self.gamma*list_cache[-1][x] + \
                                     (1 - list_cache[-1][x])*(1-dens)*self.mu
             #print("probability: " +str(probability))
@@ -507,8 +513,9 @@ class MonteCarlo(object):
         list_cache = self.__sim_data
         cache = dict()
         temps = self.__network.getNodeFeature('temperature')
-        for x in self.__network:
-            beta = (1/k)*temps[x]
+        node_l = list(self.__network.getNodes())
+        random.shuffle(node_l)
+        for x in node_l:
             summ = self.neighborSum(x,list_cache[-1])
             #print("summ: ", summ)
             probability = 0.5*(1-list_cache[-1][x]*np.tanh(beta*J*summ))
@@ -532,14 +539,17 @@ class MonteCarlo(object):
         cache = dict()
         beta_d = self.__network.getNodeFeature('beta')
         phi_d = self.__network.getNodeFeature('phi')
-        for x in self.__network:
+        neigh_d = self.__network.getNodeFeature('neighbors')
+        node_l = list(self.__network.getNodes())
+        random.shuffle(node_l)
+        for x in node_l:
             beta = beta_d[x]
             phi = phi_d[x]
             summ = self.neighborSum(x,list_cache[-1])
             unsumm = self.neighborUnsum(x,list_cache[-1])
-            probability = self.gamma*list_cache[-1][x]*(phi**unsumm) + \
+            probability = self.gamma*list_cache[-1][x]*(phi**(unsumm/len(neigh_d[x]))) + \
                                     (1 - list_cache[-1][x])*\
-                                    self.alpha*(beta**(summ))
+                                    self.alpha*(beta**(summ/len(neigh_d[x])))
             if list_cache[-1][x] == 0 and \
                random.uniform(0, 1) <= probability:
                 cache[x] = 1

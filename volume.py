@@ -275,6 +275,8 @@ def simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials,
     workbook.close()
 
 def main():
+    print("To change the default timesteps, initial state, temperatures, or"+\
+          " nodes for comparison, change the values in the change_me.py file.")
     print("Enter 'NN', 'TL', 'EI', or 'TM' for nearest neighbors, total " +
           "lattice density, empty interval, or temperature methods.")
     method = input("Method: ").upper()
