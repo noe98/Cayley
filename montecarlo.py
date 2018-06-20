@@ -405,7 +405,15 @@ class MonteCarlo(object):
             raise ValueError("Must set up initial state of simulation")
         list_cache = self.__sim_data
         cache = dict()
-        for x in self.__network:
+        node_l = self.__network.getNodes()
+        while len(node_l) != 0:
+            y = random.randint(0, len(node_l)-1)
+            x = node_l[y]
+            buh = []
+            for i in node_l:
+                if i != x:
+                    buh.append(i)
+            node_l = buh
             summ = self.neighborSum(x,list_cache[-1])
             #print("summ: ", summ)
             probability = evaluator(function,a=.5,b=.8,g=0,s=summ,
@@ -436,7 +444,15 @@ class MonteCarlo(object):
             raise ValueError("Must set up initial state of simulation")
         list_cache = self.__sim_data
         cache = dict()
-        for x in self.__network.linksAsTuples():
+        link_l = self.__network.linksAsTuples()
+        while len(link_l) != 0:
+            y = random.randint(0, len(link_l)-1)
+            x = link_l[y]
+            buh = []
+            for i in link_l:
+                if i != x:
+                    buh.append(i)
+            link_l = buh
             node_picked = random.randint(0,1)
             summ = self.edgeSum(x[1-node_picked],list_cache[-1])
             #print("summ: ", summ)
@@ -479,7 +495,15 @@ class MonteCarlo(object):
         else:
             dens = self.getOnes(timestep)/nodes ### make sure this calls correct timestep
         #print("dens: " +str(dens))
-        for x in self.__network:
+        node_l = self.__network.getNodes()
+        while len(node_l) != 0:
+            y = random.randint(0, len(node_l)-1)
+            x = node_l[y]
+            buh = []
+            for i in node_l:
+                if i != x:
+                    buh.append(i)
+            node_l = buh
             probability = self.gamma*list_cache[-1][x] + \
                                     (1 - list_cache[-1][x])*(1-dens)*self.mu
             #print("probability: " +str(probability))
@@ -507,7 +531,15 @@ class MonteCarlo(object):
         list_cache = self.__sim_data
         cache = dict()
         temps = self.__network.getNodeFeature('temperature')
-        for x in self.__network:
+        node_l = self.__network.getNodes()
+        while len(node_l) != 0:
+            y = random.randint(0, len(node_l)-1)
+            x = node_l[y]
+            buh = []
+            for i in node_l:
+                if i != x:
+                    buh.append(i)
+            node_l = buh
             beta = (1/k)*temps[x]
             summ = self.neighborSum(x,list_cache[-1])
             #print("summ: ", summ)
@@ -533,12 +565,20 @@ class MonteCarlo(object):
         beta_d = self.__network.getNodeFeature('beta')
         phi_d = self.__network.getNodeFeature('phi')
         neigh_d = self.__network.getNodeFeature('neighbors')
-        for x in self.__network:
+        node_l = self.__network.getNodes()
+        while len(node_l) != 0:
+            y = random.randint(0, len(node_l)-1)
+            x = node_l[y]
+            buh = []
+            for i in node_l:
+                if i != x:
+                    buh.append(i)
+            node_l = buh
             beta = beta_d[x]
             phi = phi_d[x]
             summ = self.neighborSum(x,list_cache[-1])
             unsumm = self.neighborUnsum(x,list_cache[-1])
-            probability = self.gamma*list_cache[-1][x]*(phi**(unsumm/len(neigh_d[x])) + \
+            probability = self.gamma*list_cache[-1][x]*(phi**(unsumm/len(neigh_d[x]))) + \
                                     (1 - list_cache[-1][x])*\
                                     self.alpha*(beta**(summ/len(neigh_d[x])))
             if list_cache[-1][x] == 0 and \
