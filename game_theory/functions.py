@@ -338,7 +338,7 @@ def random_strat_start(network):
     for node in network:
         network.add(node, strategy = random.randint(0,1))
 
-def game(network,payoff_matrix,agent1,agent2):
+def game(network,payoff_matrix,agent1,agent2,strategy_d):
     """
     Plays a game between two agents. Agent 1 is playing the vertical strategy
     and agent 2 is playing the horizontal strategy. The function adds the
@@ -390,19 +390,12 @@ def game(network,payoff_matrix,agent1,agent2):
     >>> game(matrix,"Cruz","Sanders")
     """
     try:
-        strategy_d = network.getNodeFeature('strategy')
         agent1_strategy = strategy_d[agent1]
         agent2_strategy = strategy_d[agent2]
         real_payoff = payoff_matrix[1-agent2_strategy,1-agent1_strategy]
         imagined_payoff = payoff_matrix[1-agent2_strategy,agent1_strategy]
-        try: #allows for agent to play multiple different agents in a timestep
-            imagined_d = network.getNodeFeature('imagined_reward')
-            real_d = network.getNodeFeature('real_reward')
-            imagined_d[agent1] = imagined_d[agent1] + imagined_payoff
-            real_d[agent1] = real_d[agent1] + real_payoff
-        except KeyError:
-            network.add(agent1,imagined_reward = imagined_payoff,
-                        real_reward = real_payoff)
+        network.add(agent1,imagined_reward = imagined_payoff,
+                    real_reward = real_payoff)
     except KeyError:
         return "Strategy feature is not built into entire network"
 
@@ -478,6 +471,7 @@ def timestep(network,issue_rating,a,b,c,d,k):
     >>> cgt.timestep(g,0.4,1,5.23,100,0.3,20.2)
     """
     strategy_d = network.getNodeFeature('strategy').copy()
+    print(strategy_d)
     ideology_d = network.getNodeFeature('ideology').copy()
     for node in network:
         ideology_agent1 = float(ideology_d[node])
@@ -490,15 +484,20 @@ def timestep(network,issue_rating,a,b,c,d,k):
             matrix = payoff_matrix3(network,a,b,c,d,node,agent2)
         elif issue_rating > 0.5 and ideology_agent > 0.5:
             marix = payoff_matrix4(network,a,b,c,d,node,agent2)
-        game(network,matrix,node,agent2)
+        game(network,matrix,node,agent2,strategy_d)
+        #using strat_d as arg ensures copy is used
         imagined_d = network.getNodeFeature('imagined_reward').copy()
         real_d = network.getNodeFeature('real_reward').copy()
+        #print("senator: ",node)
+        #print("Imagined: ",imagined_d[node])
+        #print("Real: ",real_d[node])
         if imagined_d[node] > real_d[node]:
             network.add(node,strategy = 1-strategy_d[node])
         else:
             switch_probability = math.e**(-1*(real_d[node]-imagined_d[node])/k)
             if random.uniform(0,1) <= switch_probability:
                 network.add(node,strategy = 1-strategy_d[node])
+    print(network.getNodeFeature('strategy'))
 
 def data_export(name,network):
     """

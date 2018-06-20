@@ -35,6 +35,7 @@ def main():
         strategy_data_dump.append(g.getNodeFeature('strategy'))
         real_data_dump.append(g.getNodeFeature('real_reward'))
         imagined_data_dump.append(g.getNodeFeature('imagined_reward'))
+    #print(real_data_dump)
     cgt.export_data(name_of_excel_sheet,g,strategy_data_dump,real_data_dump,
                                     imagined_data_dump)
     
