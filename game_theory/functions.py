@@ -481,7 +481,7 @@ def timestep(network,issue_rating,a,b,c,d,k):
             matrix = payoff_matrix2(network,a,b,c,d,node,agent2)
         elif issue_rating > 0.5 and ideology_agent1 < 0.5:
             matrix = payoff_matrix3(network,a,b,c,d,node,agent2)
-        elif issue_rating > 0.5 and ideology_agent > 0.5:
+        elif issue_rating > 0.5 and ideology_agent1 > 0.5:
             marix = payoff_matrix4(network,a,b,c,d,node,agent2)
         game(network,matrix,node,agent2,strategy_d)
         #using strat_d as arg ensures copy is used
