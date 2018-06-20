@@ -32,3 +32,5 @@ temp_d = {0: 0.3,
           }
 
 senate_corr = [['Franken','Sanders'],['Sanders','Merkley']]
+
+radius_of_connection = 0.07
