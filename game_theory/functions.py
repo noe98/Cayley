@@ -471,7 +471,6 @@ def timestep(network,issue_rating,a,b,c,d,k):
     >>> cgt.timestep(g,0.4,1,5.23,100,0.3,20.2)
     """
     strategy_d = network.getNodeFeature('strategy').copy()
-    print(strategy_d)
     ideology_d = network.getNodeFeature('ideology').copy()
     for node in network:
         ideology_agent1 = float(ideology_d[node])
@@ -497,7 +496,7 @@ def timestep(network,issue_rating,a,b,c,d,k):
             switch_probability = math.e**(-1*(real_d[node]-imagined_d[node])/k)
             if random.uniform(0,1) <= switch_probability:
                 network.add(node,strategy = 1-strategy_d[node])
-    print(network.getNodeFeature('strategy'))
+    #print(network.getNodeFeature('strategy'))
 
 def data_export(name,network):
     """
