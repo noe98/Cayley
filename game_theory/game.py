@@ -20,7 +20,7 @@ c = 100
 d = 1000
 k = 500
 timesteps = 2
-name_of_excel_sheet = 'test'
+name_of_excel_sheet = '%da_%db_%dc_%dd' %(a,b,c,d)
 
 def main():
     strategy_data_dump = list()
