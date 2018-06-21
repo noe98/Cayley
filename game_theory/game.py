@@ -28,6 +28,9 @@ def main():
     imagined_data_dump = list()
     g = cy.Graph()
     cgt.senate(g)
+##    g.completeGraph()
+    for node in g: #adds one random agent
+        cgt.random_agent(g,node)
     cgt.random_strat_start(g)
     strategy_data_dump.append(g.getNodeFeature('strategy'))
     for step in range(timesteps):
@@ -35,6 +38,7 @@ def main():
         strategy_data_dump.append(g.getNodeFeature('strategy'))
         real_data_dump.append(g.getNodeFeature('real_reward'))
         imagined_data_dump.append(g.getNodeFeature('imagined_reward'))
+    #print(real_data_dump)
     cgt.export_data(name_of_excel_sheet,g,strategy_data_dump,real_data_dump,
                                     imagined_data_dump)
     
