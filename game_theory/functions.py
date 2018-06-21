@@ -21,7 +21,7 @@ __author__ = "\n".join(['Justin Pusztay (pusztayj20@mail.wlu.edu)'])
 
 __all__ = ['senate','payoff_matrix1','payoff_matrix2','payoff_matrix3',
            'payoff_matrix4','random_strat_start','game','timestep','data_export',
-           'strat_real_imagined_setup','export_data']
+           'strat_real_imagined_setup','export_data','random_agent']
 
 def senate(network,csv_name = 'senatedata.csv'):
     """
@@ -427,7 +427,7 @@ def random_agent(network,agent1):
     agent2 = random.choice(list(network))#chooses random senator
     if agent1 == agent2:
         random_agent(network,agent1)
-    return agent2
+    network.directedLink(agent1,agent2)
 
 def timestep(network,issue_rating,a,b,c,d,k):
     """
@@ -473,17 +473,28 @@ def timestep(network,issue_rating,a,b,c,d,k):
     strategy_d = network.getNodeFeature('strategy').copy()
     ideology_d = network.getNodeFeature('ideology').copy()
     for node in network:
+        neighbors = network.getNodeFeature('neighbors')[node]
+        #print(neighbors)
         ideology_agent1 = float(ideology_d[node])
-        agent2 = random_agent(network,node)
-        if issue_rating < 0.5 and ideology_agent1 < 0.5:
-            matrix = payoff_matrix1(network,a,b,c,d,node,agent2)
-        elif issue_rating < 0.5 and ideology_agent1 > 0.5:
-            matrix = payoff_matrix2(network,a,b,c,d,node,agent2)
-        elif issue_rating > 0.5 and ideology_agent1 < 0.5:
-            matrix = payoff_matrix3(network,a,b,c,d,node,agent2)
-        elif issue_rating > 0.5 and ideology_agent1 > 0.5:
-            marix = payoff_matrix4(network,a,b,c,d,node,agent2)
-        game(network,matrix,node,agent2,strategy_d)
+        agent1_strategy = strategy_d[node]
+        real_payoff = 0
+        imagined_payoff = 0
+        for senator in neighbors:
+            #print(senator)
+            if issue_rating < 0.5 and ideology_agent1 < 0.5:
+                matrix = payoff_matrix1(network,a,b,c,d,node,senator)
+            elif issue_rating < 0.5 and ideology_agent1 > 0.5:
+                matrix = payoff_matrix2(network,a,b,c,d,node,senator)
+            elif issue_rating > 0.5 and ideology_agent1 < 0.5:
+                matrix = payoff_matrix3(network,a,b,c,d,node,senator)
+            elif issue_rating > 0.5 and ideology_agent1 > 0.5:
+                marix = payoff_matrix4(network,a,b,c,d,node,senator)
+            agent2_strategy = strategy_d[senator]
+            real_payoff += matrix[1-agent2_strategy,1-agent1_strategy]
+            imagined_payoff += matrix[1-agent2_strategy,agent1_strategy]
+        network.add(node,imagined_reward = imagined_payoff,
+                    real_reward = real_payoff)
+        #game(network,matrix,node,agent2,strategy_d)
         #using strat_d as arg ensures copy is used
         imagined_d = network.getNodeFeature('imagined_reward').copy()
         real_d = network.getNodeFeature('real_reward').copy()

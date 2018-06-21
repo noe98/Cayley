@@ -28,6 +28,9 @@ def main():
     imagined_data_dump = list()
     g = cy.Graph()
     cgt.senate(g)
+##    g.completeGraph()
+    for node in g: #adds one random agent
+        cgt.random_agent(g,node)
     cgt.random_strat_start(g)
     strategy_data_dump.append(g.getNodeFeature('strategy'))
     for step in range(timesteps):

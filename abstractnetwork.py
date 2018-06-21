@@ -101,6 +101,13 @@ class AbstractNetwork(object):
         except KeyError:
             return "Nodes not in graph"
 
+    def directedLink(self,node,connection):
+        """Adds a link that is directed from node to connection."""
+        try:
+            (self.graph[node]["neighbors"]).add(connection)
+        except KeyError:
+            return "Nodes not in graph"
+
     def multipleLinkCreator(self,node,connections):
         try:
             for connection in connections:
