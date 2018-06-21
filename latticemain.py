@@ -20,13 +20,14 @@ def main():
           + "Beta = 0.8 \n"
           + "Gamma = 0.2 \n")
     custom = input("Do you want to customize alpha, beta, gamma values? [Y/N]: ")
+    network = cy.Lattice(x_dir,y_dir,z_dir)
     if(custom.upper()=="Y"):
         alpha = float(input("Value for alpha: "))
         beta = float(input("Value for beta: "))
         gamma = float(input("Value for gamma: "))
-        monte = cy.MonteCarlo(cy.Lattice(x_dir,y_dir,z_dir), alpha, beta, gamma)
+        monte = cy.MonteCarlo(network, alpha, beta, gamma)
     else:
-        monte = cy.MonteCarlo(cy.Lattice(x_dir,y_dir,z_dir))
+        monte = cy.MonteCarlo(network)
     print("\n" + "Enter Excel file name \n"
           + "Example: monteCarloData")
     filename = str(input("Filename: "))
@@ -41,7 +42,7 @@ def main():
         monte.randomDictionary()
     else:
         monte.zeroDictionary()
-    for x in range(len(monte.network)):
+    for x in range(len(network)):
         monte.simulateNN()
     monte.sendExcel(full_filename)
     a = cg.LatticeGraphics(x_dir,y_dir,z_dir)
