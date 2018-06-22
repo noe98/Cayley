@@ -12,7 +12,7 @@ class Senate(AbstractNetwork):
         self.file = csv_file
         self.constant = BP_constant
         self.keys = list()
-        if model.lower() in ['linear','limited','complete']:
+        if model.lower() in ['linear','limited','complete','blank']:
             self.model = model.lower()
         else:
             raise ValueError("Model type unrecognized")
@@ -51,7 +51,7 @@ class Senate(AbstractNetwork):
                     self.linkCreator(rank_list[i],rank_list[i+1])
                 elif i == len(rank_list)-1:
                     self.linkCreator(rank_list[i],rank_list[i-1])
-        if self.model == 'limited':
+        elif self.model == 'limited':
             for item in self.getNodes():
                 #print(item)
                 margin = (ideals[item]-self.radius, ideals[item]+self.radius)
@@ -65,10 +65,13 @@ class Senate(AbstractNetwork):
                 if len(neigh_d[item]) == 0:
                     raise ValueError("Radius too small for connected graph.")
                 #print(neighbors)
-        if self.model == 'complete':
+        elif self.model == 'complete':
             self.completeGraph()
+        elif self.model == 'blank':
+            pass
 
-        for senator in self:
-            partisan = ideals[senator]-self.center
-            self.add(senator,beta=(1/(self.constant*(abs(partisan)+0.01))+1),\
-                        phi = (1/(self.constant*(abs(partisan)+0.01))+1))
+        if self.model != 'blank':
+            for senator in self:
+                partisan = ideals[senator]-self.center
+                self.add(senator,beta=(1/(self.constant*(abs(partisan)+0.01))+1),\
+                            phi = (1/(self.constant*(abs(partisan)+0.01))+1))
