@@ -4,10 +4,6 @@
 import csv
 import Cayley as cy
 import Cayley.game_theory as cgt
-import numpy as np
-import random
-import math
-import openpyxl
 import xlsxwriter as xl
 import time
 from change_me import a_list
