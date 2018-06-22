@@ -7,7 +7,8 @@ import xlsxwriter as xl
 import time
 from math import sqrt
 from Cayley.change_me import timesteps
-from change_me import senate_corr
+from Cayley.change_me import senate_corr
+from Cayley.change_me import radius_of_connection
 import csv
 
 def simulate(model, const, a_const, radius, issue, trials):
@@ -168,7 +169,7 @@ def main():
     const = float(input("Input proportionality constant for beta and phi: "))
     a_const = float(input("Input proportionality constant for alpha and gamma: "))
     if model == 'limited':
-        radius = float(input("Radius of connection: "))
+        radius = radius_of_connection
     else: radius = 0
     issue = float(input("What is the issue rating? "))
     start_time = time.time()

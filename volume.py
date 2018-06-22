@@ -50,9 +50,9 @@ def simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials,
         tags = r1_tag+'-'+r2_tag+'-'+g_tag
     elif method == 'TM':
         tag_list = ()
-        for s in range(generations+2):
-            tag_list += ("%.1f"%temp_d[s],)
-        tags = ("%s_"*(generations+1)+"%s") %tag_list
+        for s in range(len(temp_d)):
+            tag_list += ("%.2f"%temp_d[s],)
+        tags = ("%s_"*(len(temp_d)-1)+"%s") %tag_list
         name = ("TM%dGen_%dLin_"%(generations-1,links)+tags+".xlsx")
     else: raise ValueError("Method not recognized")
     print("\n#### RUNNING SIMULATION %s ####\n"%(name))
@@ -81,8 +81,9 @@ def simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials,
             elif initial_state == "zero": monte.zeroDictionary()
 
         if method == 'TM':
+            iterate = len(temp_d)
             for d in range (generations+1):
-                temp = temp_d[d]
+                temp = temp_d[d%iterate]
                 network.addMultipleNodes(network.nodesPerGen(d),temperature=temp)
 
         for t in range(timesteps+1):
