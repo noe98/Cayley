@@ -21,7 +21,7 @@ class Lattice(AbstractNetwork):
     2-demensional lattice."""
 
     def __init__(self,length,width,height = 1,names = None):
-        """Sets up the dimensions of the lattice."""
+        """Sets up the demenstions of the lattice."""
         AbstractNetwork.__init__(self)
         self.x = length
         self.y = width
@@ -32,7 +32,7 @@ class Lattice(AbstractNetwork):
         self.autoCreate()
         
     def __eq__(self,other):
-        """Defines equality of a lattice based on the dimensions."""
+        """Defines equality of a lattice based on the demensions."""
         if self is other:
             return True
         if type(self) != type(other):
