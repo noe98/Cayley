@@ -516,7 +516,7 @@ class MonteCarlo(object):
         node_l = list(self.__network.getNodes())
         random.shuffle(node_l)
         for x in node_l:
-            beta = (1/k)*temps[x]
+            beta = (1/(k*temps[x]))
             summ = self.neighborSum(x,list_cache[-1])
             #print("summ: ", summ)
             probability = 0.5*(1-list_cache[-1][x]*np.tanh(beta*J*summ))

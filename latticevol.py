@@ -132,7 +132,17 @@ def simulate(method, model, length, width, height, alpha, beta, gamma, mu, r1, r
             dens_t = sum_t/((length_tag)*(width_tag)*(height_tag)) ## # Density at one timestep
             density_list[i][y] = dens_t
 
-
+        if trials <= 10: # Trial-by-trial is best for small sets
+            if model == 'loop':
+                worksheet = workbook.add_worksheet("Data trial %d" % (i+1))
+                worksheet.write(0,0,"Timestep")
+                for x in network:## #
+                    worksheet.write(x+1,0,"Node "+str(x))
+                for y in range(monte.getTimesteps()): #JKP: Follows new updates
+                    worksheet.write(0,y+1,str(y))
+                for y in range(monte.getTimesteps()): #JKP: Follows new updates
+                    for x in network:
+                        worksheet.write(x+1,y+1,monte.simData(y)[x]) #JKP: Follows new updates
 
         if (trials >= 100) and ((10*i)%trials == 0):
             try:
@@ -142,8 +152,14 @@ def simulate(method, model, length, width, height, alpha, beta, gamma, mu, r1, r
             except NameError: pass
 
     corr_t = dict()
+    prod_t = dict() ### Next three dicts are temporary, for diagnosis
+    n0_t = dict()
+    n1_t = dict()
     for n in range(len(node_list)):
         corr_t[n] = [0]*(timesteps+1)
+        prod_t[n] = [0]*(timesteps+1)
+        n0_t[n] = [0]*(timesteps+1)
+        n1_t[n] = [0]*(timesteps+1)
         for t in range(timesteps+1):
             sum_prod = 0
             n1 = 0
@@ -153,6 +169,9 @@ def simulate(method, model, length, width, height, alpha, beta, gamma, mu, r1, r
                 n1 += node_d[i][n][0][t]
                 n2 += node_d[i][n][1][t]
             corr_t[n][t] = (sum_prod/trials)-(n1/trials)*(n2/trials)
+            prod_t[n][t] = (sum_prod/trials)
+            n0_t[n][t] = (n1/trials)
+            n1_t[n][t] = (n2/trials)
 
     for n in range(len(node_list)): # For recording correlations
         sheetname = ("Nodes_%d+%d" %(node_list[n][0],node_list[n][1]))
@@ -161,6 +180,9 @@ def simulate(method, model, length, width, height, alpha, beta, gamma, mu, r1, r
         corr_sheet = workbook.add_worksheet(sheetname)
         corr_sheet.write(0,0,"Timestep")
         corr_sheet.write(1,0,"Correlation")
+        corr_sheet.write(5,0,"Product")
+        corr_sheet.write(6,0,"Node %d" %(node_list[n][0]))
+        corr_sheet.write(7,0,"Node %d" %(node_list[n][1]))
         corr_chart = workbook.add_chart({'type':'line'})
         corr_sheet.insert_chart('I8', corr_chart)
         corr_chart.set_title({'name':'Correlation'})
@@ -171,7 +193,9 @@ def simulate(method, model, length, width, height, alpha, beta, gamma, mu, r1, r
         for t in range(timesteps+1):
             corr_sheet.write(0,t+1,t)
             corr_sheet.write(1,t+1,corr_t[n][t])
-
+            corr_sheet.write(5,t+1,prod_t[n][t])
+            corr_sheet.write(6,t+1,n0_t[n][t])
+            corr_sheet.write(7,t+1,n1_t[n][t])
     # Average density over time
     overtime.write(0,0,"Timestep")
     data_tag = name
