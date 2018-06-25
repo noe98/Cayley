@@ -264,7 +264,7 @@ def simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials,
             overtime.write(8,0,"Temperatures")
             for i in range(generations+1):
                 overtime.write(i+9,0,"Gen: "+str(i))
-                overtime.write(i+9,1,str(temp_d[i]))
+                overtime.write(i+9,1,str(temp_d[i%len(temp_d)]))
     for m in range(timesteps+1):
         t_sum = 0
         overtime.write(0,m+1,m)
