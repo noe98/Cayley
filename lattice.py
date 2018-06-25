@@ -67,6 +67,39 @@ class Lattice(AbstractNetwork):
         numbered, then the nodes will be properly linked as intended.
 
         If no names are given, it just uses a number as a name."""
+##        try:
+##            for x in self.__names:
+##                self.add(x)
+##        except TypeError:
+##            for x in range(self.nodeNumber()):
+##                self.add(x)
+##        row_count = 0 #x-coordinate
+##        floor_count = 0 #z-coordinate
+##        node_count = 0
+##        for node in self:
+##            column_count = node_count % self.x #y-coordinate
+##            self.add(node,coordinate = (column_count,row_count,floor_count))
+##            #above adds coordinate as feature
+##            if column_count % self.x != self.x -1: #checks if at x-max
+##                self.linkCreator(node,self.nodes[node_count+1])
+##            if column_count % self.x != 0: #checks if at x-min
+##                self.linkCreator(node,self.nodes[node_count-1])
+##
+##            if row_count % self.y != self.y-1: #checks if at y-max
+##                self.linkCreator(node,self.nodes[node_count+self.x])
+##            if row_count % self.y != 0: #checks if at y-min
+##                self.linkCreator(node,self.nodes[node_count-self.x])
+##            if node_count % self.x == self.x - 1:
+##                row_count += 1
+##                
+##            if floor_count != self.z-1: #checks if at z-max
+##                self.linkCreator(node,self.nodes[node_count+self.floorArea()])
+##            if floor_count != 0: #checks if at z-min
+##                self.linkCreator(node,self.nodes[node_count-self.floorArea()])
+##            if node_count % self.floorArea() == self.floorArea() - 1:
+##                floor_count += 1
+##            node_count += 1
+
         try:
             node_count = 0
             for n in self.__names: ### WARNING: HAS NOT BEEN TESTED ###

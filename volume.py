@@ -22,7 +22,8 @@ from change_me import temp_d
 
 ## # <-- indicates adjusted generations (account for last gen fluctuations)
 
-def simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2, trials,k,J):
+def simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2,
+             trials,k,J):
     """The important one"""
     generations = generations + 1 ## #
     network = cy.CayleyTree(generations, links)
