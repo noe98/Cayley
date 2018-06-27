@@ -111,9 +111,10 @@ def simulate(method, model, length, width, height, alpha, beta, gamma, mu, r1, r
         for y in range(monte.getTimesteps()): #JKP: Follows new updates
             sum_t = 0 # Sum of relevant nodes at one timestep
             if model == 'full':
-                edge_d = network.getNodeFeature('edge_yes')
+                coor_d = network.getNodeFeature('coords')
                 for x in network: ## # gives adjusted, can't use len(monte.network)
-                    if not edge_d[x]:
+                    if not (0 in coor_d[x] or coor_d[x][0] == length-1 or\
+                            coor_[x][1] == width-1 or coor_d[x][2] == height-1):
                         sum_t += monte.simData(y)[x] #JKP: Follows new updates
             elif model == 'flat':
                 coor_d = network.getNodeFeature('coords')

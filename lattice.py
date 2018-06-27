@@ -67,88 +67,88 @@ class Lattice(AbstractNetwork):
         numbered, then the nodes will be properly linked as intended.
 
         If no names are given, it just uses a number as a name."""
-##        try:
-##            for x in self.__names:
-##                self.add(x)
-##        except TypeError:
-##            for x in range(self.nodeNumber()):
-##                self.add(x)
-##        row_count = 0 #x-coordinate
-##        floor_count = 0 #z-coordinate
-##        node_count = 0
-##        for node in self:
-##            column_count = node_count % self.x #y-coordinate
-##            self.add(node,coordinate = (column_count,row_count,floor_count))
-##            #above adds coordinate as feature
-##            if column_count % self.x != self.x -1: #checks if at x-max
-##                self.linkCreator(node,self.nodes[node_count+1])
-##            if column_count % self.x != 0: #checks if at x-min
-##                self.linkCreator(node,self.nodes[node_count-1])
-##
-##            if row_count % self.y != self.y-1: #checks if at y-max
-##                self.linkCreator(node,self.nodes[node_count+self.x])
-##            if row_count % self.y != 0: #checks if at y-min
-##                self.linkCreator(node,self.nodes[node_count-self.x])
-##            if node_count % self.x == self.x - 1:
-##                row_count += 1
-##                
-##            if floor_count != self.z-1: #checks if at z-max
-##                self.linkCreator(node,self.nodes[node_count+self.floorArea()])
-##            if floor_count != 0: #checks if at z-min
-##                self.linkCreator(node,self.nodes[node_count-self.floorArea()])
-##            if node_count % self.floorArea() == self.floorArea() - 1:
-##                floor_count += 1
-##            node_count += 1
-
         try:
-            node_count = 0
-            for n in self.__names: ### WARNING: HAS NOT BEEN TESTED ###
-                x = node_count%self.x
-                y = floor(node_count/self.x)%self.y
-                z = floor(node_count/(self.x*self.y))
-                edge = (0 in [x,y,z] or x == self.x-1 \
-                       or y == self.y-1 or z == self.z-1)
-                self.add(n, coords = [x,y,z], edge_yes = edge)
-                node_count += 1
+            for x in self.__names:
+                self.add(x)
         except TypeError:
-            for n in range(self.nodeNumber()):
-                x = n%self.x
-                y = floor(n/self.x)%self.y
-                z = floor(n/(self.x*self.y))
-                edge = 0 in [x,y,z] or x == self.x-1 \
-                       or y == self.y-1 or z == self.z-1
-                self.add(n, coords = [x,y,z], edge_yes = edge)
-
-        coor_d = self.getNodeFeature('coords')
-        edges = self.getNodeFeature('edge_yes')
+            for x in range(self.nodeNumber()):
+                self.add(x)
+        row_count = 0 #x-coordinate
+        floor_count = 0 #z-coordinate
         node_count = 0
-        for node in self: ### CAN THIS BE IMPROVED? ###
-            if edges[node] == False:
-                neighs = [node+1,node-1,node+self.x,node-self.x,\
-                          node+self.floorArea(),node-self.floorArea()]
-                self.multipleLinkCreator(node,neighs)
-            else:
-                c = coor_d[node]
-                if c[0] != self.x -1: #checks if at x-max
-                    self.linkCreator(node,self.nodes[node_count+1])
-                if c[0] != 0: #checks if at x-min
-                   self.linkCreator(node,self.nodes[node_count-1])
-
-                if c[1] != self.y-1: #checks if at y-max
-                    self.linkCreator(node,self.nodes[node_count+self.x])
-                if c[1] != 0: #checks if at y-min
-                    self.linkCreator(node,self.nodes[node_count-self.x])
-
-
-                if c[2] != self.z-1 : #checks if at z-max
-                    self.linkCreator(node,self.nodes[node_count+self.floorArea()])
-                if c[2] != 0: #checks if at z-min
-                    self.linkCreator(node,self.nodes[node_count-self.floorArea()])
-            node_count += 1
-        neigh_d = self.getNodeFeature('neighbors')
-        edge_d = self.getNodeFeature('edge_yes')
         for node in self:
-            if (edge_d[node]) and len(neigh_d[node]) == 6:
-                print("Neighbor error: " + str(node))
-            if (not edge_d[node]) and len(neigh_d[node]) != 6:
-                print("Neighbor error: " + str(node))
+            column_count = node_count % self.x #y-coordinate
+            self.add(node,coords = (column_count,row_count,floor_count))
+            #above adds coordinate as feature
+            if column_count % self.x != self.x -1: #checks if at x-max
+                self.linkCreator(node,self.nodes[node_count+1])
+            if column_count % self.x != 0: #checks if at x-min
+                self.linkCreator(node,self.nodes[node_count-1])
+
+            if row_count % self.y != self.y-1: #checks if at y-max
+                self.linkCreator(node,self.nodes[node_count+self.x])
+            if row_count % self.y != 0: #checks if at y-min
+                self.linkCreator(node,self.nodes[node_count-self.x])
+            if node_count % self.x == self.x - 1:
+                row_count += 1
+                
+            if floor_count != self.z-1: #checks if at z-max
+                self.linkCreator(node,self.nodes[node_count+self.floorArea()])
+            if floor_count != 0: #checks if at z-min
+                self.linkCreator(node,self.nodes[node_count-self.floorArea()])
+            if node_count % self.floorArea() == self.floorArea() - 1:
+                floor_count += 1
+            node_count += 1
+
+##        try:
+##            node_count = 0
+##            for n in self.__names: ### WARNING: HAS NOT BEEN TESTED ###
+##                x = node_count%self.x
+##                y = floor(node_count/self.x)%self.y
+##                z = floor(node_count/(self.x*self.y))
+##                edge = (0 in [x,y,z] or x == self.x-1 \
+##                       or y == self.y-1 or z == self.z-1)
+##                self.add(n, coords = [x,y,z], edge_yes = edge)
+##                node_count += 1
+##        except TypeError:
+##            for n in range(self.nodeNumber()):
+##                x = n%self.x
+##                y = floor(n/self.x)%self.y
+##                z = floor(n/(self.x*self.y))
+##                edge = 0 in [x,y,z] or x == self.x-1 \
+##                       or y == self.y-1 or z == self.z-1
+##                self.add(n, coords = [x,y,z], edge_yes = edge)
+##
+##        coor_d = self.getNodeFeature('coords')
+##        edges = self.getNodeFeature('edge_yes')
+##        node_count = 0
+##        for node in self: ### CAN THIS BE IMPROVED? ###
+##            if edges[node] == False:
+##                neighs = [node+1,node-1,node+self.x,node-self.x,\
+##                          node+self.floorArea(),node-self.floorArea()]
+##                self.multipleLinkCreator(node,neighs)
+##            else:
+##                c = coor_d[node]
+##                if c[0] != self.x -1: #checks if at x-max
+##                    self.linkCreator(node,self.nodes[node_count+1])
+##                if c[0] != 0: #checks if at x-min
+##                   self.linkCreator(node,self.nodes[node_count-1])
+
+##                if c[1] != self.y-1: #checks if at y-max
+##                    self.linkCreator(node,self.nodes[node_count+self.x])
+##                if c[1] != 0: #checks if at y-min
+##                    self.linkCreator(node,self.nodes[node_count-self.x])
+##
+##
+##                if c[2] != self.z-1 : #checks if at z-max
+##                    self.linkCreator(node,self.nodes[node_count+self.floorArea()])
+##                if c[2] != 0: #checks if at z-min
+##                    self.linkCreator(node,self.nodes[node_count-self.floorArea()])
+##            node_count += 1
+##        neigh_d = self.getNodeFeature('neighbors')
+##        edge_d = self.getNodeFeature('edge_yes')
+##        for node in self:
+##            if (edge_d[node]) and len(neigh_d[node]) == 6:
+##                print("Neighbor error: " + str(node))
+##            if (not edge_d[node]) and len(neigh_d[node]) != 6:
+##                print("Neighbor error: " + str(node))
