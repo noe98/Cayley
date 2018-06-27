@@ -168,28 +168,53 @@ class AbstractNetwork(object):
         except TypeError:
             return "Nodes object is not iterable"
 
-    def setNodeFeature(self,name,data): #broken, works weird and should have
-        #**kwargs
-        """Applies new feature or updates feature for all nodes in
-        graph."""
-        try:
-            for node,datum in zip(self,data.items()):
-                self.add(node,state = datum[1])
-        except AttributeError:
-
-            for node in self:
-                a = name
-                self.add(node,a = data)
-
-    def getNodeFeature(self,name):
+    def setNodeFeature(self,name,data): 
         """
-        Returns a dictionary with nodes with feature in question.
+        Does a one-to-one mapping of data. The data variable must be a
+        dictionary where the node name is the key and the data desired to be
+        set as the feature called 'name' should be the value. This allows
+        a plethora of data to be applied to each node. This mapping can also
+        allow for all the data to the nodes to be unique.
+
+        The runtime of this algorithm is $O(n)$ in all cases, since only
+        one feature is added.
 
         Parameters
         ----------
         name: str
-           the string that represents the name of the node feature. By convention
-           the string is all lowercase. 
+           The name of the feature added
+        data: dict
+           The data is held under a key/value pair in a dictionary. The key must
+           be the name of the node and the value is the feature data.
+
+        Notes
+        -----
+        -> If the data is not in a dictionary format, it will not work.
+        """
+        try:
+            for node,datum in zip(self,data.items()): #loops through node and data
+                self.add(node,state = datum[1])
+        except AttributeError:
+            return "Dictionary must be used"
+                
+
+    def getNodeFeature(self,name):
+        """
+        Returns a dictionary with nodes with feature in question. The key/value
+        pair will be as follows: the key will be the name of the node and the
+        value will be the data. 
+
+        Parameters
+        ----------
+        name: str
+           the string that represents the name of the node feature.
+           By convention the string has all lowercase characters.
+
+        Notes
+        -----
+        -> The funciton uses a dictionary comprehension
+        -> Will not return a dictionary with all nodes if the a node does
+           not have that specific feature. 
         """
         return {n: self.graph[n][name] for n in self if name in self.graph[n]}
 
@@ -202,11 +227,14 @@ class AbstractNetwork(object):
         node: hashable object
            Any hashable object in the network.
 
-        The runtime is $O(n)$.
+        The runtime is $O(n)$.  
         """
-        copy = self.graph
-        del copy[node]
-        self.graph = copy
+        for x in self:
+            neigbhors = self.neighborFinder(x) #gets neighbors for node
+            if node in neigbhors: #checks for connection
+                (neigbhors).remove(node) #removes any connection
+        del self.graph[node] #deletes from graph
+        self.nodes.remove(node) #deletes from nodes variable
         return self.graph
 
     def linkCreator(self,node,connection):
@@ -229,7 +257,7 @@ class AbstractNetwork(object):
             (self.graph[node]["neighbors"]).add(connection)
             (self.graph[connection]["neighbors"]).add(node)
         except KeyError:
-            return "Nodes not in graph"
+            return "Node not in graph"
 
     def directedLink(self,node,connection):
         """Adds a link that is directed from node to connection.
@@ -247,7 +275,7 @@ class AbstractNetwork(object):
         try:
             (self.graph[node]["neighbors"]).add(connection)
         except KeyError:
-            return "Nodes not in graph"
+            return "Node not in graph"
 
     def multipleLinkCreator(self,node,connections):
         """
@@ -267,23 +295,38 @@ class AbstractNetwork(object):
         """
         try:
             for connection in connections:
-                (self.graph[node]["neighbors"]).add(connection)
-                (self.graph[connection]["neighbors"]).add(node)
+                self.linkCreator(node,connection) #adds the node between the 
         except TypeError:
             return "Connections object is not iterable"
 
     def clear(self):
-        """Clears the network of all links, nodes, and data."""
+        """
+        Clears the network of all links, nodes, and data, the runtime
+        is $O(k)$.
+        """
         self.graph = dict()
+        self.nodes = list()
         self.edge_list = np.zeros([0,0],dtype=int)
 
     def neighborFinder(self,node):
-        """Finds the neighbors between of the node."""
+        """Finds the neighbors between of the node.
+
+        Parameters
+        ----------
+        node: hashable object
+           Any hashable object in the network
+
+        Runtime of $O(k)$.
+        """
         return self.graph[node]["neighbors"]
 
     def edgeList(self):
-        """Uses the link dictionary to create a numpy array that is the
-        adjacency matrix for any network."""
+        """
+        Uses the neighbor dictionary to create a numpy array that is the
+        adjacency matrix for any network.
+
+        Has a runtime of $O(n^2)$.
+        """
         edge_list = np.zeros([len(self),len(self)], dtype = int)
         for node in self:
             for connection in self.graph[node]["neighbors"]:
@@ -292,8 +335,14 @@ class AbstractNetwork(object):
         return edge_list
 
     def linksAsTuples(self):
-        """Returns a list of tuples that can represent each link in a
-        network."""
+        """
+        Returns a list of tuples that can represent each link in a
+        network. Where the two nodes in the tuple are the nodes that
+        have a connection between them.
+
+        The runtime is $O(n^2)$, however it runs slightly better since it
+        uses a map function. 
+        """
         tuples = list()
         for x in self:
             edges = list(filter(lambda node: node[0] > x or \
@@ -305,7 +354,10 @@ class AbstractNetwork(object):
         return tuples
 
     def completeGraph(self):
-        """Takes any network and makes it a complete graph."""
+        """
+        Takes any network and makes it a complete graph.
+        Has a runtime of $O(n^2)$.
+        """
         nodes = self.getNodes()
         for item in nodes:
             copy = nodes[:]
