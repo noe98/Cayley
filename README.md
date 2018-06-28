@@ -3,7 +3,7 @@ Research by Justin Pusztay, Matt Lubas, and Griffin Noe, for research with Dr. I
 
 ## Overview
 
-Cayley provides a framework for agent-based modeling on networks. These models can be from a wide range of disiplines including statistical physics, game theory, or various social sciences. We also include Monte Carlo methods to introduce randomness.
+Cayley provides a framework for agent-based modeling on networks. These models can be from a wide range of disiplines including statistical physics, game theory, or various social sciences. Monte Carlo methods are also provided for any desire to incorporate randomness into the models.
 
 It provides:
 * Graph data structures that allows nodes to hold many different types of data, called features.
