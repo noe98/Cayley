@@ -19,13 +19,14 @@ You can download python at the following link:
 https://www.python.org/
 
 To use this framework the following packages are needed:
-
+```
 networkx
 matplotlib
 numpy
 random (Built into Python)
 xlsxwriter
 math (Built into Python)
+```
 
 To install these packages on Terminal for  Mac OSX/ Linux, or Command Prompt on Windows, pip must be installed on your computer (link: https://pip.pypa.io/en/stable/installing/). Once installed, copy and paste the following lines:
 
