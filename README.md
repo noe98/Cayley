@@ -1,5 +1,5 @@
-# Stochastic Absorption Rates Modeled on Networks
-Research by Justin Pusztay, Matt Lubas, and Griffin Noe, for research with Dr. Irina Mazilu at Washington and Lee University.
+# Cayley
+Research by Justin Pusztay, Matt Lubas, and Griffin Noe with Dr. Irina Mazilu at Washington and Lee University.
 
 ## Overview
 
