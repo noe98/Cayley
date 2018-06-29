@@ -1,14 +1,20 @@
 """
+Author: Will Hanstedt
+Filename: senatevol.py
+Project: Research for Irina Mazilu Ph.D.
+
+A file to run a large number of Senate network simulations.
 """
 
 import Cayley as cy
 import Cayley.game_theory as cg
+import Cayley.research as cr
 import xlsxwriter as xl
 import time
 from math import sqrt
-from Cayley.change_me import timesteps
-from Cayley.change_me import senate_corr
-from Cayley.change_me import radius_of_connection
+timesteps = cr.variable('timesteps', int)
+senate_corr = cr.variable('senate_corr',list,str)
+radius_of_connection = cr.variable('radius_of_connection', float)
 import csv
 
 def simulate(model, const, a_const, radius, issue, trials):
@@ -77,12 +83,12 @@ def simulate(model, const, a_const, radius, issue, trials):
         if trials <= 10: # Trial-by-trial is best for small sets
             worksheet = workbook.add_worksheet("Data trial %d" % (i+1))
             worksheet.write(0,0,"Timestep")
-            for x in network:
-                worksheet.write(x+1,0,"Node "+str(network.keys[x]))
-            for y in range(self.getTimesteps()):
-                worksheet.write(0,y+1,str(y))
             rank_d = network.getNodeFeature('rank')
-            for y in range(self.getTimesteps()):
+            for x in network:
+                worksheet.write(int(rank_d[x])+1,0,"Node "+str(network.keys[x]))
+            for y in range(senate.getTimesteps()):
+                worksheet.write(0,y+1,str(y))
+            for y in range(senate.getTimesteps()):
                 for x in network:
                     worksheet.write(int(rank_d[x]),y+1,senate.simData(y)[x])
 

@@ -13,7 +13,7 @@ __author__ = "\n".join(['Justin Pusztay (pusztayj20@mail.wlu.edu)'])
 
 __all__ = ['Lattice']
 
-from Cayley.abstractnetwork import *
+from Cayley.classes.abstractnetwork import *
 from math import floor
 
 class Lattice(AbstractNetwork):

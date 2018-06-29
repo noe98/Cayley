@@ -1,6 +1,15 @@
-import Cayley as cy
+"""
+Author: Will Hanstedt
+Filename: senatemain.py
+Project: Research for Irina Mazilu, Ph.D.
+
+Runs single iterations of Senate network models.
+"""
+
+import Cayley.classes as cy
 import Cayley.game_theory as cg
-from Cayley.change_me import timesteps
+import Cayley.research as cr
+timesteps = cr.variable('timesteps',int)
 import csv
 
 def main():

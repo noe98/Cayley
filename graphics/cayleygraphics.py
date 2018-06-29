@@ -18,7 +18,7 @@ __all__ = ['CayleyGraphics']
 
 import networkx as nx
 import matplotlib.pyplot as plt
-import Cayley as cy
+import Cayley.classes as cy
 from tkinter import *
 
 class CayleyGraphics(object):

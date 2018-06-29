@@ -21,13 +21,12 @@ def main():
     a.linkCreator("Justin","Joe")
     a.linkCreator("Joe","Cole")
     a.linkCreator("Maria",3)
-    print(a.link_d)
+    print(a)
     monte = cy.MonteCarlo(a)
     monte.emptyDictionary()
-    print(monte.emptyDictionary())
-    for x in range(len(monte.network)):
+    for x in a:
         monte.simulateNN()
-    monte.sendExcel()
+    monte.sendExcel() #strange keyerror, must be looked at later
 
 if __name__ == "__main__":
     main()

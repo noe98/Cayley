@@ -1,23 +1,29 @@
 """
+Author: Will Hanstedt
+Filename: gamevol.py
+Project: Research for Irina Mazilu, Ph.D.
+
+A file to run high numbers of simulations for the game theory Senate model.
 """
 
 import csv
 import Cayley as cy
 import Cayley.game_theory as cgt
+import Cayley.research as cr
 import xlsxwriter as xl
 import time
-from change_me import a_list
-from change_me import b_list
-from change_me import c_list
-from change_me import d_list
-from change_me import issue_list
-from change_me import timesteps
+a_list = cr.variable('a_list',list,float)
+b_list = cr.variable('b_list',list,float)
+c_list = cr.variable('c_list',list,float)
+d_list = cr.variable('d_list',list,float)
+issue_list = cr.variable('issue_list',list,float)
+timesteps = cr.variable('timesteps',int)
 
 def simulate(ac,bc,cc,dc,kc,issue_rating,trials):
     """The big one"""
     run_time = time.time()
     endcol = xl.utility.xl_col_to_name(timesteps+1)
-    name = '%da_%db_%dc_%dd_%.2fIV' %(ac,bc,cc,dc,issue_rating)
+    name = '%.2fa_%.2fb_%.2fc_%.2fd_%.2fIV' %(ac,bc,cc,dc,issue_rating)
     graph = cgt.Senate('blank',1)
     vote_d = dict()
     real_d = dict()

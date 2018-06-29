@@ -1,4 +1,9 @@
 """
+Author: Will Hanstedt
+Filename: TMmain.py
+Project: Research for Irina Mazilu, Ph.D.
+
+A file to run single iterations of temperature-dependent Cayley Tree simulations.
 """
 
 import Cayley as cy

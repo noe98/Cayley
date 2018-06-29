@@ -10,7 +10,8 @@ of the Lattice tree.
 
 import Cayley as cy
 import Cayley.graphics as cg
-from change_me import temp_d
+import Cayley.research as cr
+temp_d = cr.variable('temp_d',dict,float)
 
 def main():
     print("Enter 'NN', 'TL', 'EI', or 'TM' for nearest neighbors, total " +

@@ -19,11 +19,11 @@ name_of_data_from_csv = ['rank_from_low', 'rank_from_high',
 
 __author__ = "\n".join(['Justin Pusztay (pusztayj20@mail.wlu.edu)'])
 
-__all__ = ['senate','payoff_matrix1','payoff_matrix2','payoff_matrix3',
+__all__ = ['make_senate','payoff_matrix1','payoff_matrix2','payoff_matrix3',
            'payoff_matrix4','random_strat_start','game','timestep','data_export',
            'strat_real_imagined_setup','export_data','random_agent']
 
-def senate(network,csv_name = 'senatedata.csv'):
+def make_senate(network,csv_name = 'senatedata.csv'):
     """
     Takes a network and adds each senator to it. It puts their last name
     as the name of the node. Adds ideological score and state as features.

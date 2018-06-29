@@ -10,8 +10,9 @@ Warnings
 -> Every senator only plays the game with one other person in a timestep.
 """
 
-import Cayley as cy
+from Cayley import Graph
 import Cayley.game_theory as cgt
+import csv
 
 issue_rating = 0.25
 a = 1
@@ -22,12 +23,13 @@ k = 500
 timesteps = 2
 name_of_excel_sheet = '%da_%db_%dc_%dd' %(a,b,c,d)
 
+
 def main():
     strategy_data_dump = list()
     real_data_dump = list()
     imagined_data_dump = list()
-    g = cy.Graph()
-    cgt.senate(g)
+    g = Graph()
+    cgt.make_senate(g)
 ##    g.completeGraph()
     for node in g: #adds one random agent
         cgt.random_agent(g,node)

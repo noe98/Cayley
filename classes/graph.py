@@ -10,7 +10,7 @@ __author__ = "\n".join(['Justin Pusztay (pusztayj20@mail.wlu.edu)'])
 
 __all__ = ['Graph']
 
-from Cayley.abstractnetwork import *
+from Cayley.classes.abstractnetwork import *
 
 class Graph(AbstractNetwork):
 

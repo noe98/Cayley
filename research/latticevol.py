@@ -1,15 +1,21 @@
 """
+Author: Will Hanstedt
+Filename: latticevol.py
+Project: Research for Irina Mazilu, Ph.D.
+
+A file to run large numbers of trials for the lattice type network.
 """
 
 import Cayley as cy
 import Cayley.graphics as cg
+import Cayley.research as cr
 import xlsxwriter as xl
 import time
 from math import sqrt
-from change_me import timesteps
-from change_me import initial_state
-from change_me import node_list
-from change_me import temp_d
+timesteps = cr.variable('timesteps',int)
+initial_state = cr.variable('initial_state',str)
+node_list = cr.variable('node_list',list,int)
+temp_d = cr.variable('temp_d',dict,float)
 
 
 def simulate(method, model, length, width, height, alpha, beta, gamma, mu, r1, r2,trials,k,J):
@@ -114,7 +120,7 @@ def simulate(method, model, length, width, height, alpha, beta, gamma, mu, r1, r
                 coor_d = network.getNodeFeature('coords')
                 for x in network: ## # gives adjusted, can't use len(monte.network)
                     if not (0 in coor_d[x] or coor_d[x][0] == length-1 or\
-                            coor_[x][1] == width-1 or coor_d[x][2] == height-1):
+                            coor_d[x][1] == width-1 or coor_d[x][2] == height-1):
                         sum_t += monte.simData(y)[x] #JKP: Follows new updates
             elif model == 'flat':
                 coor_d = network.getNodeFeature('coords')
@@ -233,7 +239,7 @@ def simulate(method, model, length, width, height, alpha, beta, gamma, mu, r1, r
 
 def main():
     print("To change the default timesteps, initial state, temperatures, or"+\
-          " nodes for comparison, change the values in the change_me.py file.")
+          " nodes for comparison, change the values in the variables.txt file.")
     print("Enter 'full', 'flat', 'linear', or 'loop' for model type.")
     model = input("Model: ").lower()
     if model in ['linear','loop']:

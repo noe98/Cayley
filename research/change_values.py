@@ -1,6 +1,12 @@
 """
+Author: Will Hanstedt
+Filename: change_values.py
+Project: Research for Irina Mazilu, Ph.D.
+
 Sets arbitrary values of variables to be referenced by volume.py.
 """
+
+import os
 
 total_nodes = [[1,None,None,None,None], #total_nodes[gens][links]
                [None,2,3,4,5,6],
@@ -8,6 +14,9 @@ total_nodes = [[1,None,None,None,None], #total_nodes[gens][links]
                [None,None,7,22,53,106,187],
                [None,None,9,46,161,426],
                [None,None,11,94,485,1706]]
+
+dir_path = os.path.dirname(os.path.abspath(__file__))
+file_path = os.path.join(dir_path, 'variables.txt')
 
 def listify(string):
     liszt = list()
@@ -26,7 +35,7 @@ def listify(string):
 def variable(string_key, var_type, value_type = str, start_index = False):
     if not start_index:
         start_index = len(string_key)+3
-    with open('variables.txt') as variables:
+    with open(file_path) as variables:
         reader = variables.readlines()
         for line_ind in range(len(reader)):
             line = reader[line_ind]

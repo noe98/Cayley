@@ -1,7 +1,12 @@
 """
+Author: Will Hanstedt
+Filename: senate.py
+Project: Research for Irina Mazilu, Ph.D.
+
+Establishes the Senate class, with three model types.
 """
 
-from Cayley.abstractnetwork import *
+from Cayley import *
 import csv
 
 class Senate(AbstractNetwork):
