@@ -77,7 +77,9 @@ class Lattice(AbstractNetwork):
         floor_count = 0 #z-coordinate
         node_count = 0
         for node in self:
-            column_count = node_count % self.x #y-coordinate
+            column_count = node_count % self.x #x-coordinate
+            row_count = floor(node_count/self.x) % self.y
+            floor_count = floor(node_count/(self.x*self.y))
             self.add(node,coords = (column_count,row_count,floor_count))
             #above adds coordinate as feature
             if column_count % self.x != self.x -1: #checks if at x-max
@@ -89,17 +91,17 @@ class Lattice(AbstractNetwork):
                 self.linkCreator(node,self.nodes[node_count+self.x])
             if row_count % self.y != 0: #checks if at y-min
                 self.linkCreator(node,self.nodes[node_count-self.x])
-            if node_count % self.x == self.x - 1:
-                row_count += 1
+##            if node_count % self.x == self.x - 1:
+##                row_count += 1
                 
             if floor_count != self.z-1: #checks if at z-max
                 self.linkCreator(node,self.nodes[node_count+self.floorArea()])
             if floor_count != 0: #checks if at z-min
                 self.linkCreator(node,self.nodes[node_count-self.floorArea()])
-            if node_count % self.floorArea() == self.floorArea() - 1:
-                floor_count += 1
+##            if node_count % self.floorArea() == self.floorArea() - 1:
+##                floor_count += 1
             node_count += 1
-
+            
 ##        try:
 ##            node_count = 0
 ##            for n in self.__names: ### WARNING: HAS NOT BEEN TESTED ###
