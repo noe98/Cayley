@@ -13,7 +13,7 @@ import openpyxl
 import xlsxwriter
 
 #For personal reference when using the CSV
-name_of_data_from_csv = ['rank_from_low', 'rank_from_high',
+nname_of_data_from_csv = ['rank_from_low', 'rank_from_high',
                          'percentile', 'ideology', 'id',
                          'bioguide_id', 'state', 'district', 'name']
 
@@ -629,6 +629,12 @@ def imagined_reward_data(data,col,book,network):
         row_count+=1
 
 def export_data(name,network,data1,data2,data3):
+    """
+    Exports data to excel. Takes the network representing the senate
+    as a parameter as well as the data set representing the strategy, the
+    data set representing the real rewards, and the data set representing the
+    imagined rewards. 
+    """
     workbook = xlsxwriter.Workbook(name+'.xlsx')
     worksheet = workbook.add_worksheet("Strategy")
     worksheet.write(0,0,"Timestep")

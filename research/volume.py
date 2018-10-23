@@ -39,6 +39,8 @@ def simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2,
     m_tag = "%.2f" % mu
     r1_tag = "%.2f" % r1
     r2_tag = "%.2f" % r2
+
+    # naming excel file
     if method == 'NN':
         name = ("NN%dGen_%dLin_%sα_%sβ_%sγ.xlsx" % (generations-1, links,
                                                     a_tag, b_tag, g_tag))
@@ -57,37 +59,50 @@ def simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2,
             tag_list += ("%.2f"%temp_d[s],)
         tags = ("%s_"*(len(temp_d)-1)+"%s") %tag_list
         name = ("TM%dGen_%dLin_"%(generations-1,links)+tags+".xlsx")
-    else: raise ValueError("Method not recognized")
+    else:
+        raise ValueError("Method not recognized")
+
     print("\n#### RUNNING SIMULATION %s ####\n"%(name))
 
     workbook = xl.Workbook(name)
     #JKP: This all can be incorporated with new node feature ability
     density_list = dict() #[trial][timestep] stores overall densities
+    # Key is trial number and then value is list of densities per timestep
     state_collect = dict() #[trial] stores final state dictionaries
+    # key is trial number and value is simulation data from last timestep
     dens_collect = dict() #[trial][generation] stores generational densities
+    # key is trial number and value is a list with densities for every generation at last timestep
     node_d = dict() #[trial#][pair index][node index][timestep] stores node values
+    # key is trial number and value is 3 nested lists, first of which is pairs of nodes
+    # the second is the node numbers site and the third is the states of said node over
+    # each timestep
     overtime = workbook.add_worksheet("Over_Time")
     overall = workbook.add_worksheet("Overall")
 
     for m in range(trials):
+        #adding a list with zeros of certain length(number of timesteps)
         density_list[m] = [0]*(timesteps+2)
 
     for m in range(trials):
+        #adding a list with zeros of certain length(number of timesteps)
         dens_collect[m] = [0]*(generations)
+
+    """
+    Data generation begins here
+    """
 
     for i in range(trials):
         monte.clear()
-        if method == 'TM': monte.randomSpins()
-        else:
-            if initial_state == "empty": monte.emptyDictionary()
-            elif initial_state == "random": monte.randomDictionary()
-            elif initial_state == "zero": monte.zeroDictionary()
-
         if method == 'TM':
+            monte.randomSpins() # adds states of -1 and 1
             iterate = len(temp_d)
             for d in range (generations+1):
                 temp = temp_d[d%iterate]
                 network.addMultipleNodes(network.nodesPerGen(d),temperature=temp)
+        else:
+            if initial_state == "empty": monte.emptyDictionary() #pulling from variables file
+            elif initial_state == "random": monte.randomDictionary()
+            elif initial_state == "zero": monte.zeroDictionary()
 
         for t in range(timesteps+1):
             if method == 'NN':
@@ -102,6 +117,7 @@ def simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2,
         ### FOR RECORDING DATA ###
         state_collect[i] = monte.simData(monte.getTimesteps()-1) #JKP updated
 
+        #node_d is made here
         node_d[i] = list()
         for n in range(len(node_list)):
             node_d[i].append([])
@@ -113,6 +129,7 @@ def simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2,
                     else:
                         node_d[i][n][f].append(2*(monte.simData(t)[node_list[n][f]])-1)
 
+        #makes density_list
         for y in range(monte.getTimesteps()): #JKP: Follows new updates
             sum_t = 0 # Sum of relevant nodes at one timestep
             for x in range(total_nodes[generations-1][links]): ## # gives adjusted, can't use len(monte.network)
@@ -120,6 +137,10 @@ def simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2,
             dens_t = sum_t/total_nodes[generations-1][links] ## # Density at one timestep
             density_list[i][y] = dens_t
 
+        # not sure if it works
+        """
+        Looks at things tril by trials and makes things easier to look at
+        """
         if trials <= 10: # Trial-by-trial is best for small sets
             worksheet = workbook.add_worksheet("Data trial %d" % (i+1))
             worksheet.write(0,0,"Timestep")
@@ -143,14 +164,16 @@ def simulate(method, generations, links, alpha, beta, gamma, mu, r1, r2,
                     worksheet2.write(x+1,y+1,monte.density(x,monte.simData(y)))
                 worksheet2.write(network.generations+1,y+1,density_list[i][y]) ## #
 
+        # recording time for trials 
         if (trials >= 100) and ((10*i)%trials == 0):
             try:
                 ti = (time.time()-run_time)
                 print("Trial: "+str(i))
                 print(str(ti)+" secs")
             except NameError: pass
+    #big trial loop ends here
 
-    corr_t = dict()
+    corr_t = dict() #[pair index][timestep]
     for n in range(len(node_list)):
         corr_t[n] = [0]*(timesteps+1)
         for t in range(timesteps+1):

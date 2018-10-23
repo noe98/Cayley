@@ -67,7 +67,7 @@ class MonteCarlo(object):
         return len(self.__sim_data)
 
     #Initial State Methods
-    def emptyDictionary(self): #startEmpty
+    def startEmpty(self): #startEmpty
         """Creates a dictionary where all nodes have an initial state of zero.
         This will append a dictionary to the sim_data instance variable.
 
@@ -90,7 +90,7 @@ class MonteCarlo(object):
         --------
         >>> import Cayley as cy
         >>> mc = cy.MonteCarlo(Lattice(2,2))
-        >>> mc.emptyDictionary()
+        >>> mc.startEmpty()
         {0:0,1:0,2:0,3:0}
         """
         if len(self.__sim_data) == 0:
@@ -99,7 +99,7 @@ class MonteCarlo(object):
         else:
             raise ValueError("Must clear data before setting initial state.")
 
-    def randomDictionary(self): #startRandom
+    def startRandom(self): 
         """Assigns an initial filled state, a value of 1, to a
         random number of nodes in the network.
 
@@ -158,7 +158,7 @@ class MonteCarlo(object):
         --------
         >>> import Cayley as cy
         >>> mc = cy.MonteCarlo(CayleyTree(2,2))
-        >>> mc.emptyDictionary()
+        >>> mc.startEmpty()
         {0:1,1:0,2:0,3:0,4:0}
         """
         if len(self.__sim_data) == 0:
@@ -349,7 +349,7 @@ class MonteCarlo(object):
         """Gets the state of a node on an edge."""
         return timestep.get(neighbor)
 
-    def density(self,gen,state_d):
+    def generationalDensity(self,gen,state_d):
         """Takes a generation and a state dictionary and returns the density
            of the generation."""
         try:
@@ -391,12 +391,12 @@ class MonteCarlo(object):
         --------
         >>> import Cayley as cy
         >>> mc = cy.MonteCarlo(cy.CayleyTree(3,3))
-        >>> mc.emptyDictionary()
+        >>> mc.startEmpty()
         >>> mc.simulateNN() #runs one timestep
         To run multiple timesteps:
         >>> import Cayley as cy
         >>> mc = cy.MonteCarlo(cy.CayleyTree(3,3))
-        >>> mc.emptyDictionary()
+        >>> mc.startEmpty()
         >>> for count in range(10): #runs 10 timesteps
                  mc.simulateNN()
         """
@@ -575,6 +575,9 @@ class MonteCarlo(object):
     def previousState(self,node):
         """Returns the state of the node from the previous timestep."""
         return self.__sim_data[-1][node]
+
+    def allData(self):
+        return self.__sim_data
 
     def sendExcel(self,filename = "monteCarloData.xlsx"):
         """A file that sends the data ran from the most recent

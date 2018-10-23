@@ -1,1 +1,2 @@
-from Cayley.research.change_values import *
+from Cayley.research.variables import *
+from Cayley.research.analysis import *

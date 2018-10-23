@@ -24,7 +24,7 @@ class CayleyTree(AbstractNetwork):
     def __init__(self,generations,links,names = None): 
         """Creates a Cayley Tree with desired number of generations and
            links."""
-        self.generations = generations #instance variables
+        self.generations = generations
         self.links = links
         self.keys = list(range(self.nodeNumber()))
         self.__names = names

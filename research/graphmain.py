@@ -23,10 +23,10 @@ def main():
     a.linkCreator("Maria",3)
     print(a)
     monte = cy.MonteCarlo(a)
-    monte.emptyDictionary()
+    monte.startEmpty()
     for x in a:
         monte.simulateNN()
-    monte.sendExcel() #strange keyerror, must be looked at later
+   
 
 if __name__ == "__main__":
     main()
