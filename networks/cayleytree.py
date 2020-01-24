@@ -56,7 +56,7 @@ class CayleyTree(AbstractNetwork):
             for x in range(sum(self._nodeGeneration())):
                 self.add(x)
         self.addMultipleEdges(self.nodes[0],{self.nodes[x] for x in
-                                    range(1,self.nodeGeneration()[1]+1)})
+                                    range(1,self._nodeGeneration()[1]+1)})
         node_count = self._nodeGeneration()[1]
         for node in range(1,len(self)):
             if node_count + 1 != len(self):

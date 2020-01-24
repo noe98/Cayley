@@ -80,7 +80,7 @@ class Lattice(AbstractNetwork):
             column_count = node_count % self.x #x-coordinate
             row_count = floor(node_count/self.x) % self.y
             floor_count = floor(node_count/(self.x*self.y))
-            self.add(node,coords = (column_count,row_count,floor_count))
+            self.add(node)
             #above adds coordinate as feature
             if column_count % self.x != self.x -1: #checks if at x-max
                 self.addEdge(node,self.nodes[node_count+1])
