@@ -230,7 +230,7 @@ class AbstractNetwork(object):
         The runtime is $O(n)$.  
         """
         for x in self:
-            neigbhors = self.neighborFinder(x) #gets neighbors for node
+            neigbhors = self.getNeighbors(x) #gets neighbors for node
             if node in neigbhors: #checks for connection
                 (neigbhors).remove(node) #removes any connection
         del self.graph[node] #deletes from graph
@@ -308,7 +308,7 @@ class AbstractNetwork(object):
         self.nodes = list()
         self.edge_list = np.zeros([0,0],dtype=int)
 
-    def neighborFinder(self,node):
+    def getNeighbors(self,node):
         """Finds the neighbors between of the node.
 
         Parameters

@@ -34,33 +34,6 @@ class MonteCarlo(object):
         self.r1 = r1
         self.r2 = r2
 
-    def getAlpha(self):
-        """Returns alpha value."""
-        return self.alpha
-
-    def getBeta(self):
-        """Returns beta value."""
-        return self.beta
-
-    def getGamma(self):
-        """Returns gamma value."""
-        return self.gamma
-
-    def getMu(self):
-        """Returns mu value"""
-        return self.mu
-
-    def getR1(self):
-        """Returns r1 value"""
-        return self.r1
-
-    def getR2(self):
-        """Returns r2 value"""
-        return self.r2
-
-    def getMedian(self):
-        """Returns senate median ideology score"""
-        return self.__network.center
 
     def getTimesteps(self): #needs to be looked at in 0 case
         """Returns the number of timesteps."""
