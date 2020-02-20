@@ -8,6 +8,9 @@ class MonteCarlo(object):
         self.data = list() # list of dictionaries <node, int state> to hold simulation data of each timestep
 
     def getTimesteps(self):
+        """
+        Returns the number of timesteps in the current simulation.
+        """
         return len(self.data)
 
     ##### Initial Start States #####
